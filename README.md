@@ -10,7 +10,7 @@ A simple node program for executing commands using an environment from an env fi
 `npm install env-cmd`
 
 ## Usage
-**Environment Variables file (./test/.env)**
+**Environment file ``./test/.env`**
 ```
 ENV1=THANKS
 ENV2=FORALL
@@ -18,7 +18,7 @@ ENV4=THEFISH
 ```
 *This is the only accepted format for an environment file. If other formats are desired please create an issue*
 
-**package.json**
+**Package.json**
 ```js
 {
   "scripts": {
@@ -27,6 +27,7 @@ ENV4=THEFISH
 }
 ```
 or
+
 **Terminal**
 ```sh
 ./node_modules/.bin/env-cmd -e ./test/.env node index.js
@@ -34,8 +35,10 @@ or
 
 ## Why
 
-Because sometimes it just too cumbersome passing tons of environment variables to scripts. Its usually just easier to have a file with all the vars in them, especially for development. ***Do not commit sensitive data to public git!***
+Because sometimes it just too cumbersome passing tons of environment variables to scripts. Its usually just easier to have a file with all the vars in them, especially for development.
+
+**Do not commit sensitive data to a public git!**
 
 ## Special Thanks
 
-Special thanks to [cross-env](https://github.com/kentcdodds/cross-env) for inspiration.
+Special thanks to [cross-env](https://github.com/kentcdodds/cross-env) for inspiration (use's the same `cross-spawn` lib underneath).

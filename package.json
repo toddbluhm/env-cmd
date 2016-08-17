@@ -2,9 +2,9 @@
   "name": "env-cmd",
   "version": "1.0.0",
   "description": "Executes a command using the envs in the provided env file",
-  "main": "index.js",
+  "main": "lib/index.js",
   "bin": {
-    "env-cmd": "./index.js"
+    "env-cmd": "bin/env-cmd.js"
   },
   "scripts": {
     "test": "mocha",
