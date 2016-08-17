@@ -9,8 +9,9 @@ cache:
     - node_modules
 
 matrix:
-  - node_js: "5"
-  - node_js: "6"
+  include:
+    - node_js: "5"
+    - node_js: "6"
 
-notifications:
-  webhooks: https://coveralls.io/webhook?repo_token=$COVERALLS_REPO_TOKEN
+after_script:
+  - cat ./coverage/lcov.info | ./node_modules/.bin/coveralls --verbose

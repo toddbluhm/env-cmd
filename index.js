@@ -1,2 +1,3 @@
-const { EnvCmd } = require('./lib')
-EnvCmd(process.argv.slice(2))
+'use strict'
+
+require('./lib').EnvCmd(process.argv.slice(2))

@@ -1,5 +1,9 @@
+'use strict'
+
 const assert = require('better-assert')
-const { describe, it, afterEach } = require('mocha')
+const describe = require('mocha').describe
+const it = require('mocha').it
+const afterEach = require('mocha').afterEach
 const path = require('path')
 const proxyquire = require('proxyquire')
 const sinon = require('sinon')
@@ -8,34 +12,37 @@ const spawnStub = sinon.spy(() => ({
   on: sinon.stub(),
   exit: sinon.stub()
 }))
-const { EnvCmd, ParseArgs, ParseEnvFile } = proxyquire('../lib', {
+const lib = proxyquire('../lib', {
   'cross-spawn': {
     spawn: spawnStub
   }
 })
+const EnvCmd = lib.EnvCmd
+const ParseArgs = lib.ParseArgs
+const ParseEnvFile = lib.ParseEnvFile
 
 describe('env-cmd', function () {
   describe('ParseArgs', function () {
     it('should parse out the -e envfile path', function () {
-      const { envFilePath } = ParseArgs(['-e', './test/envFile', 'command', 'cmda1', 'cmda2'])
-      assert(envFilePath === path.join(__dirname, 'envFile'))
+      const parsedArgs = ParseArgs(['-e', './test/envFile', 'command', 'cmda1', 'cmda2'])
+      assert(parsedArgs.envFilePath === path.join(__dirname, 'envFile'))
     })
 
     it('should parse out the --env envfile path', function () {
-      const { envFilePath } = ParseArgs(['--env', './test/envFile', 'command', 'cmda1', 'cmda2'])
-      assert(envFilePath === path.join(__dirname, 'envFile'))
+      const parsedArgs = ParseArgs(['--env', './test/envFile', 'command', 'cmda1', 'cmda2'])
+      assert(parsedArgs.envFilePath === path.join(__dirname, 'envFile'))
     })
 
     it('should parse out the command', function () {
-      const { command } = ParseArgs(['-e', './test/envFile', 'command', 'cmda1', 'cmda2'])
-      assert(command === 'command')
+      const parsedArgs = ParseArgs(['-e', './test/envFile', 'command', 'cmda1', 'cmda2'])
+      assert(parsedArgs.command === 'command')
     })
 
     it('should parse out the command args', function () {
-      const { commandArgs } = ParseArgs(['-e', './test/envFile', 'command', 'cmda1', 'cmda2'])
-      assert(commandArgs.length === 2)
-      assert(commandArgs[0] === 'cmda1')
-      assert(commandArgs[1] === 'cmda2')
+      const parsedArgs = ParseArgs(['-e', './test/envFile', 'command', 'cmda1', 'cmda2'])
+      assert(parsedArgs.commandArgs.length === 2)
+      assert(parsedArgs.commandArgs[0] === 'cmda1')
+      assert(parsedArgs.commandArgs[1] === 'cmda2')
     })
 
     it('should error out if incorrect number of args passed', function () {
