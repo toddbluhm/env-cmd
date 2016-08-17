@@ -12,6 +12,7 @@ A simple node program for executing commands using an environment from an env fi
 ## Usage
 **Environment file ``./test/.env`**
 ```
+# This is a comment
 ENV1=THANKS
 ENV2=FORALL
 ENV4=THEFISH
@@ -22,7 +23,7 @@ ENV4=THEFISH
 ```js
 {
   "scripts": {
-    "test": "env-cmd -e ./test/.env mocha -R spec"
+    "test": "env-cmd ./test/.env mocha -R spec"
   }
 }
 ```
@@ -30,15 +31,15 @@ or
 
 **Terminal**
 ```sh
-./node_modules/.bin/env-cmd -e ./test/.env node index.js
+./node_modules/.bin/env-cmd ./test/.env node index.js
 ```
 
 ## Why
 
-Because sometimes it just too cumbersome passing tons of environment variables to scripts. Its usually just easier to have a file with all the vars in them, especially for development.
+Because sometimes its just too cumbersome passing lots of environment variables to scripts. Its usually just easier to have a file with all the vars in them, especially for development and testing.
 
-**Do not commit sensitive data to a public git!**
+**Do not commit sensitive env data to a public git repo!**
 
 ## Special Thanks
 
-Special thanks to [cross-env](https://github.com/kentcdodds/cross-env) for inspiration (use's the same `cross-spawn` lib underneath).
+Special thanks to [cross-env](https://github.com/kentcdodds/cross-env) for inspiration (use's the same `cross-spawn` lib underneath too).
