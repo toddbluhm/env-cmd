@@ -8,7 +8,8 @@
   },
   "scripts": {
     "test": "mocha",
-    "test-cover": "istanbul cover node_modules/.bin/_mocha -- -R spec"
+    "test-cover": "istanbul cover node_modules/.bin/_mocha -- -R spec",
+    "coveralls": "coveralls < coverage/lcov.info"
   },
   "repository": {
     "type": "git",
@@ -33,6 +34,7 @@
   },
   "devDependencies": {
     "better-assert": "^1.0.2",
+    "coveralls": "^2.11.12",
     "istanbul": "^0.4.4",
     "mocha": "^3.0.2",
     "proxyquire": "^1.7.10",

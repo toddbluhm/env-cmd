@@ -13,5 +13,8 @@ matrix:
     - node_js: "5"
     - node_js: "6"
 
+script:
+  - npm run test-cover
+
 after_script:
-  - cat ./coverage/lcov.info | ./node_modules/.bin/coveralls --verbose
+  - npm run coveralls
