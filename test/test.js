@@ -4,6 +4,7 @@ const assert = require('better-assert')
 const describe = require('mocha').describe
 const it = require('mocha').it
 const afterEach = require('mocha').afterEach
+const beforeEach = require('mocha').beforeEach
 const path = require('path')
 const proxyquire = require('proxyquire')
 const sinon = require('sinon')
@@ -21,6 +22,7 @@ const EnvCmd = lib.EnvCmd
 const ParseArgs = lib.ParseArgs
 const ParseEnvFile = lib.ParseEnvFile
 const PrintHelp = lib.PrintHelp
+const HandleUncaughtExceptions = lib.HandleUncaughtExceptions
 
 describe('env-cmd', function () {
   describe('ParseArgs', function () {
@@ -107,6 +109,27 @@ describe('env-cmd', function () {
       assert(helpText.match(/Usage/g).length !== 0)
       assert(helpText.match(/env-cmd/).length !== 0)
       assert(helpText.match(/-e/).length !== 0)
+    })
+  })
+  describe('HandleUncaughtExceptions', function () {
+    beforeEach(function () {
+      this.logStub = sinon.stub(console, 'log')
+      this.processStub = sinon.stub(process, 'exit')
+    })
+    afterEach(function () {
+      this.logStub.restore()
+      this.processStub.restore()
+    })
+    it('should print help text and error if error contains \'passed\'', function () {
+      HandleUncaughtExceptions(new Error('print help text passed now'))
+      assert(this.logStub.calledTwice)
+      this.logStub.restore()  // restore here so test success logs get printed
+    })
+
+    it('should print just there error if error does not contain \'passed\'', function () {
+      HandleUncaughtExceptions(new Error('do not print help text now'))
+      assert(this.logStub.calledOnce)
+      this.logStub.restore()  // restore here so test success logs get printed
     })
   })
 })
