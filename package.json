@@ -1,0 +1,41 @@
+{
+  "name": "env-cmd",
+  "version": "1.0.0",
+  "description": "Executes a command using the envs in the provided env file",
+  "main": "index.js",
+  "bin": {
+    "env-cmd": "./index.js"
+  },
+  "scripts": {
+    "test": "mocha",
+    "test-cover": "istanbul cover node_modules/.bin/_mocha -- -R spec"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/toddbluhm/env-cmd.git"
+  },
+  "keywords": [
+    "env",
+    "cli",
+    "command",
+    "exec",
+    "environment",
+    "run"
+  ],
+  "author": "Todd Bluhm",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/toddbluhm/env-cmd/issues"
+  },
+  "homepage": "https://github.com/toddbluhm/env-cmd#readme",
+  "dependencies": {
+    "cross-spawn": "^4.0.0"
+  },
+  "devDependencies": {
+    "better-assert": "^1.0.2",
+    "istanbul": "^0.4.4",
+    "mocha": "^3.0.2",
+    "proxyquire": "^1.7.10",
+    "sinon": "^1.17.5"
+  }
+}
