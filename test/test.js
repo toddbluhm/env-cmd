@@ -20,6 +20,7 @@ const lib = proxyquire('../lib', {
 const EnvCmd = lib.EnvCmd
 const ParseArgs = lib.ParseArgs
 const ParseEnvFile = lib.ParseEnvFile
+const PrintHelp = lib.PrintHelp
 
 describe('env-cmd', function () {
   describe('ParseArgs', function () {
@@ -49,7 +50,7 @@ describe('env-cmd', function () {
       try {
         ParseArgs(['-e', './test/envFile'])
       } catch (e) {
-        assert(e.message === 'Too few arguments passed to envCmd.')
+        assert(e.message === 'Error! Too few arguments passed to env-cmd.')
         return
       }
       assert(!'No exepection thrown')
@@ -59,7 +60,7 @@ describe('env-cmd', function () {
       try {
         ParseArgs(['./test/envFile', 'command', 'cmda1', 'cmda2'])
       } catch (e) {
-        assert(e.message === 'Error, No -e or --env flag passed.')
+        assert(e.message === 'Error! No -e or --env flag passed.')
         return
       }
       assert(!'No exepection thrown')
@@ -78,7 +79,7 @@ describe('env-cmd', function () {
       try {
         ParseEnvFile(path.join(__dirname, '/.env-malformed'))
       } catch (e) {
-        assert(e.message === 'Error, Malformed line in .env-malformed.')
+        assert(e.message === 'Error! Malformed line in .env-malformed.')
         return
       }
       assert(!'No exepection thrown')
@@ -96,6 +97,16 @@ describe('env-cmd', function () {
       assert(spawnStub.args[0][2].env.BOB === 'COOL')
       assert(spawnStub.args[0][2].env.NODE_ENV === 'dev')
       assert(spawnStub.args[0][2].env.NICE === '42')
+    })
+  })
+
+  describe('PrintHelp', function () {
+    it('should return help text when run', function () {
+      const helpText = PrintHelp()
+      assert(typeof helpText === 'string')
+      assert(helpText.match(/Usage/g).length !== 0)
+      assert(helpText.match(/env-cmd/).length !== 0)
+      assert(helpText.match(/-e/).length !== 0)
     })
   })
 })
