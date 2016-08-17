@@ -1,7 +1,7 @@
 [![Travis](https://img.shields.io/travis/toddbluhm/env-cmd.svg?maxAge=2592000)](https://travis-ci.org/toddbluhm/env-cmd)
 [![Coveralls](https://img.shields.io/coveralls/toddbluhm/env-cmd.svg?maxAge=2592000)](https://coveralls.io/github/toddbluhm/env-cmd)
-[![npm](https://img.shields.io/npm/toddbluhm/env-cmd.svg?maxAge=2592000)](https://www.npmjs.com/package/env-cmd)
-[![npm](https://img.shields.io/npm/toddbluhm/env-cmd.svg?maxAge=2592000)](https://www.npmjs.com/package/env-cmd)
+[![npm](https://img.shields.io/npm/dm/env-cmd.svg?maxAge=2592000)](https://www.npmjs.com/package/env-cmd)
+[![npm](https://img.shields.io/npm/l/env-cmd.svg?maxAge=2592000)](https://www.npmjs.com/package/env-cmd)
 
 # env-cmd
 A simple node program for executing commands using an environment from an env file
