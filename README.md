@@ -11,7 +11,7 @@ A simple node program for executing commands using an environment from an env fi
 `npm install env-cmd`
 
 ## Usage
-**Environment file ``./test/.env`**
+**Environment file `./test/.env`**
 ```
 # This is a comment
 ENV1=THANKS

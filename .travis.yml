@@ -2,19 +2,25 @@ sudo: required
 dist: trusty
 
 language: node_js
-node_js: "4"
+node_js:
+  - "4"
+  - "5"
+  - "6"
+
+env:
+  global:
+    - COVERALLS_REPO_TOKEN=1L5dixUbmMRqry59TMNv2EoYuEBtUKSWC
+    - COVERALLS_PARALLEL=true
 
 cache:
   directories:
     - node_modules
-
-matrix:
-  include:
-    - node_js: "5"
-    - node_js: "6"
 
 script:
   - npm run test-cover
 
 after_script:
   - npm run coveralls
+
+notifications:
+  webhooks: https://coveralls.io/webhook?repo_token=COVERALLS_REPO_TOKEN
