@@ -41,6 +41,10 @@ Because sometimes its just too cumbersome passing lots of environment variables 
 
 **Do not commit sensitive env data to a public git repo!**
 
+## Related Projects
+
+[`cross-env`](https://github.com/kentcdodds/cross-env) - Cross platform setting of environment scripts
+
 ## Special Thanks
 
-Special thanks to [cross-env](https://github.com/kentcdodds/cross-env) for inspiration (use's the same `cross-spawn` lib underneath too).
+Special thanks to [`cross-env`](https://github.com/kentcdodds/cross-env) for inspiration (use's the same `cross-spawn` lib underneath too).
