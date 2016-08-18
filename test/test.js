@@ -27,15 +27,13 @@ const ParseArgs = lib.ParseArgs
 const ParseEnvString = lib.ParseEnvString
 const PrintHelp = lib.PrintHelp
 const HandleUncaughtExceptions = lib.HandleUncaughtExceptions
+const StripComments = lib.StripComments
+const StripEmptyLines = lib.StripEmptyLines
+const ParseEnvVars = lib.ParseEnvVars
 
 describe('env-cmd', function () {
   describe('ParseArgs', function () {
-    it('should parse out the -e envfile path', function () {
-      const parsedArgs = ParseArgs(['./test/envFile', 'command', 'cmda1', 'cmda2'])
-      assert(parsedArgs.envFilePath === path.join(__dirname, 'envFile'))
-    })
-
-    it('should parse out the --env envfile path', function () {
+    it('should parse out the envfile path', function () {
       const parsedArgs = ParseArgs(['./test/envFile', 'command', 'cmda1', 'cmda2'])
       assert(parsedArgs.envFilePath === path.join(__dirname, 'envFile'))
     })
@@ -64,35 +62,70 @@ describe('env-cmd', function () {
   })
 
   describe('ParseEnvString', function () {
-    it('should parse out vars in the environment variable string', function () {
+    it('should parse env vars and merge (overwrite) with process.env vars', function () {
+      process.env.TEST = 'SOME TEST VAR'
+      process.env.NODE_ENV = 'development'
       const env = ParseEnvString('BOB=COOL\nNODE_ENV=dev\nANSWER=42\n')
       assert(env.BOB === 'COOL')
       assert(env.NODE_ENV === 'dev')
       assert(env.ANSWER === '42')
+      assert(env.TEST === 'SOME TEST VAR')
+    })
+  })
+
+  describe('StripComments', function () {
+    it('should strip out all full line comments', function () {
+      const envString = StripComments('#BOB=COOL\nNODE_ENV=dev\nANSWER=42 AND COUNTING\n#AnotherComment\n')
+      assert(envString === '\nNODE_ENV=dev\nANSWER=42 AND COUNTING\n\n')
     })
 
-    it('should ignore comment lines (starting with \'#\') and empty lines', function () {
-      const env = ParseEnvString('#BOB=COOL\nNODE_ENV=dev\n\n#ANSWER=42\n')
-      assert(env.BOB === undefined)
-      assert(env.NODE_ENV === 'dev')
-      assert(env.ANSWER === undefined)
+    it('should strip out all inline comments and preceding spaces', function () {
+      const envString = StripComments('BOB=COOL#inline1\nNODE_ENV=dev #cool\nANSWER=42 AND COUNTING  #multiple-spaces\n')
+      assert(envString === 'BOB=COOL\nNODE_ENV=dev\nANSWER=42 AND COUNTING\n')
+    })
+  })
+
+  describe('StripEmptyLines', function () {
+    it('should strip out all empty lines', function () {
+      const envString = StripEmptyLines('\nBOB=COOL\n\nNODE_ENV=dev\n\nANSWER=42 AND COUNTING\n\n')
+      assert(envString === 'BOB=COOL\nNODE_ENV=dev\nANSWER=42 AND COUNTING\n')
+    })
+  })
+
+  describe('ParseEnvVars', function () {
+    it('should parse out all env vars in string when not ending with \'\\n\'', function () {
+      const envVars = ParseEnvVars('BOB=COOL\nNODE_ENV=dev\nANSWER=42 AND COUNTING')
+      assert(envVars.BOB === 'COOL')
+      assert(envVars.NODE_ENV === 'dev')
+      assert(envVars.ANSWER === '42 AND COUNTING')
     })
 
-    it('should parse out env vars even if string does not end in \'\\n\'', function () {
-      const env = ParseEnvString('BOB=COOL\nNODE_ENV=dev\nANSWER=42')
-      assert(env.BOB === 'COOL')
-      assert(env.NODE_ENV === 'dev')
-      assert(env.ANSWER === '42')
+    it('should parse out all env vars in string with format \'key=value\'', function () {
+      const envVars = ParseEnvVars('BOB=COOL\nNODE_ENV=dev\nANSWER=42 AND COUNTING\n')
+      assert(envVars.BOB === 'COOL')
+      assert(envVars.NODE_ENV === 'dev')
+      assert(envVars.ANSWER === '42 AND COUNTING')
     })
 
-    it('should throw parse error due to malformed env var string', function () {
-      try {
-        ParseEnvString('BOB=COOL\nNODE_ENV dev\nANSWER=42\n')
-      } catch (e) {
-        assert(e.message === 'Error! Malformed line in env file.')
-        return
-      }
-      assert(!'No exception thrown')
+    it('should parse out all env vars in string with format \'key value\'', function () {
+      const envVars = ParseEnvVars('BOB COOL\nNODE_ENV dev\nANSWER 42 AND COUNTING\n')
+      assert(envVars.BOB === 'COOL')
+      assert(envVars.NODE_ENV === 'dev')
+      assert(envVars.ANSWER === '42 AND COUNTING')
+    })
+
+    it('should parse out all env vars in string with mixed format \'key=value\' & \'key value\'', function () {
+      const envVars = ParseEnvVars('BOB=COOL\nNODE_ENV dev\nANSWER=42 AND COUNTING\n')
+      assert(envVars.BOB === 'COOL')
+      assert(envVars.NODE_ENV === 'dev')
+      assert(envVars.ANSWER === '42 AND COUNTING')
+    })
+
+    it('should ignore invalid lines', function () {
+      const envVars = ParseEnvVars('BOB=COOL\nTHISIS$ANDINVALIDLINE\nANSWER=42 AND COUNTING\n')
+      assert(Object.keys(envVars).length === 2)
+      assert(envVars.BOB === 'COOL')
+      assert(envVars.ANSWER === '42 AND COUNTING')
     })
   })
 
