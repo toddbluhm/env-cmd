@@ -39,6 +39,7 @@ or
 These are the currently accepted environment file formats. If any other formats are desired please create an issue.
 - `key=value`
 - `key value`
+- Key/value pairs as JSON
 
 ## Why
 

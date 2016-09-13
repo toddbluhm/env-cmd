@@ -20,6 +20,11 @@ const spawnStub = sinon.spy(() => ({
 const lib = proxyquire('../lib', {
   'cross-spawn': {
     spawn: spawnStub
+  },
+  [path.resolve(process.cwd(), 'test/.env.json')]: {
+    BOB: 'COOL',
+    NODE_ENV: 'dev',
+    ANSWER: '42'
   }
 })
 const EnvCmd = lib.EnvCmd
@@ -126,6 +131,26 @@ describe('env-cmd', function () {
       assert(Object.keys(envVars).length === 2)
       assert(envVars.BOB === 'COOL')
       assert(envVars.ANSWER === '42 AND COUNTING')
+    })
+  })
+
+  describe('JSON format support', function () {
+    before(function () {
+      this.readFileStub = sinon.stub(fs, 'readFileSync')
+      proxyquire.noCallThru()
+    })
+    after(function () {
+      spawnStub.reset()
+      this.readFileStub.restore()
+      proxyquire.callThru()
+    })
+    it('should parse env vars from JSON with node module loader if file extension is .json', function () {
+      EnvCmd(['./test/.env.json', 'echo', '$BOB'])
+      assert(spawnStub.args[0][0] === 'echo')
+      assert(spawnStub.args[0][1][0] === '$BOB')
+      assert(spawnStub.args[0][2].env.BOB === 'COOL')
+      assert(spawnStub.args[0][2].env.NODE_ENV === 'dev')
+      assert(spawnStub.args[0][2].env.ANSWER === '42')
     })
   })
 
