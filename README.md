@@ -54,3 +54,7 @@ Because sometimes its just too cumbersome passing lots of environment variables 
 ## Special Thanks
 
 Special thanks to [`cross-env`](https://github.com/kentcdodds/cross-env) for inspiration (use's the same `cross-spawn` lib underneath too).
+
+## Contributors
+
+- Eric Lanehart
