@@ -39,6 +39,7 @@ or
 These are the currently accepted environment file formats. If any other formats are desired please create an issue.
 - `key=value`
 - `key value`
+- Key/value pairs as JSON
 
 ## Why
 
@@ -53,3 +54,7 @@ Because sometimes its just too cumbersome passing lots of environment variables 
 ## Special Thanks
 
 Special thanks to [`cross-env`](https://github.com/kentcdodds/cross-env) for inspiration (use's the same `cross-spawn` lib underneath too).
+
+## Contributors
+
+- Eric Lanehart

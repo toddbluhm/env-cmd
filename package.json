@@ -24,6 +24,9 @@
     "run"
   ],
   "author": "Todd Bluhm",
+  "contributors": [
+    "Eric Lanehart <eric@pushred.co>"
+  ],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/toddbluhm/env-cmd/issues"
