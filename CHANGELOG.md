@@ -1,5 +1,8 @@
 # Changelog
 
+## 2.2.0
+- **Feature**: Added support for .json env files (special thanks to Eric Lanehart!)
+
 ## 2.1.0
 - **Feature**: Added support for `key value` mapping in env vars file
 - **Feature**: Added support for inline comments `ENV=VALUE # inline comment`
