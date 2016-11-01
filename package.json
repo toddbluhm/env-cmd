@@ -33,7 +33,7 @@
   },
   "homepage": "https://github.com/toddbluhm/env-cmd#readme",
   "dependencies": {
-    "cross-spawn": "^4.0.0"
+    "cross-spawn": "^5.0.0"
   },
   "devDependencies": {
     "better-assert": "^1.0.2",
