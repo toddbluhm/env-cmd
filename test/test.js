@@ -25,6 +25,11 @@ const lib = proxyquire('../lib', {
     BOB: 'COOL',
     NODE_ENV: 'dev',
     ANSWER: '42'
+  },
+  [path.resolve(process.cwd(), 'test/.env.js')]: {
+    BOB: 'COOL',
+    NODE_ENV: 'dev',
+    ANSWER: '42'
   }
 })
 const EnvCmd = lib.EnvCmd
@@ -134,7 +139,7 @@ describe('env-cmd', function () {
     })
   })
 
-  describe('JSON format support', function () {
+  describe('JSON and JS format support', function () {
     before(function () {
       this.readFileStub = sinon.stub(fs, 'readFileSync')
       proxyquire.noCallThru()
@@ -146,6 +151,14 @@ describe('env-cmd', function () {
     })
     it('should parse env vars from JSON with node module loader if file extension is .json', function () {
       EnvCmd(['./test/.env.json', 'echo', '$BOB'])
+      assert(spawnStub.args[0][0] === 'echo')
+      assert(spawnStub.args[0][1][0] === '$BOB')
+      assert(spawnStub.args[0][2].env.BOB === 'COOL')
+      assert(spawnStub.args[0][2].env.NODE_ENV === 'dev')
+      assert(spawnStub.args[0][2].env.ANSWER === '42')
+    })
+    it('should parse env vars from JavaScript with node module loader if file extension is .js', function () {
+      EnvCmd(['./test/.env.js', 'echo', '$BOB'])
       assert(spawnStub.args[0][0] === 'echo')
       assert(spawnStub.args[0][1][0] === '$BOB')
       assert(spawnStub.args[0][2].env.BOB === 'COOL')
