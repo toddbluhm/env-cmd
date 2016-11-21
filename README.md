@@ -59,3 +59,4 @@ Special thanks to [`cross-env`](https://github.com/kentcdodds/cross-env) for ins
 ## Contributors
 
 - Eric Lanehart
+- Jon Scheiding
