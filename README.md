@@ -40,6 +40,7 @@ These are the currently accepted environment file formats. If any other formats 
 - `key=value`
 - `key value`
 - Key/value pairs as JSON
+- JavaScript file exporting an object
 
 ## Why
 
@@ -58,3 +59,4 @@ Special thanks to [`cross-env`](https://github.com/kentcdodds/cross-env) for ins
 ## Contributors
 
 - Eric Lanehart
+- Jon Scheiding
