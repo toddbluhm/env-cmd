@@ -3,6 +3,7 @@
 [![npm](https://img.shields.io/npm/v/env-cmd.svg?maxAge=86400)](https://www.npmjs.com/package/env-cmd)
 [![npm](https://img.shields.io/npm/dm/env-cmd.svg?maxAge=86400)](https://www.npmjs.com/package/env-cmd)
 [![npm](https://img.shields.io/npm/l/env-cmd.svg?maxAge=2592000)](https://www.npmjs.com/package/env-cmd)
+[![Standard - JavaScript Style Guide](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com/)
 
 # env-cmd
 A simple node program for executing commands using an environment from an env file.
@@ -33,6 +34,25 @@ or
 ```sh
 ./node_modules/.bin/env-cmd ./test/.env node index.js
 ```
+or
+
+**.env-cmdrc file `.env-cmdrc`**
+
+```json
+{
+  "development": {
+    "ENV1": "Thanks",
+    "ENV2": "For All"
+  },
+  "production": {
+    "ENV1": "The Fish"
+  }
+}
+```
+
+```sh
+./node_modules/.bin/env-cmd production node index.js
+```
 
 ## Environment File Formats
 
@@ -41,6 +61,7 @@ These are the currently accepted environment file formats. If any other formats 
 - `key value`
 - Key/value pairs as JSON
 - JavaScript file exporting an object
+- `.env-cmdrc` file (as valid json) in execution directory
 
 ## Why
 
@@ -60,3 +81,10 @@ Special thanks to [`cross-env`](https://github.com/kentcdodds/cross-env) for ins
 
 - Eric Lanehart
 - Jon Scheiding
+
+## Contributing Guide
+I welcome all pull requests. Please make sure you add appropriate test cases for any features added. Before opening a PR please make sure to run the following scripts:
+
+- `npm run lint` checks for code errors and formats according to [js-standard](https://github.com/feross/standard)
+- `npm test` make sure all tests pass
+- `npm run test-cover` make sure the coverage has not decreased from current master

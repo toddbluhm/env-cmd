@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.0.0
+- **Feature**: Added ability to use an `.env-cmdrc` file to hold multiple configs
+- **Feature**: Added ability to pass in a regular `.js` file exporting an object for your env file (special thanks to Jon Scheiding!)
+- **Change**: Updated core `cross-spawn` lib to 5.0.1
+
 ## 2.2.0
 - **Feature**: Added support for .json env files (special thanks to Eric Lanehart!)
 

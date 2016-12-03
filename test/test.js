@@ -14,7 +14,8 @@ const fs = require('fs')
 
 const spawnStub = sinon.spy(() => ({
   on: sinon.stub(),
-  exit: sinon.stub()
+  exit: sinon.stub(),
+  kill: sinon.stub()
 }))
 
 const lib = proxyquire('../lib', {
@@ -43,9 +44,9 @@ const ParseEnvVars = lib.ParseEnvVars
 
 describe('env-cmd', function () {
   describe('ParseArgs', function () {
-    it('should parse out the envfile path', function () {
+    it('should parse out the envfile', function () {
       const parsedArgs = ParseArgs(['./test/envFile', 'command', 'cmda1', 'cmda2'])
-      assert(parsedArgs.envFilePath === path.join(__dirname, 'envFile'))
+      assert(parsedArgs.envFile === './test/envFile')
     })
 
     it('should parse out the command', function () {
@@ -145,9 +146,11 @@ describe('env-cmd', function () {
       proxyquire.noCallThru()
     })
     after(function () {
-      spawnStub.reset()
       this.readFileStub.restore()
       proxyquire.callThru()
+    })
+    afterEach(function () {
+      spawnStub.reset()
     })
     it('should parse env vars from JSON with node module loader if file extension is .json', function () {
       EnvCmd(['./test/.env.json', 'echo', '$BOB'])
@@ -164,6 +167,51 @@ describe('env-cmd', function () {
       assert(spawnStub.args[0][2].env.BOB === 'COOL')
       assert(spawnStub.args[0][2].env.NODE_ENV === 'dev')
       assert(spawnStub.args[0][2].env.ANSWER === '42')
+    })
+  })
+
+  describe('.RC file support (.env-cmdrc)', function () {
+    before(function () {
+      this.readFileStub = sinon.stub(fs, 'readFileSync')
+      this.readFileStub.returns(`{
+        "development": {
+          "BOB": "COOL",
+          "NODE_ENV": "dev",
+          "ANSWER": "42"
+        },
+        "production": {
+          "BOB": "COOL",
+          "NODE_ENV": "prod",
+          "ANSWER": "43"
+        }
+      }`)
+      this.existsSyncStub = sinon.stub(fs, 'existsSync')
+      this.existsSyncStub.returns(true)
+      proxyquire.noCallThru()
+    })
+    after(function () {
+      this.readFileStub.restore()
+      this.existsSyncStub.restore()
+      proxyquire.callThru()
+    })
+    afterEach(function () {
+      spawnStub.reset()
+    })
+    it('should parse env vars from .env-cmdrc file using development env', function () {
+      EnvCmd(['development', 'echo', '$BOB'])
+      assert(spawnStub.args[0][0] === 'echo')
+      assert(spawnStub.args[0][1][0] === '$BOB')
+      assert(spawnStub.args[0][2].env.BOB === 'COOL')
+      assert(spawnStub.args[0][2].env.NODE_ENV === 'dev')
+      assert(spawnStub.args[0][2].env.ANSWER === '42')
+    })
+    it('should parse env vars from .env-cmdrc file using production env', function () {
+      EnvCmd(['production', 'echo', '$BOB'])
+      assert(spawnStub.args[0][0] === 'echo')
+      assert(spawnStub.args[0][1][0] === '$BOB')
+      assert(spawnStub.args[0][2].env.BOB === 'COOL')
+      assert(spawnStub.args[0][2].env.NODE_ENV === 'prod')
+      assert(spawnStub.args[0][2].env.ANSWER === '43')
     })
   })
 
@@ -209,8 +257,10 @@ describe('env-cmd', function () {
       assert(helpText.match(/Usage/g).length !== 0)
       assert(helpText.match(/env-cmd/).length !== 0)
       assert(helpText.match(/env_file/).length !== 0)
+      assert(helpText.match(/env_name/).length !== 0)
     })
   })
+
   describe('HandleUncaughtExceptions', function () {
     beforeEach(function () {
       this.logStub = sinon.stub(console, 'log')

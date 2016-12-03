@@ -1,6 +1,6 @@
 {
   "name": "env-cmd",
-  "version": "2.2.0",
+  "version": "3.0.0",
   "description": "Executes a command using the envs in the provided env file",
   "main": "lib/index.js",
   "bin": {
@@ -9,7 +9,9 @@
   "scripts": {
     "test": "mocha",
     "test-cover": "istanbul cover node_modules/.bin/_mocha -- -R spec",
-    "coveralls": "coveralls < coverage/lcov.info"
+    "test-lint": "standard",
+    "coveralls": "coveralls < coverage/lcov.info",
+    "lint": "standard --fix"
   },
   "repository": {
     "type": "git",
@@ -42,6 +44,7 @@
     "istanbul": "^0.4.4",
     "mocha": "^3.0.2",
     "proxyquire": "^1.7.10",
-    "sinon": "^1.17.5"
+    "sinon": "^1.17.5",
+    "standard": "^8.6.0"
   }
 }
