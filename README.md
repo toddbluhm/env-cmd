@@ -9,9 +9,12 @@
 A simple node program for executing commands using an environment from an env file.
 
 ## Install
-`npm install env-cmd`
+`npm install env-cmd` or `npm install -g env-cmd`
 
 ## Usage
+
+### Environment File Usage
+
 **Environment file `./test/.env`**
 ```
 # This is a comment
@@ -40,9 +43,10 @@ or
 ```sh
 ./node_modules/.bin/env-cmd ./test/.env node index.js
 ```
-or
 
-**.env-cmdrc file `.env-cmdrc`**
+### .rc file usage
+
+**.rc file `.env-cmdrc`**
 
 ```json
 {
@@ -56,6 +60,7 @@ or
 }
 ```
 
+**Terminal**
 ```sh
 ./node_modules/.bin/env-cmd production node index.js
 ```
