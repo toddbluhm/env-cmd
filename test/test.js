@@ -40,6 +40,7 @@ const PrintHelp = lib.PrintHelp
 const HandleUncaughtExceptions = lib.HandleUncaughtExceptions
 const StripComments = lib.StripComments
 const StripEmptyLines = lib.StripEmptyLines
+const StripDoubleQuotes = lib.StripDoubleQuotes
 const ParseEnvVars = lib.ParseEnvVars
 
 describe('env-cmd', function () {
@@ -94,12 +95,24 @@ describe('env-cmd', function () {
       const envString = StripComments('BOB=COOL#inline1\nNODE_ENV=dev #cool\nANSWER=42 AND COUNTING  #multiple-spaces\n')
       assert(envString === 'BOB=COOL\nNODE_ENV=dev\nANSWER=42 AND COUNTING\n')
     })
+
+    it('should not strip out values that are surrouned in double quotes', function () {
+      const envString = StripComments('BOB="#COOL"#inline1\nNODE_ENV=dev #cool\nANSWER="#42 AND COUNTING"  #multiple-spaces\n')
+      assert(envString === 'BOB="#COOL"\nNODE_ENV=dev\nANSWER="#42 AND COUNTING"\n')
+    })
   })
 
   describe('StripEmptyLines', function () {
     it('should strip out all empty lines', function () {
       const envString = StripEmptyLines('\nBOB=COOL\n\nNODE_ENV=dev\n\nANSWER=42 AND COUNTING\n\n')
       assert(envString === 'BOB=COOL\nNODE_ENV=dev\nANSWER=42 AND COUNTING\n')
+    })
+  })
+
+  describe('StripDoubleQuotes', function () {
+    it('should strip out single double quotes', function () {
+      const envString = StripDoubleQuotes(`BOB="#COOL"\nNODE_ENV=dev\nANSWER="42 AND #COUNTING"\nCOOL=""quoted""\nAwesome="'singles'"`)
+      assert(envString === `BOB=#COOL\nNODE_ENV=dev\nANSWER=42 AND #COUNTING\nCOOL="quoted"\nAwesome='singles'`)
     })
   })
 

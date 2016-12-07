@@ -18,6 +18,12 @@ A simple node program for executing commands using an environment from an env fi
 ENV1=THANKS # Yay inline comments support
 ENV2=FOR ALL
 ENV3 THE FISH # This format is also accepted
+
+# Surround value in double quotes when using a # symbol in the value
+ENV4="ValueContains#Symbol"
+
+# If using double quotes as part of the value, you must surround the value in double quotes
+ENV5=""Value includes double quotes""
 ```
 
 **Package.json**
