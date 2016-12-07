@@ -1,5 +1,10 @@
 # Changelog
 
+## 4.0.0
+- ***BREAKING***: In order to use double quotes as part of the env value, you must now surround those double quotes with an additional set of quotes: So `ENV1="value"` -> `ENV1=""value""` (this only applies to double quotes, single quotes continue to work as normal)
+- **Bug**: Fixed bug in the comment stripper function that would remove env values that included a `#`. Now, in order to use a `#` in a env value, you have to surround that env value in double quotes: `ENV="Some#Value"`.
+- **Bug**: Fixed a major bug with the `.env-cmdrc` file that would not add system env vars back in after reading the `.env-cmdrc` file. This meant that system vars like `PATH` would not exist when running the command.
+
 ## 3.0.0
 - **Feature**: Added ability to use an `.env-cmdrc` file to hold multiple configs
 - **Feature**: Added ability to pass in a regular `.js` file exporting an object for your env file (special thanks to Jon Scheiding!)
