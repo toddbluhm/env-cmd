@@ -28,7 +28,8 @@
   "author": "Todd Bluhm",
   "contributors": [
     "Eric Lanehart <eric@pushred.co>",
-    "Jon Scheiding <jonscheiding@gmail.com>"
+    "Jon Scheiding <jonscheiding@gmail.com>",
+    "serapath (Alexander Praetorius) <dev@serapath.de>"
   ],
   "license": "MIT",
   "bugs": {

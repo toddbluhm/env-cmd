@@ -250,13 +250,14 @@ describe('env-cmd', function () {
       assert(spawnStub.args[0][2].env.ANSWER === '42')
     })
 
-    it('should throw error if file does not exist', function () {
+    it('should throw error if file and fallback does not exist', function () {
       this.readFileStub.restore()
+
       try {
         EnvCmd(['./test/.non-existent-file', 'echo', '$BOB'])
       } catch (e) {
-        const resolvedPath = path.join(process.cwd(), 'test/.non-existent-file')
-        assert(e.message === `Error! Could not find or read file at ${resolvedPath}`)
+        const resolvedPath = path.join(process.cwd(), '.env')
+        assert(e.message ===`Error! Could not fallback to find or read file at ${resolvedPath}`)
         return
       }
       assert(!'No exception thrown')
