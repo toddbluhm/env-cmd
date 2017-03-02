@@ -257,7 +257,7 @@ describe('env-cmd', function () {
         EnvCmd(['./test/.non-existent-file', 'echo', '$BOB'])
       } catch (e) {
         const resolvedPath = path.join(process.cwd(), '.env')
-        assert(e.message ===`Error! Could not fallback to find or read file at ${resolvedPath}`)
+        assert(e.message === `Error! Could not fallback to find or read file at ${resolvedPath}`)
         return
       }
       assert(!'No exception thrown')
