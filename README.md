@@ -15,6 +15,9 @@ A simple node program for executing commands using an environment from an env fi
 
 ### Environment File Usage
 
+If the specified environment file can't be found, an error message is logged.  
+If then `.env` fallback file can't be found too, an error is thrown.
+
 **Environment file `./test/.env`**
 ```
 # This is a comment
@@ -28,8 +31,18 @@ ENV4="ValueContains#Symbol"
 # If using double quotes as part of the value, you must surround the value in double quotes
 ENV5=""Value includes double quotes""
 ```
+**Fallback Environment file `./.env`**
+```
+# This can be used as an example fallback
+ENV1=foo
+ENV2=bar
+ENV3=baz
+ENV4=quux
+ENV5=gorge
+```
 
 **Package.json**
+to use `./test/.env`
 ```json
 {
   "scripts": {
@@ -37,12 +50,25 @@ ENV5=""Value includes double quotes""
   }
 }
 ```
+
+uses `./.env` as a fallback
+```json
+{
+  "scripts": {
+    "test": "env-cmd ./test/.doesntExist mocha -R spec"
+  }
+}
+```
 or
 
 **Terminal**
 ```sh
+# uses ./test/.env
 ./node_modules/.bin/env-cmd ./test/.env node index.js
+# uses ./.env as a fallback, because i can't find `./test/.myEnv`
+./node_modules/.bin/env-cmd ./test/.myEnv node index.js
 ```
+
 
 ### .rc file usage
 
