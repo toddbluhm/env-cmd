@@ -1,5 +1,13 @@
 # Changelog
 
+## 5.0.0
+- ***BREAKING***: Inline comments are no longer allowed in `.env` files (full line comments are still allowed)
+- ***BREAKING***: `.env` file no longer supports the `env var` format (only `env=var` is allowed now)
+- ***BREAKING***: Double Quotes are no longer needed when using special symbols (such as `#`) in the value portion of an env var
+- **Feature**: if the given env file cannot be found, it will auto default to searching
+the execution directory for a file called `.env` and use that as a fallback. See README for why this is
+helpful. (special thanks to Alexander Praetorius)
+
 ## 4.0.0
 - ***BREAKING***: In order to use double quotes as part of the env value, you must now surround those double quotes with an additional set of quotes: So `ENV1="value"` -> `ENV1=""value""` (this only applies to double quotes, single quotes continue to work as normal)
 - **Bug**: Fixed bug in the comment stripper function that would remove env values that included a `#`. Now, in order to use a `#` in a env value, you have to surround that env value in double quotes: `ENV="Some#Value"`.
