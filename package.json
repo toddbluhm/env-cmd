@@ -45,7 +45,7 @@
     "istanbul": "^0.4.4",
     "mocha": "^3.0.2",
     "proxyquire": "^1.7.10",
-    "sinon": "^1.17.5",
+    "sinon": "^2.0.0",
     "standard": "^9.0.0"
   }
 }
