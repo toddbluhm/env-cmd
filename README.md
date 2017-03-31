@@ -33,7 +33,6 @@ or
 
 **Terminal**
 ```sh
-# uses ./test/.env
 ./node_modules/.bin/env-cmd ./test/.env node index.js
 ```
 
@@ -79,7 +78,7 @@ or
 
 ### .rc file usage
 
-For more complex projects, a `.env-cmdrc` file can be defined in the root directory and supports as many environments as you want. Instead of passing the path to a `.env` file to `env-cmd`, simple pass the name of the environment you want use thats in your `.env-cmdrc` file.
+For more complex projects, a `.env-cmdrc` file can be defined in the root directory and supports as many environments as you want. Instead of passing the path to a `.env` file to `env-cmd`, simply pass the name of the environment you want to use thats in your `.env-cmdrc` file.
 
 **.rc file `.env-cmdrc`**
 
