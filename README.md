@@ -98,7 +98,14 @@ For more complex projects, a `.env-cmdrc` file can be defined in the root direct
 ```sh
 ./node_modules/.bin/env-cmd production node index.js
 ```
+### --no-override option
 
+Sometimes you want to set env variable which is set in a file without changing env file.
+
+**Terminal**
+```sh
+ENV1=welcome ./node_modules/.bin/env-cmd --no-override ./test/.env node index.js
+```
 ## Environment File Formats
 
 These are the currently accepted environment file formats. If any other formats are desired please create an issue.
