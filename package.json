@@ -46,6 +46,6 @@
     "mocha": "^3.0.2",
     "proxyquire": "^1.7.10",
     "sinon": "^2.0.0",
-    "standard": "^9.0.0"
+    "standard": "^10.0.1"
   }
 }
