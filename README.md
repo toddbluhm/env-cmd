@@ -133,6 +133,7 @@ Special thanks to [`cross-env`](https://github.com/kentcdodds/cross-env) for ins
 - Eric Lanehart
 - Jon Scheiding
 - Alexander Praetorius
+- Anton Versal
 
 ## Contributing Guide
 I welcome all pull requests. Please make sure you add appropriate test cases for any features added. Before opening a PR please make sure to run the following scripts:

@@ -1,5 +1,10 @@
 # Changelog
 
+## 5.1.0
+- **Feature**: Added new option `--no-override` that when passed will make it so that the env file
+vars will not overwrite already defined env vars on `process.env` or in the shell
+- **Updated Dev-Dependencies**: `standard >= 10.0.0`, `sinon >= 2.0.0`
+
 ## 5.0.0
 - ***BREAKING***: Inline comments are no longer allowed in `.env` files (full line comments are still allowed)
 - ***BREAKING***: `.env` file no longer supports the `env var` format (only `env=var` is allowed now)
