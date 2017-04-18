@@ -100,7 +100,7 @@ For more complex projects, a `.env-cmdrc` file can be defined in the root direct
 ```
 ### --no-override option
 
-Sometimes you want to set env variable which is set in a file without changing env file.
+Sometimes you want to set env variables from a file without overriding existing process env vars.
 
 **Terminal**
 ```sh
