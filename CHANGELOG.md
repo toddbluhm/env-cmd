@@ -1,5 +1,15 @@
 # Changelog
 
+## 6.0.0
+- ***BREAKING***: Fallback to default `.env` file behavior is no longer the default behavior. You must specify `--fallback` option for that behavior now.
+- ***BREAKING***: A specific node version has been set in package.json. Current minimum version is `>=4.0.0`. *Note: the implied minimum version
+before this release was always `4.0.0`, but now it is explicitly set and could produce warnings by npm if included in projects that utilizes a
+node version that is less than `4.0.0`.*
+- **Feature**: Added `--fallback` option to allow for falling back to the default `.env` file if the provided `.env` file is not found.
+- **Feature**: Added ability to select multiple environments from the `.env-cmdrc` file. The environments override each other like this:
+`development,production` where `production` vars override `development` vars if they share the same vars.
+- **Bug**: `env-cmd` no longer crashes when it cannot find the provided `.env` file. Instead, it will execute as normal, but without included any custom env vars. *Note: it will still include system and shell vars.*
+
 ## 5.1.0
 - **Feature**: Added new option `--no-override` that when passed will make it so that the env file
 vars will not overwrite already defined env vars on `process.env` or in the shell
