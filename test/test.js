@@ -40,11 +40,15 @@ const PrintHelp = lib.PrintHelp
 const HandleUncaughtExceptions = lib.HandleUncaughtExceptions
 const StripComments = lib.StripComments
 const StripEmptyLines = lib.StripEmptyLines
-const StripDoubleQuotes = lib.StripDoubleQuotes
 const ParseEnvVars = lib.ParseEnvVars
 
 describe('env-cmd', function () {
   describe('ParseArgs', function () {
+    it('should parse out --no-override option ', function () {
+      const parsedArgs = ParseArgs(['--no-override', './test/envFile', 'command', 'cmda1', 'cmda2'])
+      assert(parsedArgs.noOverride === true)
+    })
+
     it('should parse out the envfile', function () {
       const parsedArgs = ParseArgs(['./test/envFile', 'command', 'cmda1', 'cmda2'])
       assert(parsedArgs.envFile === './test/envFile')
@@ -90,29 +94,12 @@ describe('env-cmd', function () {
       const envString = StripComments('#BOB=COOL\nNODE_ENV=dev\nANSWER=42 AND COUNTING\n#AnotherComment\n')
       assert(envString === '\nNODE_ENV=dev\nANSWER=42 AND COUNTING\n\n')
     })
-
-    it('should strip out all inline comments and preceding spaces', function () {
-      const envString = StripComments('BOB=COOL#inline1\nNODE_ENV=dev #cool\nANSWER=42 AND COUNTING  #multiple-spaces\n')
-      assert(envString === 'BOB=COOL\nNODE_ENV=dev\nANSWER=42 AND COUNTING\n')
-    })
-
-    it('should not strip out values that are surrouned in double quotes', function () {
-      const envString = StripComments('BOB="#COOL"#inline1\nNODE_ENV=dev #cool\nANSWER="#42 AND COUNTING"  #multiple-spaces\n')
-      assert(envString === 'BOB="#COOL"\nNODE_ENV=dev\nANSWER="#42 AND COUNTING"\n')
-    })
   })
 
   describe('StripEmptyLines', function () {
     it('should strip out all empty lines', function () {
       const envString = StripEmptyLines('\nBOB=COOL\n\nNODE_ENV=dev\n\nANSWER=42 AND COUNTING\n\n')
       assert(envString === 'BOB=COOL\nNODE_ENV=dev\nANSWER=42 AND COUNTING\n')
-    })
-  })
-
-  describe('StripDoubleQuotes', function () {
-    it('should strip out single double quotes', function () {
-      const envString = StripDoubleQuotes(`BOB="#COOL"\nNODE_ENV=dev\nANSWER="42 AND #COUNTING"\nCOOL=""quoted""\nAwesome="'singles'"`)
-      assert(envString === `BOB=#COOL\nNODE_ENV=dev\nANSWER=42 AND #COUNTING\nCOOL="quoted"\nAwesome='singles'`)
     })
   })
 
@@ -126,20 +113,6 @@ describe('env-cmd', function () {
 
     it('should parse out all env vars in string with format \'key=value\'', function () {
       const envVars = ParseEnvVars('BOB=COOL\nNODE_ENV=dev\nANSWER=42 AND COUNTING\n')
-      assert(envVars.BOB === 'COOL')
-      assert(envVars.NODE_ENV === 'dev')
-      assert(envVars.ANSWER === '42 AND COUNTING')
-    })
-
-    it('should parse out all env vars in string with format \'key value\'', function () {
-      const envVars = ParseEnvVars('BOB COOL\nNODE_ENV dev\nANSWER 42 AND COUNTING\n')
-      assert(envVars.BOB === 'COOL')
-      assert(envVars.NODE_ENV === 'dev')
-      assert(envVars.ANSWER === '42 AND COUNTING')
-    })
-
-    it('should parse out all env vars in string with mixed format \'key=value\' & \'key value\'', function () {
-      const envVars = ParseEnvVars('BOB=COOL\nNODE_ENV dev\nANSWER=42 AND COUNTING\n')
       assert(envVars.BOB === 'COOL')
       assert(envVars.NODE_ENV === 'dev')
       assert(envVars.ANSWER === '42 AND COUNTING')
@@ -218,6 +191,7 @@ describe('env-cmd', function () {
       assert(spawnStub.args[0][2].env.NODE_ENV === 'dev')
       assert(spawnStub.args[0][2].env.ANSWER === '42')
     })
+
     it('should parse env vars from .env-cmdrc file using production env', function () {
       EnvCmd(['production', 'echo', '$BOB'])
       assert(spawnStub.args[0][0] === 'echo')
@@ -225,6 +199,16 @@ describe('env-cmd', function () {
       assert(spawnStub.args[0][2].env.BOB === 'COOL')
       assert(spawnStub.args[0][2].env.NODE_ENV === 'prod')
       assert(spawnStub.args[0][2].env.ANSWER === '43')
+    })
+
+    it('should throw error if env not in .rc file', function () {
+      try {
+        EnvCmd(['staging', 'echo', '$BOB'])
+        assert(!'Should throw missing environment error.')
+      } catch (e) {
+        assert(e.message.includes('staging'))
+        assert(e.message.includes(`.env-cmdrc`))
+      }
     })
   })
 
@@ -250,13 +234,27 @@ describe('env-cmd', function () {
       assert(spawnStub.args[0][2].env.ANSWER === '42')
     })
 
-    it('should throw error if file does not exist', function () {
+    it('should spawn a new process without overriding shell env vars', function () {
+      process.env.NODE_ENV = 'development'
+      process.env.BOB = 'SUPERCOOL'
+      this.readFileStub.returns('BOB=COOL\nNODE_ENV=dev\nANSWER=42\n')
+      EnvCmd(['--no-override', './test/.env', 'echo', '$BOB'])
+      assert(this.readFileStub.args[0][0] === path.join(process.cwd(), 'test/.env'))
+      assert(spawnStub.args[0][0] === 'echo')
+      assert(spawnStub.args[0][1][0] === '$BOB')
+      assert(spawnStub.args[0][2].env.BOB === 'SUPERCOOL')
+      assert(spawnStub.args[0][2].env.NODE_ENV === 'development')
+      assert(spawnStub.args[0][2].env.ANSWER === '42')
+    })
+
+    it('should throw error if file and fallback does not exist', function () {
       this.readFileStub.restore()
+
       try {
         EnvCmd(['./test/.non-existent-file', 'echo', '$BOB'])
       } catch (e) {
-        const resolvedPath = path.join(process.cwd(), 'test/.non-existent-file')
-        assert(e.message === `Error! Could not find or read file at ${resolvedPath}`)
+        const resolvedPath = path.join(process.cwd(), '.env')
+        assert(e.message === `Error! Could not fallback to find or read file at ${resolvedPath}`)
         return
       }
       assert(!'No exception thrown')

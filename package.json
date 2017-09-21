@@ -1,6 +1,6 @@
 {
   "name": "env-cmd",
-  "version": "4.0.0",
+  "version": "5.1.0",
   "description": "Executes a command using the envs in the provided env file",
   "main": "lib/index.js",
   "bin": {
@@ -28,7 +28,9 @@
   "author": "Todd Bluhm",
   "contributors": [
     "Eric Lanehart <eric@pushred.co>",
-    "Jon Scheiding <jonscheiding@gmail.com>"
+    "Jon Scheiding <jonscheiding@gmail.com>",
+    "serapath (Alexander Praetorius) <dev@serapath.de>",
+    "Anton Versal <ant.ver@gmail.com>"
   ],
   "license": "MIT",
   "bugs": {
@@ -44,7 +46,7 @@
     "istanbul": "^0.4.4",
     "mocha": "^3.0.2",
     "proxyquire": "^1.7.10",
-    "sinon": "^1.17.5",
-    "standard": "^8.6.0"
+    "sinon": "^2.0.0",
+    "standard": "^10.0.0"
   }
 }
