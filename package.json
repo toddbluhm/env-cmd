@@ -3,6 +3,9 @@
   "version": "5.1.0",
   "description": "Executes a command using the envs in the provided env file",
   "main": "lib/index.js",
+  "engines" : {
+    "node" : ">=6.0.0" 
+  },
   "bin": {
     "env-cmd": "bin/env-cmd.js"
   },
@@ -46,7 +49,7 @@
     "istanbul": "^0.4.4",
     "mocha": "^3.0.2",
     "proxyquire": "^1.7.10",
-    "sinon": "^2.0.0",
+    "sinon": "^3.3.0",
     "standard": "^10.0.0"
   }
 }
