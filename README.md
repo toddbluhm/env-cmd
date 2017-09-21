@@ -78,7 +78,7 @@ or
 
 ### .rc file usage
 
-For more complex projects, a `.env-cmdrc` file can be defined in the root directory and supports as many environments as you want. Instead of passing the path to a `.env` file to `env-cmd`, simply pass the name of the environment you want to use thats in your `.env-cmdrc` file.
+For more complex projects, a `.env-cmdrc` file can be defined in the root directory and supports as many environments as you want. Instead of passing the path to a `.env` file to `env-cmd`, simply pass the name of the environment you want to use thats in your `.env-cmdrc` file. You may also use multiple environment names to merge env vars together.
 
 **.rc file `.env-cmdrc`**
 
@@ -97,7 +97,11 @@ For more complex projects, a `.env-cmdrc` file can be defined in the root direct
 **Terminal**
 ```sh
 ./node_modules/.bin/env-cmd production node index.js
+# Or for multiple environments (where `production` vars override `common` vars,
+# but both are included)
+./node_modules/.bin/env-cmd common,production node index.js
 ```
+
 ### --no-override option
 
 Sometimes you want to set env variables from a file without overriding existing process env vars.

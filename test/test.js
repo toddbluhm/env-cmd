@@ -163,7 +163,8 @@ describe('env-cmd', function () {
         "development": {
           "BOB": "COOL",
           "NODE_ENV": "dev",
-          "ANSWER": "42"
+          "ANSWER": "42",
+          "TEST_CASES": true
         },
         "production": {
           "BOB": "COOL",
@@ -209,6 +210,35 @@ describe('env-cmd', function () {
         assert(e.message.includes('staging'))
         assert(e.message.includes(`.env-cmdrc`))
       }
+    })
+
+    it('should parse env vars from .env-cmdrc file using both development and production env', function () {
+      EnvCmd(['development,production', 'echo', '$BOB'])
+      assert(spawnStub.args[0][0] === 'echo')
+      assert(spawnStub.args[0][1][0] === '$BOB')
+      assert(spawnStub.args[0][2].env.BOB === 'COOL')
+      assert(spawnStub.args[0][2].env.NODE_ENV === 'prod')
+      assert(spawnStub.args[0][2].env.ANSWER === '43')
+      assert(spawnStub.args[0][2].env.TEST_CASES === true)
+    })
+
+    it('should parse env vars from .env-cmdrc file using both development and production env in reverse order', function () {
+      EnvCmd(['production,development', 'echo', '$BOB'])
+      assert(spawnStub.args[0][0] === 'echo')
+      assert(spawnStub.args[0][1][0] === '$BOB')
+      assert(spawnStub.args[0][2].env.BOB === 'COOL')
+      assert(spawnStub.args[0][2].env.NODE_ENV === 'dev')
+      assert(spawnStub.args[0][2].env.ANSWER === '42')
+      assert(spawnStub.args[0][2].env.TEST_CASES === true)
+    })
+
+    it('should not fail if only one environment name exists', function () {
+      EnvCmd(['production,test', 'echo', '$BOB'])
+      assert(spawnStub.args[0][0] === 'echo')
+      assert(spawnStub.args[0][1][0] === '$BOB')
+      assert(spawnStub.args[0][2].env.BOB === 'COOL')
+      assert(spawnStub.args[0][2].env.NODE_ENV === 'prod')
+      assert(spawnStub.args[0][2].env.ANSWER === '43')
     })
   })
 
