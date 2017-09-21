@@ -237,6 +237,29 @@ describe('env-cmd', function () {
       assert(spawnStub.args[0][2].env.NODE_ENV === 'prod')
       assert(spawnStub.args[0][2].env.ANSWER === '43')
     })
+
+    it('should throw error if .rc file is not valid JSON', function () {
+      this.readFileStub.returns(`{
+        "development": {
+          "BOB": "COOL",
+          "NODE_ENV": "dev",
+          "ANSWER": "42"
+        },
+        "production": {
+          "BOB": 'COOL',
+          "NODE_ENV": "prod",
+          "ANSWER": "43"
+        }
+      }`)
+      try {
+        EnvCmd(['staging', 'echo', '$BOB'])
+        assert(!'Should throw invalid JSON error.')
+      } catch (e) {
+        assert(e.message.includes(`.env-cmdrc`))
+        assert(e.message.includes(`parse`))
+        assert(e.message.includes(`JSON`))
+      }
+    })
   })
 
   describe('EnvCmd', function () {
