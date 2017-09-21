@@ -88,6 +88,10 @@ For more complex projects, a `.env-cmdrc` file can be defined in the root direct
     "ENV1": "Thanks",
     "ENV2": "For All"
   },
+  "test": {
+    "ENV1": "No Thanks",
+    "ENV3": "!"
+  },
   "production": {
     "ENV1": "The Fish"
   }
@@ -97,9 +101,9 @@ For more complex projects, a `.env-cmdrc` file can be defined in the root direct
 **Terminal**
 ```sh
 ./node_modules/.bin/env-cmd production node index.js
-# Or for multiple environments (where `production` vars override `common` vars,
+# Or for multiple environments (where `production` vars override `test` vars,
 # but both are included)
-./node_modules/.bin/env-cmd common,production node index.js
+./node_modules/.bin/env-cmd test,production node index.js
 ```
 
 ### `--no-override` option
