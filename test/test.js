@@ -79,13 +79,10 @@ describe('env-cmd', function () {
 
   describe('ParseEnvString', function () {
     it('should parse env vars and merge (overwrite) with process.env vars', function () {
-      process.env.TEST = 'SOME TEST VAR'
-      process.env.NODE_ENV = 'development'
       const env = ParseEnvString('BOB=COOL\nNODE_ENV=dev\nANSWER=42\n')
       assert(env.BOB === 'COOL')
       assert(env.NODE_ENV === 'dev')
       assert(env.ANSWER === '42')
-      assert(env.TEST === 'SOME TEST VAR')
     })
   })
 
@@ -240,6 +237,29 @@ describe('env-cmd', function () {
       assert(spawnStub.args[0][2].env.NODE_ENV === 'prod')
       assert(spawnStub.args[0][2].env.ANSWER === '43')
     })
+
+    it('should throw error if .rc file is not valid JSON', function () {
+      this.readFileStub.returns(`{
+        "development": {
+          "BOB": "COOL",
+          "NODE_ENV": "dev",
+          "ANSWER": "42"
+        },
+        "production": {
+          "BOB": 'COOL',
+          "NODE_ENV": "prod",
+          "ANSWER": "43"
+        }
+      }`)
+      try {
+        EnvCmd(['staging', 'echo', '$BOB'])
+        assert(!'Should throw invalid JSON error.')
+      } catch (e) {
+        assert(e.message.includes(`.env-cmdrc`))
+        assert(e.message.includes(`parse`))
+        assert(e.message.includes(`JSON`))
+      }
+    })
   })
 
   describe('EnvCmd', function () {
@@ -277,17 +297,31 @@ describe('env-cmd', function () {
       assert(spawnStub.args[0][2].env.ANSWER === '42')
     })
 
-    it('should throw error if file and fallback does not exist', function () {
+    it('should throw error if file and fallback does not exist with --fallback option', function () {
       this.readFileStub.restore()
 
       try {
-        EnvCmd(['./test/.non-existent-file', 'echo', '$BOB'])
+        EnvCmd(['--fallback', './test/.non-existent-file', 'echo', '$BOB'])
       } catch (e) {
         const resolvedPath = path.join(process.cwd(), '.env')
-        assert(e.message === `Error! Could not fallback to find or read file at ${resolvedPath}`)
+        assert(e.message === `Error! Could not find fallback file or read env file at ${resolvedPath}`)
         return
       }
       assert(!'No exception thrown')
+    })
+
+    it('should execute successfully if no env file found', function () {
+      this.readFileStub.restore()
+      process.env.NODE_ENV = 'dev'
+      process.env.ANSWER = '42'
+      delete process.env.BOB
+
+      EnvCmd(['./test/.non-existent-file', 'echo', '$BOB'])
+      assert(spawnStub.args[0][0] === 'echo')
+      assert(spawnStub.args[0][1][0] === '$BOB')
+      assert(spawnStub.args[0][2].env.BOB === undefined)
+      assert(spawnStub.args[0][2].env.NODE_ENV === 'dev')
+      assert(spawnStub.args[0][2].env.ANSWER === '42')
     })
   })
 

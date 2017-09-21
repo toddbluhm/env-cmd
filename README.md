@@ -38,7 +38,7 @@ or
 
 ## Advanced Usage
 
-### Fallback file usage
+### `--fallback` file usage option
 
 You can specify an `.env.local` (or any name) env file, add that to your `.gitignore` and use that in your local development environment. Then you can use a regular `.env` file in root directory with production configs that can get committed to a private/protected repo. When `env-cmd` cannot find the `.env.local` file it will fallback to looking for a regular `.env` file.
 
@@ -64,7 +64,7 @@ uses `./.env` as a fallback
 ```json
 {
   "scripts": {
-    "test": "env-cmd ./.env.local mocha -R spec"
+    "test": "env-cmd --fallback ./.env.local mocha -R spec"
   }
 }
 ```
@@ -76,7 +76,7 @@ or
 ./node_modules/.bin/env-cmd ./.env.local node index.js
 ```
 
-### .rc file usage
+### `.rc` file usage
 
 For more complex projects, a `.env-cmdrc` file can be defined in the root directory and supports as many environments as you want. Instead of passing the path to a `.env` file to `env-cmd`, simply pass the name of the environment you want to use thats in your `.env-cmdrc` file. You may also use multiple environment names to merge env vars together.
 
@@ -88,6 +88,10 @@ For more complex projects, a `.env-cmdrc` file can be defined in the root direct
     "ENV1": "Thanks",
     "ENV2": "For All"
   },
+  "test": {
+    "ENV1": "No Thanks",
+    "ENV3": "!"
+  },
   "production": {
     "ENV1": "The Fish"
   }
@@ -97,14 +101,14 @@ For more complex projects, a `.env-cmdrc` file can be defined in the root direct
 **Terminal**
 ```sh
 ./node_modules/.bin/env-cmd production node index.js
-# Or for multiple environments (where `production` vars override `common` vars,
+# Or for multiple environments (where `production` vars override `test` vars,
 # but both are included)
-./node_modules/.bin/env-cmd common,production node index.js
+./node_modules/.bin/env-cmd test,production node index.js
 ```
 
-### --no-override option
+### `--no-override` option
 
-Sometimes you want to set env variables from a file without overriding existing process env vars.
+Sometimes you want to set env variables from a file without overriding existing process env vars or shell env vars.
 
 **Terminal**
 ```sh
