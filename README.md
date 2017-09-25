@@ -122,6 +122,21 @@ These are the currently accepted environment file formats. If any other formats 
 - JavaScript file exporting an object
 - `.env-cmdrc` file (as valid json) in execution directory
 
+## Path Rules
+
+This lib attempts to follow standard `bash` path rules. The rules are as followed:
+
+Home Directory = `/Users/test`
+
+Working Directory = `/Users/test/Development/app`
+
+| Type | Input Path | Expanded Path |
+| -- | -- | ------------- |
+| Absolute | `/some/absolute/path.env` | `/some/absolute/path.env` |
+| Home Directory with `~` | `~/starts/on/homedir/path.env` | `/Users/test/starts/on/homedir/path.env` |
+| Relative | `./some/relative/path.env` or `some/relative/path.env` | `/Users/test/Development/app/some/relative/path.env` |
+| Relative with parent dir | `../some/relative/path.env` | `/Users/test/Development/some/relative/path.env` |
+
 ## Why
 
 Because sometimes its just too cumbersome passing lots of environment variables to scripts. Its usually just easier to have a file with all the vars in them, especially for development and testing.
