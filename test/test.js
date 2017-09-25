@@ -11,6 +11,7 @@ const path = require('path')
 const proxyquire = require('proxyquire')
 const sinon = require('sinon')
 const fs = require('fs')
+let userHomeDir = '/Users/hitchhikers-guide-to-the-galaxy'
 
 const spawnStub = sinon.spy(() => ({
   on: sinon.stub(),
@@ -31,6 +32,9 @@ const lib = proxyquire('../lib', {
     BOB: 'COOL',
     NODE_ENV: 'dev',
     ANSWER: '42'
+  },
+  'os': {
+    homedir: () => userHomeDir
   }
 })
 const EnvCmd = lib.EnvCmd
@@ -41,6 +45,7 @@ const HandleUncaughtExceptions = lib.HandleUncaughtExceptions
 const StripComments = lib.StripComments
 const StripEmptyLines = lib.StripEmptyLines
 const ParseEnvVars = lib.ParseEnvVars
+const ResolveEnvFilePath = lib.ResolveEnvFilePath
 
 describe('env-cmd', function () {
   describe('ParseArgs', function () {
@@ -355,6 +360,37 @@ describe('env-cmd', function () {
       HandleUncaughtExceptions(new Error('do not print help text now'))
       assert(this.logStub.calledOnce)
       this.logStub.restore()  // restore here so test success logs get printed
+    })
+  })
+
+  describe('ResolveEnvFilePath', function () {
+    beforeEach(function () {
+      this.cwdStub = sinon.stub(process, 'cwd')
+      this.cwdStub.returns('/Users/hitchhikers-guide-to-the-galaxy/Thanks')
+    })
+    afterEach(function () {
+      this.cwdStub.restore()
+    })
+    it('should add "fish.env" to the end of the current directory', function () {
+      const abPath = ResolveEnvFilePath('fish.env')
+      assert(abPath === '/Users/hitchhikers-guide-to-the-galaxy/Thanks/fish.env')
+    })
+    it('should add "for-all-the/fish.env" to the end of the current directory', function () {
+      const abPath = ResolveEnvFilePath('for-all-the/fish.env')
+      assert(abPath === '/Users/hitchhikers-guide-to-the-galaxy/Thanks/for-all-the/fish.env')
+    })
+    it('should set the absolute path to "/thanks/for-all-the/fish.env"', function () {
+      const abPath = ResolveEnvFilePath('/thanks/for-all-the/fish.env')
+      assert(abPath === '/thanks/for-all-the/fish.env')
+    })
+    it('should use "~" to add "fish.env" to the end of user directory', function () {
+      const abPath = ResolveEnvFilePath('~/fish.env')
+      assert(abPath === '/Users/hitchhikers-guide-to-the-galaxy/fish.env')
+    })
+    it('should leave "~" in path if no user home directory found', function () {
+      userHomeDir = ''
+      const abPath = ResolveEnvFilePath('~/fish.env')
+      assert(abPath === '/Users/hitchhikers-guide-to-the-galaxy/Thanks/~/fish.env')
     })
   })
 })
