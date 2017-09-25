@@ -1,5 +1,9 @@
 # Changelog
 
+## 7.0.0
+- ***BREAKING***: The `.env` file path resolving has been changed to allow for absolute pathing, relative pathing, and `~` home directory pathing. Please
+see Readme.md for more info about how the new pathing conventions work.
+
 ## 6.0.0
 - ***BREAKING***: Fallback to default `.env` file behavior is no longer the default behavior. You must specify `--fallback` option for that behavior now.
 - ***BREAKING***: A specific node version has been set in package.json. Current minimum version is `>=4.0.0`. *Note: the implied minimum version
