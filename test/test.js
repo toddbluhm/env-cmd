@@ -375,6 +375,14 @@ describe('env-cmd', function () {
       const abPath = ResolveEnvFilePath('fish.env')
       assert(abPath === '/Users/hitchhikers-guide-to-the-galaxy/Thanks/fish.env')
     })
+    it('should add "./fish.env" to the end of the current directory', function () {
+      const abPath = ResolveEnvFilePath('./fish.env')
+      assert(abPath === '/Users/hitchhikers-guide-to-the-galaxy/Thanks/fish.env')
+    })
+    it('should add "../fish.env" to the end of the current directory', function () {
+      const abPath = ResolveEnvFilePath('../fish.env')
+      assert(abPath === '/Users/hitchhikers-guide-to-the-galaxy/fish.env')
+    })
     it('should add "for-all-the/fish.env" to the end of the current directory', function () {
       const abPath = ResolveEnvFilePath('for-all-the/fish.env')
       assert(abPath === '/Users/hitchhikers-guide-to-the-galaxy/Thanks/for-all-the/fish.env')
