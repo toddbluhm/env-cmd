@@ -126,6 +126,21 @@ describe('env-cmd', function () {
       assert(envVars.BOB === 'COOL')
       assert(envVars.ANSWER === '42 AND COUNTING')
     })
+
+    it('should default an empty value to an empty string', function () {
+      const envVars = ParseEnvVars('EMPTY=\n')
+      assert(envVars.EMPTY === '')
+    })
+
+    it('should escape double quoted values', function () {
+      const envVars = ParseEnvVars('DOUBLE_QUOTES="double_quotes"\n')
+      assert(envVars.DOUBLE_QUOTES === 'double_quotes')
+    })
+
+    it('should escape single quoted values', function () {
+      const envVars = ParseEnvVars('SINGLE_QUOTES=\'single_quotes\'\n')
+      assert(envVars.SINGLE_QUOTES === 'single_quotes')
+    })
   })
 
   describe('JSON and JS format support', function () {
