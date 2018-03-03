@@ -141,6 +141,20 @@ describe('env-cmd', function () {
       const envVars = ParseEnvVars('SINGLE_QUOTES=\'single_quotes\'\n')
       assert(envVars.SINGLE_QUOTES === 'single_quotes')
     })
+
+    it('should preserve embedded double quotes', function () {
+      const envVars = ParseEnvVars('DOUBLE=""""\nDOUBLE_ONE=\'"double_one"\'\nDOUBLE_TWO=""double_two""\n')
+      assert(envVars.DOUBLE === '""')
+      assert(envVars.DOUBLE_ONE === '"double_one"')
+      assert(envVars.DOUBLE_TWO === '"double_two"')
+    })
+
+    it('should preserve embedded single quotes', function () {
+      const envVars = ParseEnvVars('SINGLE=\'\'\'\'\nSINGLE_ONE=\'\'single_one\'\'\nSINGLE_TWO="\'single_two\'"\n')
+      assert(envVars.SINGLE === '\'\'')
+      assert(envVars.SINGLE_ONE === '\'single_one\'')
+      assert(envVars.SINGLE_TWO === '\'single_two\'')
+    })
   })
 
   describe('JSON and JS format support', function () {
