@@ -2,6 +2,8 @@
 
 ## 8.0.0 - In Development
 - ***BREAKING***: Stripe out spaces around the `key` and `value` in an env file. In order to include a beginning/ending space in an env var value, you need to surround the value in double or single quotes. `ENV = " Value"`
+- **Bug**: Fixed some bugs around how the parent process and spawn processes are killed
+- **Change**: Updated a number of core libraries: `cross-spawn`, `coveralls`, `istanbul -> nyc`, `mocha`, `proxyquire`, `sinon`, `standard`
 
 ## 7.0.0
 - ***BREAKING***: The `.env` file path resolving has been changed to allow for absolute pathing, relative pathing, and `~` home directory pathing. Please
