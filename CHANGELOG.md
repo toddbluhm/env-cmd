@@ -1,7 +1,7 @@
 # Changelog
 
 ## 8.0.0 - In Development
-- ***BREAKING***: Spaces around the `=` in env files are now striped out. In order to include a beginning space in an env var value, you need to surround the value in double or single quotes. `ENV = " Value"`
+- ***BREAKING***: Stripe out spaces around the `key` and `value` in an env file. In order to include a beginning/ending space in an env var value, you need to surround the value in double or single quotes. `ENV = " Value"`
 
 ## 7.0.0
 - ***BREAKING***: The `.env` file path resolving has been changed to allow for absolute pathing, relative pathing, and `~` home directory pathing. Please
