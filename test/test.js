@@ -155,6 +155,20 @@ describe('env-cmd', function () {
       assert(envVars.SINGLE_ONE === '\'single_one\'')
       assert(envVars.SINGLE_TWO === '\'single_two\'')
     })
+
+    it('should parse out all env vars ignoring spaces around = sign', function () {
+      const envVars = ParseEnvVars('BOB = COOL\nNODE_ENV =dev\nANSWER= 42 AND COUNTING')
+      assert(envVars.BOB === 'COOL')
+      assert(envVars.NODE_ENV === 'dev')
+      assert(envVars.ANSWER === '42 AND COUNTING')
+    })
+
+    it('should parse out all env vars ignoring spaces around = sign', function () {
+      const envVars = ParseEnvVars('BOB = "COOL "\nNODE_ENV = dev\nANSWER= \' 42 AND COUNTING\'')
+      assert(envVars.BOB === 'COOL ')
+      assert(envVars.NODE_ENV === 'dev')
+      assert(envVars.ANSWER === ' 42 AND COUNTING')
+    })
   })
 
   describe('JSON and JS format support', function () {
