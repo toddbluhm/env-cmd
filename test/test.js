@@ -183,7 +183,7 @@ describe('env-cmd', function () {
       proxyquire.callThru()
     })
     afterEach(function () {
-      spawnStub.reset()
+      spawnStub.resetHistory()
     })
     it('should parse env vars from JSON with node module loader if file extension is .json', function () {
       EnvCmd(['./test/.env.json', 'echo', '$BOB'])
@@ -229,7 +229,7 @@ describe('env-cmd', function () {
       proxyquire.callThru()
     })
     afterEach(function () {
-      spawnStub.reset()
+      spawnStub.resetHistory()
     })
     it('should parse env vars from .env-cmdrc file using development env', function () {
       EnvCmd(['development', 'echo', '$BOB'])
@@ -320,8 +320,9 @@ describe('env-cmd', function () {
       this.readFileStub.restore()
     })
     afterEach(function () {
-      spawnStub.reset()
-      this.readFileStub.reset()
+      spawnStub.resetHistory()
+      this.readFileStub.resetHistory()
+      process.removeAllListeners();
     })
     it('should spawn a new process with the env vars set', function () {
       this.readFileStub.returns('BOB=COOL\nNODE_ENV=dev\nANSWER=42\n')
@@ -398,13 +399,13 @@ describe('env-cmd', function () {
     it('should print help text and error if error contains \'passed\'', function () {
       HandleUncaughtExceptions(new Error('print help text passed now'))
       assert(this.logStub.calledTwice)
-      this.logStub.restore()  // restore here so test success logs get printed
+      this.logStub.restore() // restore here so test success logs get printed
     })
 
     it('should print just there error if error does not contain \'passed\'', function () {
       HandleUncaughtExceptions(new Error('do not print help text now'))
       assert(this.logStub.calledOnce)
-      this.logStub.restore()  // restore here so test success logs get printed
+      this.logStub.restore() // restore here so test success logs get printed
     })
   })
 
@@ -447,7 +448,7 @@ describe('env-cmd', function () {
     })
   })
 
-  describe('TerminateSpawnedProc', function() {
+  describe('TerminateSpawnedProc', function () {
     beforeEach(function () {
       this.procStub = sinon.stub()
       this.proc = {
@@ -468,7 +469,7 @@ describe('env-cmd', function () {
     })
 
     it('should not call kill method if the spawn process is already dying', function () {
-      this.exitCalled = true;
+      this.exitCalled = true
       TerminateSpawnedProc.call(this, this.proc)
       assert(this.procStub.callCount === 0)
     })
@@ -480,7 +481,7 @@ describe('env-cmd', function () {
       this.exitCalled = false
     })
 
-    afterEach(function() {
+    afterEach(function () {
       this.exitStub.restore()
     })
 
@@ -496,7 +497,7 @@ describe('env-cmd', function () {
     })
 
     it('should not call exit method if the process is already dying', function () {
-      this.exitCalled = true;
+      this.exitCalled = true
       TerminateParentProcess.call(this)
       assert(this.exitStub.callCount === 0)
     })
