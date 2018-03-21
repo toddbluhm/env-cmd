@@ -46,6 +46,8 @@ const StripComments = lib.StripComments
 const StripEmptyLines = lib.StripEmptyLines
 const ParseEnvVars = lib.ParseEnvVars
 const ResolveEnvFilePath = lib.ResolveEnvFilePath
+const TerminateSpawnedProc = lib.TerminateSpawnedProc
+const TerminateParentProcess = lib.TerminateParentProcess
 
 describe('env-cmd', function () {
   describe('ParseArgs', function () {
@@ -442,6 +444,61 @@ describe('env-cmd', function () {
       userHomeDir = ''
       const abPath = ResolveEnvFilePath('~/fish.env')
       assert(abPath === '/Users/hitchhikers-guide-to-the-galaxy/Thanks/~/fish.env')
+    })
+  })
+
+  describe('TerminateSpawnedProc', function() {
+    beforeEach(function () {
+      this.procStub = sinon.stub()
+      this.proc = {
+        kill: this.procStub
+      }
+      this.exitCalled = false
+    })
+
+    it('should call kill method on spawned process', function () {
+      TerminateSpawnedProc.call(this, this.proc)
+      assert(this.procStub.callCount === 1)
+    })
+
+    it('should not call kill method more than once', function () {
+      TerminateSpawnedProc.call(this, this.proc)
+      TerminateSpawnedProc.call(this, this.proc)
+      assert(this.procStub.callCount === 1)
+    })
+
+    it('should not call kill method if the spawn process is already dying', function () {
+      this.exitCalled = true;
+      TerminateSpawnedProc.call(this, this.proc)
+      assert(this.procStub.callCount === 0)
+    })
+  })
+
+  describe('TerminateParentProcess', function () {
+    beforeEach(function () {
+      this.exitStub = sinon.stub(process, 'exit')
+      this.exitCalled = false
+    })
+
+    afterEach(function() {
+      this.exitStub.restore()
+    })
+
+    it('should call exit method on parent process', function () {
+      TerminateParentProcess.call(this)
+      assert(this.exitStub.callCount === 1)
+    })
+
+    it('should not call exit method more than once', function () {
+      TerminateParentProcess.call(this)
+      TerminateParentProcess.call(this)
+      assert(this.exitStub.callCount === 1)
+    })
+
+    it('should not call exit method if the process is already dying', function () {
+      this.exitCalled = true;
+      TerminateParentProcess.call(this)
+      assert(this.exitStub.callCount === 0)
     })
   })
 })
