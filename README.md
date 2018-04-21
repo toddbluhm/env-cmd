@@ -78,9 +78,9 @@ or
 
 ### `.rc` file usage
 
-For more complex projects, a `.env-cmdrc` file can be defined in the root directory and supports as many environments as you want. Instead of passing the path to a `.env` file to `env-cmd`, simply pass the name of the environment you want to use thats in your `.env-cmdrc` file. You may also use multiple environment names to merge env vars together.
+For more complex projects, a `.env-cmdrc` file (with optional json extension) can be defined in the root directory and supports as many environments as you want. Instead of passing the path to a `.env` file to `env-cmd`, simply pass the name of the environment you want to use thats in your `.env-cmdrc` file. You may also use multiple environment names to merge env vars together.
 
-**.rc file `.env-cmdrc`**
+**.rc file `.env-cmdrc` or `.env-cmdrc.json`**
 
 ```json
 {
