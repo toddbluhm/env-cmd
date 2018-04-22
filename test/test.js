@@ -322,7 +322,7 @@ describe('env-cmd', function () {
     afterEach(function () {
       spawnStub.resetHistory()
       this.readFileStub.resetHistory()
-      process.removeAllListeners();
+      process.removeAllListeners()
     })
     it('should spawn a new process with the env vars set', function () {
       this.readFileStub.returns('BOB=COOL\nNODE_ENV=dev\nANSWER=42\n')
