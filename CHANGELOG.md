@@ -1,5 +1,8 @@
 # Changelog
 
+## 8.0.1
+- **Bug**: Properly propagate child process exit signals and codes to parent process
+
 ## 8.0.0
 - ***BREAKING***: Stripe out spaces around the `key` and `value` in an env file. In order to include a beginning/ending space in an env var value, you need to surround the value in double or single quotes. `ENV = " Value"`
 - **Bug**: Fixed some bugs around how the parent process and spawn processes are killed

@@ -451,10 +451,17 @@ describe('env-cmd', function () {
   describe('TerminateSpawnedProc', function () {
     beforeEach(function () {
       this.procStub = sinon.stub()
+      this.exitStub = sinon.stub(process, 'exit')
+      this.killStub = sinon.stub(process, 'kill')
       this.proc = {
         kill: this.procStub
       }
       this.exitCalled = false
+    })
+
+    afterEach(function () {
+      this.exitStub.restore()
+      this.killStub.restore()
     })
 
     it('should call kill method on spawned process', function () {
@@ -473,16 +480,38 @@ describe('env-cmd', function () {
       TerminateSpawnedProc.call(this, this.proc)
       assert(this.procStub.callCount === 0)
     })
+
+    it('should call kill method on spawned process with correct signal', function () {
+      TerminateSpawnedProc.call(this, this.proc, 'SIGINT')
+      assert(this.procStub.callCount === 1)
+      assert(this.procStub.args[0][0] === 'SIGINT')
+    })
+
+    it('should call kill method on parent process with correct signal', function () {
+      TerminateSpawnedProc.call(this, this.proc, 'SIGINT')
+      assert(this.exitStub.callCount === 0)
+      assert(this.killStub.callCount === 1)
+      assert(this.killStub.args[0][1] === 'SIGINT')
+    })
+
+    it('should call exit method on parent process with correct exit code', function () {
+      TerminateSpawnedProc.call(this, this.proc, 'SIGINT', 1)
+      assert(this.killStub.callCount === 0)
+      assert(this.exitStub.callCount === 1)
+      assert(this.exitStub.args[0][0] === 1)
+    })
   })
 
   describe('TerminateParentProcess', function () {
     beforeEach(function () {
       this.exitStub = sinon.stub(process, 'exit')
+      this.killStub = sinon.stub(process, 'kill')
       this.exitCalled = false
     })
 
     afterEach(function () {
       this.exitStub.restore()
+      this.killStub.restore()
     })
 
     it('should call exit method on parent process', function () {
@@ -500,6 +529,20 @@ describe('env-cmd', function () {
       this.exitCalled = true
       TerminateParentProcess.call(this)
       assert(this.exitStub.callCount === 0)
+    })
+
+    it('should call exit method with correct error code', function () {
+      TerminateParentProcess.call(this, 0)
+      assert(this.killStub.callCount === 0)
+      assert(this.exitStub.callCount === 1)
+      assert(this.exitStub.args[0][0] === 0)
+    })
+
+    it('should call kill method with correct kill signal', function () {
+      TerminateParentProcess.call(this, null, 'SIGINT')
+      assert(this.killStub.callCount === 1)
+      assert(this.exitStub.callCount === 0)
+      assert(this.killStub.args[0][1] === 'SIGINT')
     })
   })
 })

@@ -1,6 +1,6 @@
 {
   "name": "env-cmd",
-  "version": "8.0.0",
+  "version": "8.0.1",
   "description": "Executes a command using the envs in the provided env file",
   "main": "lib/index.js",
   "engines": {
