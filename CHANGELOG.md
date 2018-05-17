@@ -1,4 +1,6 @@
 # Changelog
+## 8.0.2
+- **Change**: Updated dependencies and packages.json to fix `npm audit` concerns.
 
 ## 8.0.1
 - **Bug**: Properly propagate child process exit signals and codes to parent process
