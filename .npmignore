@@ -2,3 +2,4 @@ coverage/
 node_modules/
 test/
 *.yml
+.nyc_output
