@@ -33,6 +33,11 @@ const lib = proxyquire('../lib', {
     NODE_ENV: 'dev',
     ANSWER: '42'
   },
+  [path.resolve(process.cwd(), 'test/.async.env.js')]: Promise.resolve({
+    BOB: 'COOL',
+    NODE_ENV: 'dev',
+    ANSWER: '42'
+  }),
   'os': {
     homedir: () => userHomeDir
   }
@@ -186,20 +191,31 @@ describe('env-cmd', function () {
       spawnStub.resetHistory()
     })
     it('should parse env vars from JSON with node module loader if file extension is .json', function () {
-      EnvCmd(['./test/.env.json', 'echo', '$BOB'])
-      assert(spawnStub.args[0][0] === 'echo')
-      assert(spawnStub.args[0][1][0] === '$BOB')
-      assert(spawnStub.args[0][2].env.BOB === 'COOL')
-      assert(spawnStub.args[0][2].env.NODE_ENV === 'dev')
-      assert(spawnStub.args[0][2].env.ANSWER === '42')
+      return EnvCmd(['./test/.env.json', 'echo', '$BOB']).then(() => {
+        assert(spawnStub.args[0][0] === 'echo')
+        assert(spawnStub.args[0][1][0] === '$BOB')
+        assert(spawnStub.args[0][2].env.BOB === 'COOL')
+        assert(spawnStub.args[0][2].env.NODE_ENV === 'dev')
+        assert(spawnStub.args[0][2].env.ANSWER === '42')
+      })
     })
     it('should parse env vars from JavaScript with node module loader if file extension is .js', function () {
-      EnvCmd(['./test/.env.js', 'echo', '$BOB'])
-      assert(spawnStub.args[0][0] === 'echo')
-      assert(spawnStub.args[0][1][0] === '$BOB')
-      assert(spawnStub.args[0][2].env.BOB === 'COOL')
-      assert(spawnStub.args[0][2].env.NODE_ENV === 'dev')
-      assert(spawnStub.args[0][2].env.ANSWER === '42')
+      return EnvCmd(['./test/.env.js', 'echo', '$BOB']).then(() => {
+        assert(spawnStub.args[0][0] === 'echo')
+        assert(spawnStub.args[0][1][0] === '$BOB')
+        assert(spawnStub.args[0][2].env.BOB === 'COOL')
+        assert(spawnStub.args[0][2].env.NODE_ENV === 'dev')
+        assert(spawnStub.args[0][2].env.ANSWER === '42')
+      })
+    })
+    it('should parse async env vars from JavaScript with node module loader if file extension is .js', function () {
+      return EnvCmd(['./test/.async.env.js', 'echo', '$BOB']).then(() => {
+        assert(spawnStub.args[0][0] === 'echo')
+        assert(spawnStub.args[0][1][0] === '$BOB')
+        assert(spawnStub.args[0][2].env.BOB === 'COOL')
+        assert(spawnStub.args[0][2].env.NODE_ENV === 'dev')
+        assert(spawnStub.args[0][2].env.ANSWER === '42')
+      })
     })
   })
 
@@ -232,60 +248,67 @@ describe('env-cmd', function () {
       spawnStub.resetHistory()
     })
     it('should parse env vars from .env-cmdrc file using development env', function () {
-      EnvCmd(['development', 'echo', '$BOB'])
-      assert(spawnStub.args[0][0] === 'echo')
-      assert(spawnStub.args[0][1][0] === '$BOB')
-      assert(spawnStub.args[0][2].env.BOB === 'COOL')
-      assert(spawnStub.args[0][2].env.NODE_ENV === 'dev')
-      assert(spawnStub.args[0][2].env.ANSWER === '42')
+      return EnvCmd(['development', 'echo', '$BOB']).then(() => {
+        assert(spawnStub.args[0][0] === 'echo')
+        assert(spawnStub.args[0][1][0] === '$BOB')
+        assert(spawnStub.args[0][2].env.BOB === 'COOL')
+        assert(spawnStub.args[0][2].env.NODE_ENV === 'dev')
+        assert(spawnStub.args[0][2].env.ANSWER === '42')
+      })
     })
 
     it('should parse env vars from .env-cmdrc file using production env', function () {
-      EnvCmd(['production', 'echo', '$BOB'])
-      assert(spawnStub.args[0][0] === 'echo')
-      assert(spawnStub.args[0][1][0] === '$BOB')
-      assert(spawnStub.args[0][2].env.BOB === 'COOL')
-      assert(spawnStub.args[0][2].env.NODE_ENV === 'prod')
-      assert(spawnStub.args[0][2].env.ANSWER === '43')
+      return EnvCmd(['production', 'echo', '$BOB']).then(() => {
+        assert(spawnStub.args[0][0] === 'echo')
+        assert(spawnStub.args[0][1][0] === '$BOB')
+        assert(spawnStub.args[0][2].env.BOB === 'COOL')
+        assert(spawnStub.args[0][2].env.NODE_ENV === 'prod')
+        assert(spawnStub.args[0][2].env.ANSWER === '43')
+      })
     })
 
     it('should throw error if env not in .rc file', function () {
-      try {
-        EnvCmd(['staging', 'echo', '$BOB'])
-        assert(!'Should throw missing environment error.')
-      } catch (e) {
-        assert(e.message.includes('staging'))
-        assert(e.message.includes(`.env-cmdrc`))
-      }
+      return EnvCmd(['staging', 'echo', '$BOB'])
+        .then(() => EnvCmd(['staging', 'echo', '$BOB']))
+        .then(() => {
+          assert(!'Should throw missing environment error.')
+        })
+        .catch(e => {
+          assert(e.message.includes('staging'))
+          assert(e.message.includes(`.env-cmdrc`))
+        })
     })
 
     it('should parse env vars from .env-cmdrc file using both development and production env', function () {
-      EnvCmd(['development,production', 'echo', '$BOB'])
-      assert(spawnStub.args[0][0] === 'echo')
-      assert(spawnStub.args[0][1][0] === '$BOB')
-      assert(spawnStub.args[0][2].env.BOB === 'COOL')
-      assert(spawnStub.args[0][2].env.NODE_ENV === 'prod')
-      assert(spawnStub.args[0][2].env.ANSWER === '43')
-      assert(spawnStub.args[0][2].env.TEST_CASES === true)
+      return EnvCmd(['development,production', 'echo', '$BOB']).then(() => {
+        assert(spawnStub.args[0][0] === 'echo')
+        assert(spawnStub.args[0][1][0] === '$BOB')
+        assert(spawnStub.args[0][2].env.BOB === 'COOL')
+        assert(spawnStub.args[0][2].env.NODE_ENV === 'prod')
+        assert(spawnStub.args[0][2].env.ANSWER === '43')
+        assert(spawnStub.args[0][2].env.TEST_CASES === true)
+      })
     })
 
     it('should parse env vars from .env-cmdrc file using both development and production env in reverse order', function () {
-      EnvCmd(['production,development', 'echo', '$BOB'])
-      assert(spawnStub.args[0][0] === 'echo')
-      assert(spawnStub.args[0][1][0] === '$BOB')
-      assert(spawnStub.args[0][2].env.BOB === 'COOL')
-      assert(spawnStub.args[0][2].env.NODE_ENV === 'dev')
-      assert(spawnStub.args[0][2].env.ANSWER === '42')
-      assert(spawnStub.args[0][2].env.TEST_CASES === true)
+      return EnvCmd(['production,development', 'echo', '$BOB']).then(() => {
+        assert(spawnStub.args[0][0] === 'echo')
+        assert(spawnStub.args[0][1][0] === '$BOB')
+        assert(spawnStub.args[0][2].env.BOB === 'COOL')
+        assert(spawnStub.args[0][2].env.NODE_ENV === 'dev')
+        assert(spawnStub.args[0][2].env.ANSWER === '42')
+        assert(spawnStub.args[0][2].env.TEST_CASES === true)
+      })
     })
 
     it('should not fail if only one environment name exists', function () {
-      EnvCmd(['production,test', 'echo', '$BOB'])
-      assert(spawnStub.args[0][0] === 'echo')
-      assert(spawnStub.args[0][1][0] === '$BOB')
-      assert(spawnStub.args[0][2].env.BOB === 'COOL')
-      assert(spawnStub.args[0][2].env.NODE_ENV === 'prod')
-      assert(spawnStub.args[0][2].env.ANSWER === '43')
+      return EnvCmd(['production,test', 'echo', '$BOB']).then(() => {
+        assert(spawnStub.args[0][0] === 'echo')
+        assert(spawnStub.args[0][1][0] === '$BOB')
+        assert(spawnStub.args[0][2].env.BOB === 'COOL')
+        assert(spawnStub.args[0][2].env.NODE_ENV === 'prod')
+        assert(spawnStub.args[0][2].env.ANSWER === '43')
+      })
     })
 
     it('should throw error if .rc file is not valid JSON', function () {
@@ -301,14 +324,13 @@ describe('env-cmd', function () {
           "ANSWER": "43"
         }
       }`)
-      try {
-        EnvCmd(['staging', 'echo', '$BOB'])
+      return EnvCmd(['staging', 'echo', '$BOB']).then(() => {
         assert(!'Should throw invalid JSON error.')
-      } catch (e) {
+      }).catch((e) => {
         assert(e.message.includes(`.env-cmdrc`))
         assert(e.message.includes(`parse`))
         assert(e.message.includes(`JSON`))
-      }
+      })
     })
   })
 
@@ -326,39 +348,40 @@ describe('env-cmd', function () {
     })
     it('should spawn a new process with the env vars set', function () {
       this.readFileStub.returns('BOB=COOL\nNODE_ENV=dev\nANSWER=42\n')
-      EnvCmd(['./test/.env', 'echo', '$BOB'])
-      assert(this.readFileStub.args[0][0] === path.join(process.cwd(), 'test/.env'))
-      assert(spawnStub.args[0][0] === 'echo')
-      assert(spawnStub.args[0][1][0] === '$BOB')
-      assert(spawnStub.args[0][2].env.BOB === 'COOL')
-      assert(spawnStub.args[0][2].env.NODE_ENV === 'dev')
-      assert(spawnStub.args[0][2].env.ANSWER === '42')
+      return EnvCmd(['./test/.env', 'echo', '$BOB']).then(() => {
+        assert(this.readFileStub.args[0][0] === path.join(process.cwd(), 'test/.env'))
+        assert(spawnStub.args[0][0] === 'echo')
+        assert(spawnStub.args[0][1][0] === '$BOB')
+        assert(spawnStub.args[0][2].env.BOB === 'COOL')
+        assert(spawnStub.args[0][2].env.NODE_ENV === 'dev')
+        assert(spawnStub.args[0][2].env.ANSWER === '42')
+      })
     })
 
     it('should spawn a new process without overriding shell env vars', function () {
       process.env.NODE_ENV = 'development'
       process.env.BOB = 'SUPERCOOL'
       this.readFileStub.returns('BOB=COOL\nNODE_ENV=dev\nANSWER=42\n')
-      EnvCmd(['--no-override', './test/.env', 'echo', '$BOB'])
-      assert(this.readFileStub.args[0][0] === path.join(process.cwd(), 'test/.env'))
-      assert(spawnStub.args[0][0] === 'echo')
-      assert(spawnStub.args[0][1][0] === '$BOB')
-      assert(spawnStub.args[0][2].env.BOB === 'SUPERCOOL')
-      assert(spawnStub.args[0][2].env.NODE_ENV === 'development')
-      assert(spawnStub.args[0][2].env.ANSWER === '42')
+      return EnvCmd(['--no-override', './test/.env', 'echo', '$BOB']).then(() => {
+        assert(this.readFileStub.args[0][0] === path.join(process.cwd(), 'test/.env'))
+        assert(spawnStub.args[0][0] === 'echo')
+        assert(spawnStub.args[0][1][0] === '$BOB')
+        assert(spawnStub.args[0][2].env.BOB === 'SUPERCOOL')
+        assert(spawnStub.args[0][2].env.NODE_ENV === 'development')
+        assert(spawnStub.args[0][2].env.ANSWER === '42')
+      })
     })
 
     it('should throw error if file and fallback does not exist with --fallback option', function () {
       this.readFileStub.restore()
-
-      try {
-        EnvCmd(['--fallback', './test/.non-existent-file', 'echo', '$BOB'])
-      } catch (e) {
-        const resolvedPath = path.join(process.cwd(), '.env')
-        assert(e.message === `Error! Could not find fallback file or read env file at ${resolvedPath}`)
-        return
-      }
-      assert(!'No exception thrown')
+      return EnvCmd(['--fallback', './test/.non-existent-file', 'echo', '$BOB'])
+        .then(() => {
+          assert(!'No exception thrown')
+        })
+        .catch(e => {
+          const resolvedPath = path.join(process.cwd(), '.env')
+          assert(e.message === `Error! Could not find fallback file or read env file at ${resolvedPath}`)
+        })
     })
 
     it('should execute successfully if no env file found', function () {
@@ -367,12 +390,13 @@ describe('env-cmd', function () {
       process.env.ANSWER = '42'
       delete process.env.BOB
 
-      EnvCmd(['./test/.non-existent-file', 'echo', '$BOB'])
-      assert(spawnStub.args[0][0] === 'echo')
-      assert(spawnStub.args[0][1][0] === '$BOB')
-      assert(spawnStub.args[0][2].env.BOB === undefined)
-      assert(spawnStub.args[0][2].env.NODE_ENV === 'dev')
-      assert(spawnStub.args[0][2].env.ANSWER === '42')
+      return EnvCmd(['./test/.non-existent-file', 'echo', '$BOB']).then(() => {
+        assert(spawnStub.args[0][0] === 'echo')
+        assert(spawnStub.args[0][1][0] === '$BOB')
+        assert(spawnStub.args[0][2].env.BOB === undefined)
+        assert(spawnStub.args[0][2].env.NODE_ENV === 'dev')
+        assert(spawnStub.args[0][2].env.ANSWER === '42')
+      })
     })
   })
 

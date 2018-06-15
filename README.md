@@ -119,7 +119,7 @@ ENV1=welcome ./node_modules/.bin/env-cmd --no-override ./test/.env node index.js
 These are the currently accepted environment file formats. If any other formats are desired please create an issue.
 - `key=value`
 - Key/value pairs as JSON
-- JavaScript file exporting an object
+- JavaScript file exporting an object or Promise that resolves one
 - `.env-cmdrc` file (as valid json) in execution directory
 
 ## Path Rules
