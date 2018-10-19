@@ -114,6 +114,12 @@ Sometimes you want to set env variables from a file without overriding existing 
 ```sh
 ENV1=welcome ./node_modules/.bin/env-cmd --no-override ./test/.env node index.js
 ```
+
+## Examples
+
+You can find examples of how to use the various options above by visiting
+the examples repo [env-cmd-examples](https://github.com/toddbluhm/env-cmd-examples).
+
 ## Environment File Formats
 
 These are the currently accepted environment file formats. If any other formats are desired please create an issue.

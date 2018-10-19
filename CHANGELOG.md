@@ -1,4 +1,10 @@
 # Changelog
+## 9.0.0 - Pending
+- ***BREAKING***: Dropping support for node v4
+- **Change**: Updated dev dependencies `sinon` and `nyc`
+- **Change**: Update package-lock.json file
+- **Addition**: Added node v10 to build automation
+
 ## 8.0.2
 - **Change**: Updated dependencies and packages.json to fix `npm audit` concerns.
 

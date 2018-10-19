@@ -1,10 +1,10 @@
 {
   "name": "env-cmd",
-  "version": "8.0.2",
+  "version": "9.0.0",
   "description": "Executes a command using the envs in the provided env file",
   "main": "lib/index.js",
   "engines": {
-    "node": ">=4.0.0"
+    "node": ">=6.0.0"
   },
   "bin": {
     "env-cmd": "bin/env-cmd.js"
@@ -47,9 +47,9 @@
     "better-assert": "^1.0.2",
     "coveralls": "^3.0.1",
     "mocha": "^5.1.1",
-    "nyc": "^11.8.0",
+    "nyc": "^13.1.0",
     "proxyquire": "^2.0.1",
-    "sinon": "^5.0.7",
-    "standard": "^11.0.1"
+    "sinon": "^7.0.0",
+    "standard": "^12.0.1"
   }
 }
