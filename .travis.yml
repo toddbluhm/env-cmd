@@ -7,11 +7,6 @@ node_js:
   - "8"
   - "10"
 
-env:
-  global:
-    - COVERALLS_REPO_TOKEN=1L5dixUbmMRqry59TMNv2EoYuEBtUKSWC
-    - COVERALLS_PARALLEL=true
-
 cache:
   directories:
     - node_modules

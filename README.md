@@ -40,7 +40,10 @@ or
 
 ### `--fallback` file usage option
 
-You can specify an `.env.local` (or any name) env file, add that to your `.gitignore` and use that in your local development environment. Then you can use a regular `.env` file in root directory with production configs that can get committed to a private/protected repo. When `env-cmd` cannot find the `.env.local` file it will fallback to looking for a regular `.env` file.
+You can specify an `.env.local` (or any name) env file, add that to your `.gitignore` and use that
+in your local development environment. Then you can use a regular `.env` file in root directory
+with production configs that can get committed to a private/protected repo. When `env-cmd` cannot
+find the `.env.local` file it will fallback to looking for a regular `.env` file.
 
 **Environment file `./.env.local`**
 ```
@@ -78,7 +81,10 @@ or
 
 ### `.rc` file usage
 
-For more complex projects, a `.env-cmdrc` file can be defined in the root directory and supports as many environments as you want. Instead of passing the path to a `.env` file to `env-cmd`, simply pass the name of the environment you want to use thats in your `.env-cmdrc` file. You may also use multiple environment names to merge env vars together.
+For more complex projects, a `.env-cmdrc` file can be defined in the root directory and supports
+as many environments as you want. Instead of passing the path to a `.env` file to `env-cmd`, simply
+pass the name of the environment you want to use thats in your `.env-cmdrc` file. You may also use
+multiple environment names to merge env vars together.
 
 **.rc file `.env-cmdrc`**
 
@@ -145,7 +151,8 @@ Working Directory = `/Users/test/Development/app`
 
 ## Why
 
-Because sometimes its just too cumbersome passing lots of environment variables to scripts. Its usually just easier to have a file with all the vars in them, especially for development and testing.
+Because sometimes its just too cumbersome passing lots of environment variables to scripts. Its
+usually just easier to have a file with all the vars in them, especially for development and testing.
 
 **Do not commit sensitive environment data to a public git repo!**
 
@@ -155,7 +162,8 @@ Because sometimes its just too cumbersome passing lots of environment variables 
 
 ## Special Thanks
 
-Special thanks to [`cross-env`](https://github.com/kentcdodds/cross-env) for inspiration (use's the same `cross-spawn` lib underneath too).
+Special thanks to [`cross-env`](https://github.com/kentcdodds/cross-env) for inspiration (use's the
+same `cross-spawn` lib underneath too).
 
 ## Contributors
 
@@ -165,7 +173,8 @@ Special thanks to [`cross-env`](https://github.com/kentcdodds/cross-env) for ins
 - Anton Versal
 
 ## Contributing Guide
-I welcome all pull requests. Please make sure you add appropriate test cases for any features added. Before opening a PR please make sure to run the following scripts:
+I welcome all pull requests. Please make sure you add appropriate test cases for any features
+added. Before opening a PR please make sure to run the following scripts:
 
 - `npm run lint` checks for code errors and formats according to [js-standard](https://github.com/feross/standard)
 - `npm test` make sure all tests pass
