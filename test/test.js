@@ -56,6 +56,11 @@ describe('env-cmd', function () {
       assert(parsedArgs.noOverride === true)
     })
 
+    it('should parse out --use-shell option ', function () {
+      const parsedArgs = ParseArgs(['--use-shell', './test/envFile', 'command', 'cmda1', 'cmda2'])
+      assert(parsedArgs.useShell === true)
+    })
+
     it('should parse out the envfile', function () {
       const parsedArgs = ParseArgs(['./test/envFile', 'command', 'cmda1', 'cmda2'])
       assert(parsedArgs.envFile === './test/envFile')
@@ -346,6 +351,20 @@ describe('env-cmd', function () {
       assert(spawnStub.args[0][2].env.BOB === 'SUPERCOOL')
       assert(spawnStub.args[0][2].env.NODE_ENV === 'development')
       assert(spawnStub.args[0][2].env.ANSWER === '42')
+    })
+
+    it('should spawn a new process using the shell option', function () {
+      process.env.NODE_ENV = 'development'
+      process.env.BOB = 'SUPERCOOL'
+      this.readFileStub.returns('BOB=COOL\nNODE_ENV=dev\nANSWER=42\n')
+      EnvCmd(['--use-shell', './test/.env', 'echo', '$BOB'])
+      assert(this.readFileStub.args[0][0] === path.join(process.cwd(), 'test/.env'))
+      assert(spawnStub.args[0][0] === 'echo')
+      assert(spawnStub.args[0][1][0] === '$BOB')
+      assert(spawnStub.args[0][2].env.BOB === 'COOL')
+      assert(spawnStub.args[0][2].env.NODE_ENV === 'dev')
+      assert(spawnStub.args[0][2].env.ANSWER === '42')
+      assert(spawnStub.args[0][2].shell === true)
     })
 
     it('should throw error if file and fallback does not exist with --fallback option', function () {
