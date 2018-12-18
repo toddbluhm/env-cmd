@@ -49,6 +49,10 @@ const ResolveEnvFilePath = lib.ResolveEnvFilePath
 const TerminateSpawnedProc = lib.TerminateSpawnedProc
 const TerminateParentProcess = lib.TerminateParentProcess
 
+function fixSlash(path) {
+  return path.replace(/\//g, '\\')
+}
+
 describe('env-cmd', function () {
   describe('ParseArgs', function () {
     it('should parse out --no-override option ', function () {
@@ -412,39 +416,39 @@ describe('env-cmd', function () {
   describe('ResolveEnvFilePath', function () {
     beforeEach(function () {
       this.cwdStub = sinon.stub(process, 'cwd')
-      this.cwdStub.returns('/Users/hitchhikers-guide-to-the-galaxy/Thanks')
+      this.cwdStub.returns(fixSlash('/Users/hitchhikers-guide-to-the-galaxy/Thanks'))
     })
     afterEach(function () {
       this.cwdStub.restore()
     })
     it('should add "fish.env" to the end of the current directory', function () {
       const abPath = ResolveEnvFilePath('fish.env')
-      assert(abPath === '/Users/hitchhikers-guide-to-the-galaxy/Thanks/fish.env')
+      assert(abPath === fixSlash('/Users/hitchhikers-guide-to-the-galaxy/Thanks/fish.env'))
     })
     it('should add "./fish.env" to the end of the current directory', function () {
       const abPath = ResolveEnvFilePath('./fish.env')
-      assert(abPath === '/Users/hitchhikers-guide-to-the-galaxy/Thanks/fish.env')
+      assert(abPath === fixSlash('/Users/hitchhikers-guide-to-the-galaxy/Thanks/fish.env'))
     })
     it('should add "../fish.env" to the end of the current directory', function () {
       const abPath = ResolveEnvFilePath('../fish.env')
-      assert(abPath === '/Users/hitchhikers-guide-to-the-galaxy/fish.env')
+      assert(abPath === fixSlash('/Users/hitchhikers-guide-to-the-galaxy/fish.env'))
     })
     it('should add "for-all-the/fish.env" to the end of the current directory', function () {
       const abPath = ResolveEnvFilePath('for-all-the/fish.env')
-      assert(abPath === '/Users/hitchhikers-guide-to-the-galaxy/Thanks/for-all-the/fish.env')
+      assert(abPath === fixSlash('/Users/hitchhikers-guide-to-the-galaxy/Thanks/for-all-the/fish.env'))
     })
     it('should set the absolute path to "/thanks/for-all-the/fish.env"', function () {
       const abPath = ResolveEnvFilePath('/thanks/for-all-the/fish.env')
-      assert(abPath === '/thanks/for-all-the/fish.env')
+      assert(abPath === fixSlash('/thanks/for-all-the/fish.env'))
     })
     it('should use "~" to add "fish.env" to the end of user directory', function () {
       const abPath = ResolveEnvFilePath('~/fish.env')
-      assert(abPath === '/Users/hitchhikers-guide-to-the-galaxy/fish.env')
+      assert(abPath === fixSlash('/Users/hitchhikers-guide-to-the-galaxy/fish.env'))
     })
     it('should leave "~" in path if no user home directory found', function () {
       userHomeDir = ''
       const abPath = ResolveEnvFilePath('~/fish.env')
-      assert(abPath === '/Users/hitchhikers-guide-to-the-galaxy/Thanks/~/fish.env')
+      assert(abPath === fixSlash('/Users/hitchhikers-guide-to-the-galaxy/Thanks/~/fish.env'))
     })
   })
 
