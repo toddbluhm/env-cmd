@@ -87,7 +87,6 @@ pass the name of the environment you want to use thats in your `.env-cmdrc` file
 multiple environment names to merge env vars together.
 
 **.rc file `.env-cmdrc`**
-
 ```json
 {
   "development": {
@@ -119,6 +118,56 @@ Sometimes you want to set env variables from a file without overriding existing 
 **Terminal**
 ```sh
 ENV1=welcome ./node_modules/.bin/env-cmd --no-override ./test/.env node index.js
+```
+
+### `--use-shell` option
+
+Sometimes you want to set env variables that are available to multiple commands instead of just one command or are available as command line arguments.
+
+### Available as commandline arguments
+
+**dot env file `.env.local`**
+```
+HELLO=WORLD
+```
+
+**Terminal**
+```sh
+# no --use-shell
+node bin/env-cmd --fallback .env.local echo %HELLO%
+# result: %HELLO%
+
+# with --use-shell
+node bin/env-cmd --fallback .env.local --use-shell echo %HELLO%
+# result: WORLD
+```
+
+> **NOTE** The quotes around the commands are required for them to be interpreted correctly.
+
+### Available to multiple commands
+
+**command `cmd.js`**
+```js
+console.log(process.env.GOODBYE)
+```
+
+**dot env file `.env.local`**
+```
+GOODBYE=BYE
+```
+
+**Terminal**
+```sh
+# no --use-shell
+node bin/env-cmd --fallback .env.local "node cmd && node cmd"
+# result:
+# * BYE
+
+# with --use-shell
+node bin/env-cmd --fallback .env.local --use-shell "node cmd && node cmd"
+# result:
+# BYE
+# BYE
 ```
 
 ## Examples
