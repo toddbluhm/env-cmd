@@ -121,6 +121,15 @@ Sometimes you want to set env variables from a file without overriding existing 
 ENV1=welcome ./node_modules/.bin/env-cmd --no-override ./test/.env node index.js
 ```
 
+### `--no-warn` option
+
+By default a warning is displayed if the env file and fallback file do not exist. If the `--fallback` option is not specified and the env file does not exist the warning message will also be displayed. This warning message can be suppressed with the `--no-warn` option.
+
+**Terminal**
+```sh
+./node_modules/.bin/env-cmd --no-warn ./.env.does-no-exist --fallback node index.js
+```
+
 ## Examples
 
 You can find examples of how to use the various options above by visiting

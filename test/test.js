@@ -11,6 +11,7 @@ const path = require('path')
 const proxyquire = require('proxyquire')
 const sinon = require('sinon')
 const fs = require('fs')
+const helpers = require('./helpers')
 let userHomeDir = '/Users/hitchhikers-guide-to-the-galaxy'
 
 const spawnStub = sinon.spy(() => ({
@@ -355,10 +356,28 @@ describe('env-cmd', function () {
         EnvCmd(['--fallback', './test/.non-existent-file', 'echo', '$BOB'])
       } catch (e) {
         const resolvedPath = path.join(process.cwd(), '.env')
-        assert(e.message === `Error! Could not find fallback file or read env file at ${resolvedPath}`)
+        assert(e.message === `ERROR: Could not find env file or fallback file (${resolvedPath})`)
         return
       }
       assert(!'No exception thrown')
+    })
+
+    it('should display warning if env file and fallback do not exist and --no-warn is NOT specified', function () {
+      this.readFileStub.restore()
+      helpers.captureOutput()
+      EnvCmd(['./test/.non-existent-file', 'echo', '$BOB'])
+      helpers.restoreOutput()
+      const resolvedPath = path.join(process.cwd(), '.env')
+      assert(helpers.getOutput().indexOf(`WARNING: Could not find env file or fallback file (${resolvedPath})`) >= 0)
+    })
+
+    it('should NOT display warning if env file and fallback do not exist and --no-warn is specified', function () {
+      this.readFileStub.restore()
+      helpers.captureOutput()
+      EnvCmd(['--no-warn', './test/.non-existent-file', 'echo', '$BOB'])
+      helpers.restoreOutput()
+      const resolvedPath = path.join(process.cwd(), '.env')
+      assert(helpers.getOutput().indexOf(`WARNING: Could not find env file or fallback file (${resolvedPath})`) === -1)
     })
 
     it('should execute successfully if no env file found', function () {
