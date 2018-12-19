@@ -380,6 +380,19 @@ describe('env-cmd', function () {
       assert(helpers.getOutput().indexOf(`WARNING: Could not find env file or fallback file (${resolvedPath})`) === -1)
     })
 
+    it('should throw error if file and fallback do not exist with --fallback and --no-warn options', function () {
+      this.readFileStub.restore()
+
+      try {
+        EnvCmd(['--fallback', '--no-warn', './test/.non-existent-file', 'echo', '$BOB'])
+      } catch (e) {
+        const resolvedPath = path.join(process.cwd(), '.env')
+        assert(e.message === `ERROR: Could not find env file or fallback file (${resolvedPath})`)
+        return
+      }
+      assert(!'No exception thrown')
+    })
+
     it('should execute successfully if no env file found', function () {
       this.readFileStub.restore()
       process.env.NODE_ENV = 'dev'
