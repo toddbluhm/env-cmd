@@ -111,7 +111,6 @@ multiple environment names to merge env vars together.
 # but both are included)
 ./node_modules/.bin/env-cmd test,production node index.js
 ```
-
 ### `--no-override` option
 
 Sometimes you want to set env variables from a file without overriding existing process env vars or shell env vars.
