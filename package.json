@@ -41,7 +41,9 @@
   },
   "homepage": "https://github.com/toddbluhm/env-cmd#readme",
   "dependencies": {
-    "cross-spawn": "^6.0.5"
+    "argparse": "^1.0.10",
+    "cross-spawn": "^6.0.5",
+    "properties-reader": "0.0.16"
   },
   "devDependencies": {
     "better-assert": "^1.0.2",
