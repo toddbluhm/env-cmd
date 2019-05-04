@@ -97,30 +97,19 @@ describe('getEnvFileVars', (): void => {
   it('should parse a json file', async (): Promise<void> => {
     const env = await getEnvFileVars('./test/test-files/test.json')
     assert.deepEqual(env, {
-      'development': {
-        'THANKS': 'FOR ALL THE FISH',
-        'ANSWER': 0
-      },
-      'production': {
-        'THANKS': 'FOR WHAT?!',
-        'ANSWER': 42,
-        'ONLY': 'IN PRODUCTION'
-      }
+      'THANKS': 'FOR WHAT?!',
+      'ANSWER': 42,
+      'ONLY': 'IN PRODUCTION',
+      'GALAXY': 'hitch\nhiking'
     })
   })
 
   it('should parse a js file', async (): Promise<void> => {
     const env = await getEnvFileVars('./test/test-files/test.js')
     assert.deepEqual(env, {
-      'development': {
-        'THANKS': 'FOR ALL THE FISH',
-        'ANSWER': 0
-      },
-      'production': {
-        'THANKS': 'FOR WHAT?!',
-        'ANSWER': 42,
-        'ONLY': 'IN PRODUCTION'
-      }
+      'THANKS': 'FOR ALL THE FISH',
+      'ANSWER': 0,
+      'GALAXY': 'hitch\nhiking'
     })
   })
 
@@ -137,7 +126,8 @@ describe('getEnvFileVars', (): void => {
     assert.deepEqual(env, {
       'THANKS': 'FOR WHAT?!',
       'ANSWER': '42',
-      'ONLY': 'IN=PRODUCTION'
+      'ONLY': 'IN=PRODUCTION',
+      'GALAXY': 'hitch\nhiking'
     })
   })
 

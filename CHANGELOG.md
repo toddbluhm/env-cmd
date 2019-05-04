@@ -7,6 +7,7 @@
 - **Change**: Update package-lock.json file
 - **Feature**: Added support for asyncronous .env and .rc files
 - **Feature**: Added support for a programmatic API
+- **Fix**: Keep newline (`\n`) characters intact when parsing env files
 - **Change**: Added node v10 and v12 to build automation
 
 ## 8.0.2
