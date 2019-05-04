@@ -89,13 +89,22 @@ later environments overwritting earlier ones.
 
 Prevents overwritting of existing env vars on `process.env`
 
-
 ### `--fallback` file usage option
 
 You can specify a `.env.local` (or any name) env file, add that to your `.gitignore` and use that
 in your local development environment. Then you can use a regular `.env` file in the root directory
 with production configs that you can commit to a private/protected repo. When `env-cmd` cannot
 find the `.env.local` file it will fallback to looking for a regular `.env` file.
+
+### `--use-shell`
+
+Executes the command within a new shell instance. This is useful if you want to string multiple 
+commands together and share the same env vars.
+
+**Terminal**
+```sh
+./node_modules/.bin/env-cmd -f ./test/.env --use-shell "node run lint && node test"
+```
 
 ### Asynchronous env file support
 
@@ -151,7 +160,8 @@ Executes a command in a new child process with the given options
       - **`environments`** { `string[]` }: List of environment to read from the `.rc` file
       - **`filePath`** { `string` }: Custom path to the `.rc` file (defaults to: `./.env-cmdrc(|.js|.json)`)
     - **`options`** { `object` }
-      - **`noOverride`** { `boolean` }: Prevent `.env` file vars from overriding existing `process.env` vars
+      - **`noOverride`** { `boolean` }: Prevent `.env` file vars from overriding existing `process.env` vars (default: `false`)
+      - **`useShell`** { `boolean` }: Runs command inside a new shell instance (default: `false`)
     - **Returns** { `Promise<object>` }: key is env var name and value is the env var value
 
 ### `GetEnvVars`

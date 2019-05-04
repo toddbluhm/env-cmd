@@ -42,6 +42,7 @@ export async function EnvCmd (
   // Execute the command with the given environment variables
   const proc = spawn(command, commandArgs, {
     stdio: 'inherit',
+    shell: options.useShell,
     env
   })
 

@@ -14,5 +14,6 @@ export interface EnvCmdOptions extends GetEnvVarOptions {
   commandArgs: string[]
   options?: {
     noOverride?: boolean
+    useShell?: boolean
   }
 }
