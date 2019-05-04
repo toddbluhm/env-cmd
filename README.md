@@ -86,12 +86,8 @@ later environments overwritting earlier ones.
 
 ### `--no-override` option
 
-Sometimes you want to set env variables from a file without overriding existing process env vars or shell env vars.
+Prevents overwritting of existing env vars on `process.env`
 
-**Terminal**
-```sh
-ENV1=welcome ./node_modules/.bin/env-cmd --no-override ./test/.env node index.js
-```
 
 ### `--fallback` file usage option
 
@@ -100,10 +96,11 @@ in your local development environment. Then you can use a regular `.env` file in
 with production configs that you can commit to a private/protected repo. When `env-cmd` cannot
 find the `.env.local` file it will fallback to looking for a regular `.env` file.
 
-### Asynchronous env file support using a javascript file
+### Asynchronous env file support
 
 EnvCmd supports reading from asynchronous `.env` files. Instead of using a `.env` file, pass in a `.js`
-file that returns a `Promise` resolving to an object (`{ ENV_VAR_NAME: value, ... }`).
+file that returns a `Promise` resolving to an object (`{ ENV_VAR_NAME: value, ... }`). Asynchronous `.rc`
+files are also supported using `.js` file extension.
 
 **Terminal**
 ```sh

@@ -1,7 +1,7 @@
 import { stat, readFile } from 'fs'
 import { promisify } from 'util'
 import { extname } from 'path'
-import { resolveEnvFilePath } from './utils'
+import { resolveEnvFilePath, isPromise } from './utils'
 
 const statAsync = promisify(stat)
 const readFileAsync = promisify(readFile)
@@ -24,7 +24,8 @@ export async function getRCFileVars (
   const ext = extname(absolutePath).toLowerCase()
   let parsedData: { [key: string]: any }
   if (ext === '.json' || ext === '.js') {
-    parsedData = require(absolutePath)
+    const possiblePromise = require(absolutePath) /* eslint-disable-line */
+    parsedData = isPromise(possiblePromise) ? await possiblePromise : possiblePromise
   } else {
     const file = await readFileAsync(absolutePath, { encoding: 'utf8' })
     parsedData = parseRCFile(file)

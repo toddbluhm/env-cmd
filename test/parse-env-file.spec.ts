@@ -127,15 +127,8 @@ describe('getEnvFileVars', (): void => {
   it('should parse an async js file', async (): Promise<void> => {
     const env = await getEnvFileVars('./test/test-files/test-async.js')
     assert.deepEqual(env, {
-      'development': {
-        'THANKS': 'FOR ALL THE FISH',
-        'ANSWER': 0
-      },
-      'production': {
-        'THANKS': 'FOR WHAT?!',
-        'ANSWER': 42,
-        'ONLY': 'IN PRODUCTION'
-      }
+      'THANKS': 'FOR ALL THE FISH',
+      'ANSWER': 0
     })
   })
 

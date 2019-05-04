@@ -62,4 +62,16 @@ describe('getRCFileVars', (): void => {
       assert.match(e.message, /path/gi)
     }
   })
+
+  it('should parse an async js .rc file', async (): Promise<void> => {
+    const env = await getRCFileVars({
+      environments: ['production'],
+      filePath: './test/test-files/.rc-test-async.js'
+    })
+    assert.deepEqual(env, {
+      'THANKS': 'FOR WHAT?!',
+      'ANSWER': 42,
+      'ONLY': 'IN PRODUCTION'
+    })
+  })
 })
