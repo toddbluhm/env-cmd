@@ -36,7 +36,7 @@ ENV3=THE FISH
 ```
 
 
-## Help
+## 📜 Help
 ```
 Usage: _ [options] <command> [...args]
 
@@ -50,7 +50,7 @@ Options:
   -h, --help                          output usage information
 ```
 
-## Advanced Usage
+## 🔬 Advanced Usage
 
 ### `.rc` file usage
 
@@ -137,7 +137,7 @@ Working Directory = `/Users/test/Development/app`
 | Relative | `./some/relative/path.env` or `some/relative/path.env` | `/Users/test/Development/app/some/relative/path.env` |
 | Relative with parent dir | `../some/relative/path.env` | `/Users/test/Development/some/relative/path.env` |
 
-## API Usage
+## ⚒ API Usage
 
 ### `EnvCmd`
 Executes a command in a new child process with the given options
@@ -170,28 +170,28 @@ Parses environment variables from a `.env` or a `.rc` file
 Because sometimes it is just too cumbersome passing a lot of environment variables to scripts. It is
 usually just easier to have a file with all the vars in them, especially for development and testing.
 
-**Do not commit sensitive environment data to a public git repo!**
+🚨**Do not commit sensitive environment data to a public git repo!** 🚨
 
 ## Related Projects
 
 [`cross-env`](https://github.com/kentcdodds/cross-env) - Cross platform setting of environment scripts
 
-## Special Thanks
+## 🎊 Special Thanks
 
 Special thanks to [`cross-env`](https://github.com/kentcdodds/cross-env) for inspiration (use's the
 same `cross-spawn` lib underneath too).
 
-## Contributors
+## 🎉 Contributors
 
 - Eric Lanehart
 - Jon Scheiding
 - Alexander Praetorius
 - Anton Versal
 
-## Contributing Guide
+## 📋 Contributing Guide
 I welcome all pull requests. Please make sure you add appropriate test cases for any features
 added. Before opening a PR please make sure to run the following scripts:
 
-- `npm run lint` checks for code errors and formats according to [js-standard](https://github.com/feross/standard)
+- `npm run lint` checks for code errors and format according to [js-standard](https://github.com/feross/standard)
 - `npm test` make sure all tests pass
 - `npm run test-cover` make sure the coverage has not decreased from current master
