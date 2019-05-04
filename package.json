@@ -2,19 +2,21 @@
   "name": "env-cmd",
   "version": "9.0.0",
   "description": "Executes a command using the envs in the provided env file",
-  "main": "lib/index.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "engines": {
-    "node": ">=6.0.0"
+    "node": ">=8.0.0"
   },
   "bin": {
     "env-cmd": "bin/env-cmd.js"
   },
   "scripts": {
-    "test": "mocha",
+    "test": "mocha -r ts-node/register ./test/**/*.ts",
     "test-cover": "nyc --reporter=lcov --reporter=text npm test",
-    "test-lint": "standard",
+    "test-lint": "eslint ./src/**/*.ts ./test/**/*.ts",
     "coveralls": "coveralls < coverage/lcov.info",
-    "lint": "standard --fix"
+    "lint": "eslint --fix ./src/**/*.ts ./test/**/*.ts",
+    "build": "tsc"
   },
   "repository": {
     "type": "git",
@@ -41,15 +43,46 @@
   },
   "homepage": "https://github.com/toddbluhm/env-cmd#readme",
   "dependencies": {
-    "cross-spawn": "^6.0.5"
+    "commander": "^2.20.0",
+    "cross-spawn": "6.0.5"
   },
   "devDependencies": {
-    "better-assert": "^1.0.2",
-    "coveralls": "^3.0.1",
-    "mocha": "^5.1.1",
-    "nyc": "^13.1.0",
-    "proxyquire": "^2.0.1",
-    "sinon": "^7.0.0",
-    "standard": "^12.0.1"
+    "@types/chai": "4.1.7",
+    "@types/cross-spawn": "6.0.0",
+    "@types/mocha": "5.2.6",
+    "@types/node": "^12.0.0",
+    "@types/sinon": "^7.0.11",
+    "@typescript-eslint/eslint-plugin": "^1.7.0",
+    "@typescript-eslint/parser": "^1.7.0",
+    "chai": "4.2.0",
+    "coveralls": "3.0.3",
+    "eslint": "^5.16.0",
+    "eslint-config-standard-with-typescript": "^7.0.0",
+    "eslint-plugin-import": "^2.17.2",
+    "eslint-plugin-node": "^9.0.1",
+    "eslint-plugin-promise": "^4.1.1",
+    "eslint-plugin-standard": "^4.0.0",
+    "mocha": "^6.1.4",
+    "nyc": "^14.1.0",
+    "sinon": "^7.3.2",
+    "ts-node": "^8.1.0",
+    "typescript": "^3.4.5"
+  },
+  "nyc": {
+    "include": [
+      "src/**/*.ts"
+    ],
+    "extension": [
+      ".ts"
+    ],
+    "require": [
+      "ts-node/register"
+    ],
+    "reporter": [
+      "text-summary",
+      "html"
+    ],
+    "sourceMap": true,
+    "instrument": true
   }
 }

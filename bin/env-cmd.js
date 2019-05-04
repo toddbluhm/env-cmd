@@ -1,2 +1,2 @@
 #! /usr/bin/env node
-require('../lib').EnvCmd(process.argv.slice(2))
+require('../dist').CLI(process.argv.slice(2))

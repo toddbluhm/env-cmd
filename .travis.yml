@@ -1,11 +1,15 @@
 sudo: required
 dist: trusty
 
+os:
+  - linux
+  # - windows Can not use windows at this time as secrets are not supported yet
+
 language: node_js
 node_js:
-  - "6"
   - "8"
   - "10"
+  - "12"
 
 cache:
   directories:

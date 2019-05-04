@@ -13,7 +13,7 @@ A simple node program for executing commands using an environment from an env fi
 
 ## Basic Usage
 
-**Environment file `./test/.env`**
+**Environment file `./.env`**
 ```
 # This is a comment
 ENV1=THANKS
@@ -25,66 +25,41 @@ ENV3=THE FISH
 ```json
 {
   "scripts": {
-    "test": "env-cmd ./test/.env mocha -R spec"
+    "test": "env-cmd mocha -R spec"
   }
 }
 ```
-or
 
 **Terminal**
 ```sh
-./node_modules/.bin/env-cmd ./test/.env node index.js
+./node_modules/.bin/env-cmd node index.js
 ```
 
-## Advanced Usage
 
-### `--fallback` file usage option
+## 📜 Help
+```
+Usage: _ [options] <command> [...args]
 
-You can specify an `.env.local` (or any name) env file, add that to your `.gitignore` and use that
-in your local development environment. Then you can use a regular `.env` file in root directory
-with production configs that can get committed to a private/protected repo. When `env-cmd` cannot
-find the `.env.local` file it will fallback to looking for a regular `.env` file.
-
-**Environment file `./.env.local`**
-```
-# This is a comment
-ENV1=THANKS
-ENV2=FOR ALL
-ENV3=THE FISH
-```
-**Fallback Environment file `./.env`**
-```
-# This can be used as an example fallback
-ENV1=foo
-ENV2=bar
-ENV3=baz
-ENV4=quux
-ENV5=gorge
+Options:
+  -v, --version                       output the version number
+  -f, --file [path]                   Custom env file file path (default path: ./.env)
+  -r, --rc-file [path]                Custom rc file path (default path: ./.env-cmdrc(|.js|.json)
+  -e, --environments [env1,env2,...]  The rc file environment(s) to use
+  --fallback                          Fallback to default env file path, if custom env file path not found
+  --no-override                       Do not override existing environment variables
+  --use-shell                         Execute the command in a new shell with the given environment
+  -h, --help                          output usage information
 ```
 
-**Package.json**
-uses `./.env` as a fallback
-```json
-{
-  "scripts": {
-    "test": "env-cmd --fallback ./.env.local mocha -R spec"
-  }
-}
-```
-or
-
-**Terminal**
-```sh
-# uses ./.env as a fallback, because it can't find `./.env.local`
-./node_modules/.bin/env-cmd ./.env.local node index.js
-```
+## 🔬 Advanced Usage
 
 ### `.rc` file usage
 
 For more complex projects, a `.env-cmdrc` file can be defined in the root directory and supports
-as many environments as you want. Instead of passing the path to a `.env` file to `env-cmd`, simply
-pass the name of the environment you want to use thats in your `.env-cmdrc` file. You may also use
-multiple environment names to merge env vars together.
+as many environments as you want. Simply use the `-e` flag and provide which environments you wish to
+use from the `.env-cmdrc` file. Using multiple environment names will merge the environment variables
+together. Later environments overwrite earlier ones in the list if conflicting environment variables
+are found.
 
 **.rc file `.env-cmdrc`**
 
@@ -106,19 +81,42 @@ multiple environment names to merge env vars together.
 
 **Terminal**
 ```sh
-./node_modules/.bin/env-cmd production node index.js
+./node_modules/.bin/env-cmd -e production node index.js
 # Or for multiple environments (where `production` vars override `test` vars,
 # but both are included)
-./node_modules/.bin/env-cmd test,production node index.js
+./node_modules/.bin/env-cmd -e test,production node index.js
 ```
 
 ### `--no-override` option
 
-Sometimes you want to set env variables from a file without overriding existing process env vars or shell env vars.
+Prevents overriding of existing environment variables on `process.env` and within the current
+environment.
+
+### `--fallback` file usage option
+
+If the `.env` file does not exist at the provieded custom path, then use the default
+fallback location `./.env` env file instead.
+
+### `--use-shell`
+
+Executes the command within a new shell environment. This is useful if you want to string multiple
+commands together that share the same environment variables.
 
 **Terminal**
 ```sh
-ENV1=welcome ./node_modules/.bin/env-cmd --no-override ./test/.env node index.js
+./node_modules/.bin/env-cmd -f ./test/.env --use-shell "node run lint && node test"
+```
+
+### Asynchronous env file support
+
+EnvCmd supports reading from asynchronous `.env` files. Instead of using a `.env` file, pass in a `.js`
+file that returns a `Promise` resolving to an object (`{ ENV_VAR_NAME: value, ... }`). Asynchronous `.rc`
+files are also supported using `.js` file extension and resolving to an object with top level environment
+names (`{ production: { ENV_VAR_NAME: value, ... } }`).
+
+**Terminal**
+```sh
+./node_modules/.bin/env-cmd -f ./async-file.js node index.js
 ```
 
 ## Examples
@@ -131,7 +129,7 @@ the examples repo [env-cmd-examples](https://github.com/toddbluhm/env-cmd-exampl
 These are the currently accepted environment file formats. If any other formats are desired please create an issue.
 - `key=value`
 - Key/value pairs as JSON
-- JavaScript file exporting an object
+- JavaScript file exporting an `object` or a `Promise` that resolves to an `object`
 - `.env-cmdrc` file (as valid json) in execution directory
 
 ## Path Rules
@@ -149,33 +147,62 @@ Working Directory = `/Users/test/Development/app`
 | Relative | `./some/relative/path.env` or `some/relative/path.env` | `/Users/test/Development/app/some/relative/path.env` |
 | Relative with parent dir | `../some/relative/path.env` | `/Users/test/Development/some/relative/path.env` |
 
+## ⚒ API Usage
+
+### `EnvCmd`
+A function that executes a given command in a new child process with the given environment and options
+  - **`options`** { `object` }
+    - **`command`** { `string` }: The command to execute (`node`, `mocha`, ...)
+    - **`commandArgs`** { `string[]` }: List of arguments to pass to the `command` (`['-R', 'Spec']`)
+    - **`envFile`** { `object` }
+      - **`filePath`** { `string` }: Custom path to .env file to read from (defaults to: `./.env`)
+      - **`fallback`** { `boolean` }: Should fall back to default `./.env` file if custom path does not exist
+    - **`rc`** { `object` }
+      - **`environments`** { `string[]` }: List of environment to read from the `.rc` file
+      - **`filePath`** { `string` }: Custom path to the `.rc` file (defaults to: `./.env-cmdrc(|.js|.json)`)
+    - **`options`** { `object` }
+      - **`noOverride`** { `boolean` }: Prevent `.env` file vars from overriding existing `process.env` vars (default: `false`)
+      - **`useShell`** { `boolean` }: Runs command inside a new shell instance (default: `false`)
+    - **Returns** { `Promise<object>` }: key is env var name and value is the env var value
+
+### `GetEnvVars`
+A function that parses environment variables from a `.env` or a `.rc` file
+  - **`options`** { `object` }
+    - **`envFile`** { `object` }
+      - **`filePath`** { `string` }: Custom path to .env file to read from (defaults to: `./.env`)
+      - **`fallback`** { `boolean` }: Should fall back to default `./.env` file if custom path does not exist
+    - **`rc`** { `object` }
+      - **`environments`** { `string[]` }: List of environment to read from the `.rc` file
+      - **`filePath`** { `string` }: Custom path to the `.rc` file (defaults to: `./.env-cmdrc(|.js|.json)`)
+  - **Returns** { `Promise<object>` }: key is env var name and value is the env var value
+
 ## Why
 
-Because sometimes its just too cumbersome passing lots of environment variables to scripts. Its
+Because sometimes it is just too cumbersome passing a lot of environment variables to scripts. It is
 usually just easier to have a file with all the vars in them, especially for development and testing.
 
-**Do not commit sensitive environment data to a public git repo!**
+🚨**Do not commit sensitive environment data to a public git repo!** 🚨
 
 ## Related Projects
 
 [`cross-env`](https://github.com/kentcdodds/cross-env) - Cross platform setting of environment scripts
 
-## Special Thanks
+## 🎊 Special Thanks
 
 Special thanks to [`cross-env`](https://github.com/kentcdodds/cross-env) for inspiration (use's the
 same `cross-spawn` lib underneath too).
 
-## Contributors
+## 🎉 Contributors
 
 - Eric Lanehart
 - Jon Scheiding
 - Alexander Praetorius
 - Anton Versal
 
-## Contributing Guide
+## 📋 Contributing Guide
 I welcome all pull requests. Please make sure you add appropriate test cases for any features
 added. Before opening a PR please make sure to run the following scripts:
 
-- `npm run lint` checks for code errors and formats according to [js-standard](https://github.com/feross/standard)
+- `npm run lint` checks for code errors and format according to [js-standard](https://github.com/feross/standard)
 - `npm test` make sure all tests pass
 - `npm run test-cover` make sure the coverage has not decreased from current master
