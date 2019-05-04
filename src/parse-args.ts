@@ -21,17 +21,32 @@ export function parseArgs (args: string[]): EnvCmdOptions {
   const command = program.args[0]
   const commandArgs = program.args.slice(1)
   const noOverride = !program.override
+
+  let rc: any
+  if (program.environments && program.environments.length) {
+    rc = rc || {}
+    rc.environments = program.environments
+  }
+  if (program.rcFile) {
+    rc = rc || {}
+    rc.filePath = program.rcFile
+  }
+
+  let envFile: any
+  if (program.file) {
+    envFile = envFile || {}
+    envFile.filePath = program.file
+  }
+  if (program.fallback != null) {
+    envFile = envFile || {}
+    envFile.fallback = program.fallback
+  }
+
   return {
     command,
     commandArgs,
-    envFile: {
-      filePath: program.file,
-      fallback: program.fallback
-    },
-    rc: {
-      environments: program.environments,
-      filePath: program.rcFile
-    },
+    envFile,
+    rc,
     options: {
       noOverride
     }

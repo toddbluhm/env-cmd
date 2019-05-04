@@ -45,10 +45,10 @@ export class TermSignals {
    * Terminate parent process helper
    */
   public _terminateProcess (code?: number, signal?: string): void {
-    if (signal !== undefined) {
+    if (signal != null) {
       return process.kill(process.pid, signal)
     }
-    if (code !== undefined) {
+    if (code != null) {
       return process.exit(code)
     }
     throw new Error('Unable to terminate parent process successfully')
