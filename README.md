@@ -13,7 +13,7 @@ A simple node program for executing commands using an environment from an env fi
 
 ## Basic Usage
 
-**Environment file `./test/.env`**
+**Environment file `./.env`**
 ```
 # This is a comment
 ENV1=THANKS
@@ -25,14 +25,14 @@ ENV3=THE FISH
 ```json
 {
   "scripts": {
-    "test": "env-cmd -f ./test/.env mocha -R spec"
+    "test": "env-cmd mocha -R spec"
   }
 }
 ```
 
 **Terminal**
 ```sh
-./node_modules/.bin/env-cmd -f ./test/.env node index.js
+./node_modules/.bin/env-cmd node index.js
 ```
 
 
@@ -42,11 +42,11 @@ Usage: _ [options] <command> [...args]
 
 Options:
   -v, --version                       output the version number
-  -f, --file [path]                   Custom .env file location (default location: ./.env)
-  -r, --rc-file [path]                Custom .env-cmdrc file location (default location: ./.env-cmdrc(|.js|.json)
-  -e, --environments [env1,env2,...]  The rc-file environments to select
-  --fallback                          Enables auto fallback to default env file location ./.env
-  --no-override                       Do not override existing env vars on process.env
+  -f, --file [path]                   Custom env file file path (default path: ./.env)
+  -r, --rc-file [path]                Custom rc file path (default path: ./.env-cmdrc(|.js|.json)
+  -e, --environments [env1,env2,...]  The rc file environment(s) to use
+  --fallback                          Fallback to default env file path, if custom env file path not found
+  --no-override                       Do not override existing environment variables
   --use-shell                         Execute the command in a new shell with the given environment
   -h, --help                          output usage information
 ```
@@ -57,8 +57,9 @@ Options:
 
 For more complex projects, a `.env-cmdrc` file can be defined in the root directory and supports
 as many environments as you want. Simply use the `-e` flag and provide which environments you wish to
-use from the `.env-cmdrc` file. Using multiple environment names will merge the env vars together with
-later environments overwritting earlier ones.
+use from the `.env-cmdrc` file. Using multiple environment names will merge the environment variables
+together. Later environments overwrite earlier ones in the list if conflicting environment variables
+are found.
 
 **.rc file `.env-cmdrc`**
 
@@ -88,19 +89,18 @@ later environments overwritting earlier ones.
 
 ### `--no-override` option
 
-Prevents overwritting of existing env vars on `process.env`
+Prevents overriding of existing environment variables on `process.env` and within the current
+environment.
 
 ### `--fallback` file usage option
 
-You can specify a `.env.local` (or any name) env file, add that to your `.gitignore` and use that
-in your local development environment. Then you can use a regular `.env` file in the root directory
-with production configs that you can commit to a private/protected repo. When `env-cmd` cannot
-find the `.env.local` file it will fallback to looking for a regular `.env` file.
+If the `.env` file does not exist at the provieded custom path, then use the default
+fallback location `./.env` env file instead.
 
 ### `--use-shell`
 
-Executes the command within a new shell instance. This is useful if you want to string multiple 
-commands together and share the same env vars.
+Executes the command within a new shell environment. This is useful if you want to string multiple
+commands together that share the same environment variables.
 
 **Terminal**
 ```sh
@@ -129,7 +129,7 @@ the examples repo [env-cmd-examples](https://github.com/toddbluhm/env-cmd-exampl
 These are the currently accepted environment file formats. If any other formats are desired please create an issue.
 - `key=value`
 - Key/value pairs as JSON
-- JavaScript file exporting an object
+- JavaScript file exporting an `object` or a `Promise` that resolves to an `object`
 - `.env-cmdrc` file (as valid json) in execution directory
 
 ## Path Rules
@@ -150,7 +150,7 @@ Working Directory = `/Users/test/Development/app`
 ## ⚒ API Usage
 
 ### `EnvCmd`
-Executes a command in a new child process with the given options
+A function that executes a given command in a new child process with the given environment and options
   - **`options`** { `object` }
     - **`command`** { `string` }: The command to execute (`node`, `mocha`, ...)
     - **`commandArgs`** { `string[]` }: List of arguments to pass to the `command` (`['-R', 'Spec']`)
@@ -166,7 +166,7 @@ Executes a command in a new child process with the given options
     - **Returns** { `Promise<object>` }: key is env var name and value is the env var value
 
 ### `GetEnvVars`
-Parses environment variables from a `.env` or a `.rc` file
+A function that parses environment variables from a `.env` or a `.rc` file
   - **`options`** { `object` }
     - **`envFile`** { `object` }
       - **`filePath`** { `string` }: Custom path to .env file to read from (defaults to: `./.env`)

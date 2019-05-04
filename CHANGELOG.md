@@ -5,11 +5,12 @@
 - ***BREAKING***: Dropping support for node v4 and v6
 - **Change**: Updated all dependencies
 - **Change**: Update package-lock.json file
-- **Feature**: Added support for asyncronous .env and .rc files
+- **Feature**: Added support for asynchronous .env and .rc files
 - **Feature**: Added support for a programmatic API
-- **Feature**: Added --use-shell option
+- **Feature**: Added --use-shell option (thanks to nidkil)
 - **Fix**: Keep newline (`\n`) characters intact when parsing env files
 - **Change**: Added node v10 and v12 to build automation
+- **Change**: Updated Readme file to reflect new options and CLI changes
 
 ## 8.0.2
 - **Change**: Updated dependencies and packages.json to fix `npm audit` concerns.
