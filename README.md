@@ -101,7 +101,8 @@ find the `.env.local` file it will fallback to looking for a regular `.env` file
 
 EnvCmd supports reading from asynchronous `.env` files. Instead of using a `.env` file, pass in a `.js`
 file that returns a `Promise` resolving to an object (`{ ENV_VAR_NAME: value, ... }`). Asynchronous `.rc`
-files are also supported using `.js` file extension.
+files are also supported using `.js` file extension and resolving to an object with top level environment
+names (`{ production: { ENV_VAR_NAME: value, ... } }`).
 
 **Terminal**
 ```sh
