@@ -35,7 +35,8 @@ ENV3=THE FISH
 ./node_modules/.bin/env-cmd -f ./test/.env node index.js
 ```
 
-**Usage Help**
+
+## Help
 ```
 Usage: _ [options] <command> [...args]
 
