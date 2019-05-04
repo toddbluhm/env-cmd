@@ -136,9 +136,37 @@ Working Directory = `/Users/test/Development/app`
 | Relative | `./some/relative/path.env` or `some/relative/path.env` | `/Users/test/Development/app/some/relative/path.env` |
 | Relative with parent dir | `../some/relative/path.env` | `/Users/test/Development/some/relative/path.env` |
 
+## API Usage
+
+### `EnvCmd`
+Executes a command in a new child process with the given options
+  - **`options`** { `object` }
+    - **`command`** { `string` }: The command to execute (`node`, `mocha`, ...)
+    - **`commandArgs`** { `string[]` }: List of arguments to pass to the `command` (`['-R', 'Spec']`)
+    - **`envFile`** { `object` }
+      - **`filePath`** { `string` }: Custom path to .env file to read from (defaults to: `./.env`)
+      - **`fallback`** { `boolean` }: Should fall back to default `./.env` file if custom path does not exist
+    - **`rc`** { `object` }
+      - **`environments`** { `string[]` }: List of environment to read from the `.rc` file
+      - **`filePath`** { `string` }: Custom path to the `.rc` file (defaults to: `./.env-cmdrc(|.js|.json)`)
+    - **`options`** { `object` }
+      - **`noOverride`** { `boolean` }: Prevent `.env` file vars from overriding existing `process.env` vars
+    - **Returns** { `Promise<object>` }: key is env var name and value is the env var value
+
+### `GetEnvVars`
+Parses environment variables from a `.env` or a `.rc` file
+  - **`options`** { `object` }
+    - **`envFile`** { `object` }
+      - **`filePath`** { `string` }: Custom path to .env file to read from (defaults to: `./.env`)
+      - **`fallback`** { `boolean` }: Should fall back to default `./.env` file if custom path does not exist
+    - **`rc`** { `object` }
+      - **`environments`** { `string[]` }: List of environment to read from the `.rc` file
+      - **`filePath`** { `string` }: Custom path to the `.rc` file (defaults to: `./.env-cmdrc(|.js|.json)`)
+  - **Returns** { `Promise<object>` }: key is env var name and value is the env var value
+
 ## Why
 
-Because sometimes its just too cumbersome passing lots of environment variables to scripts. Its
+Because sometimes it is just too cumbersome passing a lot of environment variables to scripts. It is
 usually just easier to have a file with all the vars in them, especially for development and testing.
 
 **Do not commit sensitive environment data to a public git repo!**
