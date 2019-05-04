@@ -1,12 +1,13 @@
-
 import * as fs from 'fs'
 import * as path from 'path'
-import { resolveEnvFilePath } from './utils'
+import { resolveEnvFilePath, isPromise } from './utils'
+
+const REQUIRE_HOOK_EXTENSIONS = ['.json', '.js']
 
 /**
- * Uses the cli passed env file path to get env vars
+ * Gets the environment vars from an env file
  */
-export function useCmdLine (envFilePath: string): { [key: string]: any } {
+export async function getEnvFileVars (envFilePath: string): Promise<{ [key: string]: any }> {
   const absolutePath = resolveEnvFilePath(envFilePath)
   if (!fs.existsSync(absolutePath)) {
     throw new Error(`Invalid env file path (${envFilePath}).`)
@@ -14,9 +15,10 @@ export function useCmdLine (envFilePath: string): { [key: string]: any } {
 
   // Get the file extension
   const ext = path.extname(absolutePath).toLowerCase()
-  let env
-  if (ext === '.json') {
-    env = require(absolutePath)
+  let env = {}
+  if (~REQUIRE_HOOK_EXTENSIONS.indexOf(ext)) {
+    const possiblePromise = require(absolutePath) /* eslint-disable-line */
+    env = isPromise(possiblePromise) ? await possiblePromise : possiblePromise
   } else {
     const file = fs.readFileSync(absolutePath, { encoding: 'utf8' })
     env = parseEnvString(file)

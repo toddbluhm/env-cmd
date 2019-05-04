@@ -1,5 +1,7 @@
+.nyc_output
+.vscode
 coverage/
 node_modules/
+src/
 test/
 *.yml
-.nyc_output

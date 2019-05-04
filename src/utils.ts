@@ -18,3 +18,10 @@ export function resolveEnvFilePath (userPath: string): string {
 export function parseArgList (list: string): string[] {
   return list.split(',')
 }
+
+/**
+ * A simple function to test if the value is a promise
+ */
+export function isPromise (value: any | PromiseLike<Object>): boolean {
+  return value && typeof value.then === 'function'
+}

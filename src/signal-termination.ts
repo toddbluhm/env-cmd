@@ -1,84 +1,74 @@
 import { ChildProcess } from 'child_process' // eslint-disable-line
-import * as program from 'commander'
 
 const SIGNALS_TO_HANDLE: NodeJS.Signals[] = [
   'SIGINT', 'SIGTERM', 'SIGHUP'
 ]
 
-const terminateSpawnedProcessFuncHandlers: {[key: string]: any } = {}
-const sharedState = {
-  exitCalled: false
-}
+export class TermSignals {
+  private terminateSpawnedProcessFuncHandlers: { [key: string]: any } = {}
+  public _exitCalled = false
 
-export function handleTermSignals (proc: ChildProcess) {
-  // Handle a few special signals and then the general node exit event
-  // on both parent and spawned process
-  SIGNALS_TO_HANDLE.forEach(signal => {
-    terminateSpawnedProcessFuncHandlers[signal] =
-      (signal: any, code: any) => terminateSpawnedProc(proc, signal, sharedState, code)
-    process.once(signal, terminateSpawnedProcessFuncHandlers[signal])
-  })
-  process.once('exit', terminateSpawnedProcessFuncHandlers['SIGTERM'])
+  public handleTermSignals (proc: ChildProcess): void {
+    // Terminate child process if parent process receives termination events
+    SIGNALS_TO_HANDLE.forEach((signal): void => {
+      this.terminateSpawnedProcessFuncHandlers[signal] =
+        (signal: any, code: any): void => {
+          this._removeProcessListeners()
+          if (!this._exitCalled) {
+            this._exitCalled = true
+            proc.kill(signal)
+            this._terminateProcess(code, signal)
+          }
+        }
+      process.once(signal, this.terminateSpawnedProcessFuncHandlers[signal])
+    })
+    process.once('exit', this.terminateSpawnedProcessFuncHandlers['SIGTERM'])
 
-  const terminateProcessFuncHandler =
-    (code: any, signal: any) => terminateParentProcess(code, signal, sharedState)
-  proc.on('exit', terminateProcessFuncHandler)
-}
-
-/**
- * Helper for terminating the spawned process
- */
-export function terminateSpawnedProc (
-  proc: ChildProcess, signal: string, sharedState: any, code?: number
-) {
-  removeProcessListeners()
-
-  if (!sharedState.exitCalled) {
-    sharedState.exitCalled = true
-    proc.kill(signal)
+    // Terminate parent process if child process receives termination events
+    proc.on('exit', (code: number | undefined, signal: string | undefined): void => {
+      this._removeProcessListeners()
+      if (!this._exitCalled) {
+        this._exitCalled = true
+        this._terminateProcess(code, signal)
+      }
+    })
   }
 
-  if (code) {
-    return process.exit(code)
+  /**
+   * Enables catching of unhandled exceptions
+   */
+  public handleUncaughtExceptions (): void {
+    process.on('uncaughtException', (e): void => this._uncaughtExceptionHandler(e))
   }
 
-  process.kill(process.pid, signal)
-}
-
-/**
- * Helper for terminating the parent process
- */
-export function terminateParentProcess (code: number, signal: string, sharedState: any) {
-  removeProcessListeners()
-
-  if (!sharedState.exitCalled) {
-    sharedState.exitCalled = true
-    if (signal) {
+  /**
+   * Terminate parent process helper
+   */
+  public _terminateProcess (code?: number, signal?: string): void {
+    if (signal !== undefined) {
       return process.kill(process.pid, signal)
     }
-    process.exit(code)
+    if (code !== undefined) {
+      return process.exit(code)
+    }
+    throw new Error('Unable to terminate parent process successfully')
+  }
+
+  /**
+   * Exit event listener clean up helper
+   */
+  public _removeProcessListeners (): void {
+    SIGNALS_TO_HANDLE.forEach((signal): void => {
+      process.removeListener(signal, this.terminateSpawnedProcessFuncHandlers[signal])
+    })
+    process.removeListener('exit', this.terminateSpawnedProcessFuncHandlers['SIGTERM'])
+  }
+
+  /**
+  * General exception handler
+  */
+  public _uncaughtExceptionHandler (e: Error): void {
+    console.error(e.message)
+    process.exit(1)
   }
 }
-
-/**
- * Helper for removing all termination signal listeners from parent process
- */
-export function removeProcessListeners () {
-  SIGNALS_TO_HANDLE.forEach(signal => {
-    process.removeListener(signal, terminateSpawnedProcessFuncHandlers[signal])
-  })
-  process.removeListener('exit', terminateSpawnedProcessFuncHandlers['SIGTERM'])
-}
-
-/**
- * General exception handler
- */
-export function handleUncaughtExceptions (e: Error) {
-  if (e.message.match(/passed/gi)) {
-    console.log(program.outputHelp())
-  }
-  console.log(e.message)
-  process.exit(1)
-}
-
-process.on('uncaughtException', handleUncaughtExceptions)

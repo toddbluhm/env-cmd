@@ -1,34 +1,39 @@
-import * as fs from 'fs'
+import { stat, readFile } from 'fs'
+import { promisify } from 'util'
+import { extname } from 'path'
 import { resolveEnvFilePath } from './utils'
 
+const statAsync = promisify(stat)
+const readFileAsync = promisify(readFile)
+
 /**
- * Uses the rc file and rc environment to get env vars
+ * Gets the env vars from the rc file and rc environments
  */
-export function useRCFile (
-  { environments, path }:
-  { environments: string[], path: string }
-): { [key: string]: any } {
-  const absolutePath = resolveEnvFilePath(path)
-  console.log(absolutePath)
-  if (!fs.existsSync(absolutePath)) {
+export async function getRCFileVars (
+  { environments, filePath }:
+  { environments: string[], filePath: string }
+): Promise<{ [key: string]: any }> {
+  const absolutePath = resolveEnvFilePath(filePath)
+  try {
+    await statAsync(absolutePath)
+  } catch (e) {
     throw new Error('Invalid .rc file path.')
   }
-  const fileData = fs.readFileSync(absolutePath, { encoding: 'utf8' })
-  const parsedData = parseRCFile(fileData)
 
-  if (environments.length === 1 && !parsedData[environments[0]]) {
-    console.error(`Error:
-  Could not find environment:
-    ${environments[0]}
-  in .rc file:
-    ${absolutePath}`)
-    throw new Error(`Missing environment ${environments[0]} in .env-cmdrc file.`)
+  // Get the file extension
+  const ext = extname(absolutePath).toLowerCase()
+  let parsedData: { [key: string]: any }
+  if (ext === '.json' || ext === '.js') {
+    parsedData = require(absolutePath)
+  } else {
+    const file = await readFileAsync(absolutePath, { encoding: 'utf8' })
+    parsedData = parseRCFile(file)
   }
 
   // Parse and merge multiple rc environments together
   let result = {}
   let environmentFound = false
-  environments.forEach(name => {
+  environments.forEach((name): void => {
     const envVars = parsedData[name]
     if (envVars) {
       environmentFound = true
@@ -52,7 +57,7 @@ export function useRCFile (
 }
 
 /**
- * Reads and parses the .env-cmdrc file
+ * Reads and parses the .rc file
  */
 export function parseRCFile (fileData: string): { [key: string]: any } {
   let data
@@ -60,9 +65,9 @@ export function parseRCFile (fileData: string): { [key: string]: any } {
     data = JSON.parse(fileData)
   } catch (e) {
     console.error(`Error:
-  Could not parse the .env-cmdrc file.
-  Please make sure its in a valid JSON format.`)
-    throw new Error(`Unable to parse JSON in .env-cmdrc file.`)
+  Failed to parse the .rc file.
+  Please make sure its a valid JSON format.`)
+    throw new Error(`Unable to parse JSON in .rc file.`)
   }
   return data
 }

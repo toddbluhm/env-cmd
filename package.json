@@ -12,9 +12,9 @@
   "scripts": {
     "test": "mocha -r ts-node/register ./**/*.ts",
     "test-cover": "nyc --reporter=lcov --reporter=text npm test",
-    "test-lint": "standard",
+    "test-lint": "eslint ./**/*.ts",
     "coveralls": "coveralls < coverage/lcov.info",
-    "lint": "standard --env mocha --fix ./**/*.ts",
+    "lint": "eslint --fix ./**/*.ts",
     "build": "tsc"
   },
   "repository": {
@@ -42,28 +42,48 @@
   },
   "homepage": "https://github.com/toddbluhm/env-cmd#readme",
   "dependencies": {
-    "commander": "^2.19.0",
-    "cross-spawn": "^6.0.5"
+    "bluebird": "^3.5.4",
+    "commander": "^2.20.0",
+    "cross-spawn": "6.0.5"
   },
   "devDependencies": {
-    "@types/cross-spawn": "^6.0.0",
-    "@types/node": "^10.12.20",
-    "@typescript-eslint/eslint-plugin": "^1.1.1",
-    "@typescript-eslint/parser": "^1.1.1",
-    "better-assert": "^1.0.2",
-    "coveralls": "^3.0.1",
-    "mocha": "^5.1.1",
-    "nyc": "^13.1.0",
-    "proxyquire": "^2.0.1",
-    "sinon": "^7.2.3",
-    "standard": "^12.0.1",
-    "ts-node": "^8.0.2",
-    "typescript": "~3.2.1"
+    "@types/bluebird": "3.5.26",
+    "@types/chai": "4.1.7",
+    "@types/cross-spawn": "6.0.0",
+    "@types/mocha": "5.2.6",
+    "@types/node": "^12.0.0",
+    "@types/sinon": "^7.0.11",
+    "@typescript-eslint/eslint-plugin": "^1.7.0",
+    "@typescript-eslint/parser": "^1.7.0",
+    "chai": "4.2.0",
+    "coveralls": "3.0.3",
+    "eslint": "^5.16.0",
+    "eslint-config-standard-with-typescript": "^7.0.0",
+    "eslint-plugin-import": "^2.17.2",
+    "eslint-plugin-node": "^9.0.1",
+    "eslint-plugin-promise": "^4.1.1",
+    "eslint-plugin-standard": "^4.0.0",
+    "mocha": "^6.1.4",
+    "nyc": "^14.1.0",
+    "sinon": "^7.3.2",
+    "ts-node": "^8.1.0",
+    "typescript": "^3.4.5"
   },
-  "standard": {
-    "parser": "@typescript-eslint/parser",
-    "plugins": [
-      "@typescript-eslint"
-    ]
+  "nyc": {
+    "include": [
+      "src/**/*.ts"
+    ],
+    "extension": [
+      ".ts"
+    ],
+    "require": [
+      "ts-node/register"
+    ],
+    "reporter": [
+      "text-summary",
+      "html"
+    ],
+    "sourceMap": true,
+    "instrument": true
   }
 }
