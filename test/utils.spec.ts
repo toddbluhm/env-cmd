@@ -39,10 +39,6 @@ describe('utils', (): void => {
   })
 
   describe('isPromise', (): void => {
-    it('should return true for bluebird promise', (): void => {
-      const res = isPromise(Promise.resolve())
-      assert.isTrue(res)
-    })
     it('should return true for native promise', (): void => {
       const res = isPromise(Promise.resolve())
       assert.isTrue(res)
