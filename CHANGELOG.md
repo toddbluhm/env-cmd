@@ -1,9 +1,13 @@
 # Changelog
-## 9.0.0 - Pending
-- ***BREAKING***: Dropping support for node v4
-- **Change**: Updated dev dependencies `sinon` and `nyc`
+## 9.0.0
+- ***BREAKING***: Converted project to Typescript
+- ***BREAKING***: Changes to all option flags, see docs for new options
+- ***BREAKING***: Dropping support for node v4 and v6
+- **Change**: Updated all dependencies
 - **Change**: Update package-lock.json file
-- **Addition**: Added node v10 to build automation
+- **Feature**: Added support for asyncronous .env and .rc files
+- 
+- **Change**: Added node v10 and v12 to build automation
 
 ## 8.0.2
 - **Change**: Updated dependencies and packages.json to fix `npm audit` concerns.

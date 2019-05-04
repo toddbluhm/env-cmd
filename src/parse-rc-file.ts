@@ -1,5 +1,5 @@
 import { stat, readFile } from 'fs'
-import * as promisify from 'util.promisify'
+import { promisify } from 'util'
 import { extname } from 'path'
 import { resolveEnvFilePath, isPromise } from './utils'
 

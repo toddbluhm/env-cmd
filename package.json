@@ -4,7 +4,7 @@
   "description": "Executes a command using the envs in the provided env file",
   "main": "lib/index.js",
   "engines": {
-    "node": ">=6.0.0"
+    "node": ">=8.0.0"
   },
   "bin": {
     "env-cmd": "bin/env-cmd.js"
@@ -43,8 +43,7 @@
   "homepage": "https://github.com/toddbluhm/env-cmd#readme",
   "dependencies": {
     "commander": "^2.20.0",
-    "cross-spawn": "6.0.5",
-    "util.promisify": "^1.0.0"
+    "cross-spawn": "6.0.5"
   },
   "devDependencies": {
     "@types/chai": "4.1.7",
@@ -52,7 +51,6 @@
     "@types/mocha": "5.2.6",
     "@types/node": "^12.0.0",
     "@types/sinon": "^7.0.11",
-    "@types/util.promisify": "^1.0.0",
     "@typescript-eslint/eslint-plugin": "^1.7.0",
     "@typescript-eslint/parser": "^1.7.0",
     "chai": "4.2.0",
