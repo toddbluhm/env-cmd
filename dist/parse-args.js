@@ -15,7 +15,7 @@ function parseArgs(args) {
         .option('-e, --environments [env1,env2,...]', 'The rc-file environments to select', utils_1.parseArgList)
         .option('--fallback', 'Enables auto fallback to default env file location ./.env')
         .option('--no-override', 'Do not override existing env vars on process.env')
-        .option('--use-shell', 'Make env variables available to multiple commands and as command line arguments')
+        .option('--use-shell', 'Execute the command in a new shell with the given environment')
         .parse(['_', '_', ...args]);
     // get the command and command args
     const command = program.args[0];

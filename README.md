@@ -47,6 +47,7 @@ Options:
   -e, --environments [env1,env2,...]  The rc-file environments to select
   --fallback                          Enables auto fallback to default env file location ./.env
   --no-override                       Do not override existing env vars on process.env
+  --use-shell                         Execute the command in a new shell with the given environment
   -h, --help                          output usage information
 ```
 
