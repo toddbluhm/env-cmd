@@ -2,7 +2,8 @@
   "name": "env-cmd",
   "version": "9.0.0",
   "description": "Executes a command using the envs in the provided env file",
-  "main": "lib/index.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "engines": {
     "node": ">=8.0.0"
   },
@@ -10,11 +11,11 @@
     "env-cmd": "bin/env-cmd.js"
   },
   "scripts": {
-    "test": "mocha -r ts-node/register ./**/*.ts",
+    "test": "mocha -r ts-node/register ./test/**/*.ts",
     "test-cover": "nyc --reporter=lcov --reporter=text npm test",
-    "test-lint": "eslint ./**/*.ts",
+    "test-lint": "eslint ./src/**/*.ts ./test/**/*.ts",
     "coveralls": "coveralls < coverage/lcov.info",
-    "lint": "eslint --fix ./**/*.ts",
+    "lint": "eslint --fix ./src/**/*.ts ./test/**/*.ts",
     "build": "tsc"
   },
   "repository": {
