@@ -1,4 +1,8 @@
 # Changelog
+## 9.0.1 - Unreleased
+- **Change**: Fixed some documentation issues
+- **Change**: `npm run lint` command now includes calling `tsc` to check for typescript errors
+
 ## 9.0.0
 - ***BREAKING***: Converted project to Typescript
 - ***BREAKING***: Changes to all option flags, see docs for new options

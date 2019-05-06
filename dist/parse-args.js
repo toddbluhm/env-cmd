@@ -10,7 +10,7 @@ function parseArgs(args) {
     program
         .version('9.0.0', '-v, --version')
         .usage('[options] <command> [...args]')
-        .option('-f, --file [path]', 'Custom env file file path (default path: ./.env)')
+        .option('-f, --file [path]', 'Custom env file path (default path: ./.env)')
         .option('-r, --rc-file [path]', 'Custom rc file path (default path: ./.env-cmdrc(|.js|.json)')
         .option('-e, --environments [env1,env2,...]', 'The rc file environment(s) to use', utils_1.parseArgList)
         .option('--fallback', 'Fallback to default env file path, if custom env file path not found')

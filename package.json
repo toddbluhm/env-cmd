@@ -1,7 +1,7 @@
 {
   "name": "env-cmd",
-  "version": "9.0.0",
-  "description": "Executes a command using the envs in the provided env file",
+  "version": "9.0.1",
+  "description": "Executes a command using the environment variables in an env file",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "engines": {
@@ -15,7 +15,7 @@
     "test-cover": "nyc --reporter=lcov --reporter=text npm test",
     "test-lint": "eslint ./src/**/*.ts ./test/**/*.ts",
     "coveralls": "coveralls < coverage/lcov.info",
-    "lint": "eslint --fix ./src/**/*.ts ./test/**/*.ts",
+    "lint": "eslint --fix ./src/**/*.ts ./test/**/*.ts && tsc --noEmit",
     "build": "tsc"
   },
   "repository": {

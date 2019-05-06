@@ -42,7 +42,7 @@ Usage: _ [options] <command> [...args]
 
 Options:
   -v, --version                       output the version number
-  -f, --file [path]                   Custom env file file path (default path: ./.env)
+  -f, --file [path]                   Custom env file path (default path: ./.env)
   -r, --rc-file [path]                Custom rc file path (default path: ./.env-cmdrc(|.js|.json)
   -e, --environments [env1,env2,...]  The rc file environment(s) to use
   --fallback                          Fallback to default env file path, if custom env file path not found
@@ -61,7 +61,7 @@ use from the `.env-cmdrc` file. Using multiple environment names will merge the 
 together. Later environments overwrite earlier ones in the list if conflicting environment variables
 are found.
 
-**.rc file `.env-cmdrc`**
+**.rc file `./.env-cmdrc`**
 
 ```json
 {
@@ -104,7 +104,7 @@ commands together that share the same environment variables.
 
 **Terminal**
 ```sh
-./node_modules/.bin/env-cmd -f ./test/.env --use-shell "node run lint && node test"
+./node_modules/.bin/env-cmd -f ./test/.env --use-shell "npm run lint && npm test"
 ```
 
 ### Asynchronous env file support
