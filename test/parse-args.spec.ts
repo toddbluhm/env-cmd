@@ -4,7 +4,7 @@ import { parseArgs } from '../src/parse-args'
 
 describe('parseArgs', (): void => {
   const command = 'command'
-  const commandArgs = ['cmda1', 'cmda2']
+  const commandArgs = ['cmda1', 'cmda2', '--cmda3', '-4', 'cmda4']
   const environments = ['development', 'production']
   const rcFilePath = './.env-cmdrc'
   const envFilePath = './.env'
@@ -29,6 +29,16 @@ describe('parseArgs', (): void => {
     const res = parseArgs(['-e', environments[0], command, ...commandArgs])
     assert.sameOrderedMembers(res.commandArgs, commandArgs)
   })
+
+  it('should parse multiple command arguments even if they use the same options flags as env-cmd',
+    (): void => {
+      const commandFlags = ['-f', './other-file', '--use-shell', '-r']
+      const res = parseArgs(['-e', environments[0], command, ...commandFlags])
+      assert.sameOrderedMembers(res.commandArgs, commandFlags)
+      assert.notOk(res.options!.useShell)
+      assert.notOk(res.envFile)
+    }
+  )
 
   it('should parse override option', (): void => {
     const res = parseArgs(['-e', environments[0], '--no-override', command, ...commandArgs])

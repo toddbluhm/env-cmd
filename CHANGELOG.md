@@ -1,5 +1,8 @@
 # Changelog
-## 9.0.1 - Unreleased
+## 9.0.1
+- **BREAKING**: Fixed major bug that required passing `--` inorder to pass flags to the command.
+Normally I release major breaking changes as major versions, but this was a bug and no documentation
+anywhere states using `--` as intended or official behavior.
 - **Change**: Fixed some documentation issues
 - **Change**: `npm run lint` command now includes calling `tsc` to check for typescript errors
 
