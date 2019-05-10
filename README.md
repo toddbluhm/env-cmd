@@ -35,6 +35,13 @@ ENV3=THE FISH
 ./node_modules/.bin/env-cmd node index.js
 ```
 
+## Using custom env file path
+To use a custom env filename or path, pass the `-f` flag. This is a major breaking change from prior versions < 9.0.0
+
+**Terminal**
+```sh
+./node_modules/.bin/env-cmd -f ./custom/path/.env node index.js
+```
 
 ## 📜 Help
 ```
