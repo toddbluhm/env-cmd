@@ -117,7 +117,7 @@ commands together that share the same environment variables.
 ### Asynchronous env file support
 
 EnvCmd supports reading from asynchronous `.env` files. Instead of using a `.env` file, pass in a `.js`
-file that returns a `Promise` resolving to an object (`{ ENV_VAR_NAME: value, ... }`). Asynchronous `.rc`
+file that exports either an object or a `Promise` resolving to an object (`{ ENV_VAR_NAME: value, ... }`). Asynchronous `.rc`
 files are also supported using `.js` file extension and resolving to an object with top level environment
 names (`{ production: { ENV_VAR_NAME: value, ... } }`).
 
