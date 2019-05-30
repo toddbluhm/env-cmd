@@ -1,12 +1,12 @@
 # Changelog
 
-## 9.0.2 - Unreleased
+## 9.0.2
 
 - **Fix**: CLI will now exit with non-zero error code when an error is encountered (thanks to blagh)
 
 ## 9.0.1
 
-- **BREAKING**: Fixed major bug that required passing `--` inorder to pass flags to the command.
+- **BREAKING**: Fixed major bug that required passing `--` in order to pass flags to the command.
 Normally I release major breaking changes as major versions, but this was a bug and no documentation
 anywhere states using `--` as intended or official behavior.
 - **Change**: Fixed some documentation issues

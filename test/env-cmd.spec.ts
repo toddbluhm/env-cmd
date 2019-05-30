@@ -8,13 +8,21 @@ import * as envCmdLib from '../src/env-cmd'
 describe('CLI', (): void => {
   let parseArgsStub: sinon.SinonStub
   let envCmdStub: sinon.SinonStub
+  let processExitStub: sinon.SinonStub
+
   before((): void => {
     parseArgsStub = sinon.stub(parseArgsLib, 'parseArgs')
     envCmdStub = sinon.stub(envCmdLib, 'EnvCmd')
+    processExitStub = sinon.stub(process, 'exit')
   })
 
   after((): void => {
     sinon.restore()
+  })
+
+  afterEach((): void => {
+    sinon.resetHistory()
+    sinon.resetBehavior()
   })
 
   it('should parse the provided args and execute the EnvCmd', async (): Promise<void> => {
@@ -22,6 +30,17 @@ describe('CLI', (): void => {
     await envCmdLib.CLI(['node', './env-cmd', '-v'])
     assert.equal(parseArgsStub.callCount, 1)
     assert.equal(envCmdStub.callCount, 1)
+    assert.equal(processExitStub.callCount, 0)
+  })
+
+  it('should catch exception if EnvCmd throws an exception', async (): Promise<void> => {
+    parseArgsStub.returns({})
+    envCmdStub.throwsException('Error')
+    await envCmdLib.CLI(['node', './env-cmd', '-v'])
+    assert.equal(parseArgsStub.callCount, 1)
+    assert.equal(envCmdStub.callCount, 1)
+    assert.equal(processExitStub.callCount, 1)
+    assert.equal(processExitStub.args[0][0], 1)
   })
 })
 
