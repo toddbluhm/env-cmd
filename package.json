@@ -16,7 +16,8 @@
     "test-lint": "eslint ./src/**/*.ts ./test/**/*.ts",
     "coveralls": "coveralls < coverage/lcov.info",
     "lint": "eslint --fix ./src/**/*.ts ./test/**/*.ts && tsc --noEmit",
-    "build": "tsc"
+    "build": "tsc",
+    "watch": "tsc -w"
   },
   "repository": {
     "type": "git",

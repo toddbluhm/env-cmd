@@ -15,7 +15,12 @@ export async function CLI (args: string[]): Promise<{ [key: string]: any }> {
   const parsedArgs = parseArgs(args)
 
   // Run EnvCmd
-  return exports.EnvCmd(parsedArgs)
+  try {
+    return await exports.EnvCmd(parsedArgs)
+  } catch (e) {
+    console.error(e)
+    return process.exit(1)
+  }
 }
 
 /**

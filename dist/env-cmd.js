@@ -23,7 +23,13 @@ function CLI(args) {
         // Parse the args from the command line
         const parsedArgs = parse_args_1.parseArgs(args);
         // Run EnvCmd
-        return exports.EnvCmd(parsedArgs);
+        try {
+            return yield exports.EnvCmd(parsedArgs);
+        }
+        catch (e) {
+            console.error(e);
+            return process.exit(1);
+        }
     });
 }
 exports.CLI = CLI;
