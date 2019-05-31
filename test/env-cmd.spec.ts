@@ -6,9 +6,9 @@ import * as spawnLib from '../src/spawn'
 import * as envCmdLib from '../src/env-cmd'
 
 describe('CLI', (): void => {
-  let parseArgsStub: sinon.SinonStub
-  let envCmdStub: sinon.SinonStub
-  let processExitStub: sinon.SinonStub
+  let parseArgsStub: sinon.SinonStub<any, any>
+  let envCmdStub: sinon.SinonStub<any, any>
+  let processExitStub: sinon.SinonStub<any, any>
 
   before((): void => {
     parseArgsStub = sinon.stub(parseArgsLib, 'parseArgs')
@@ -45,8 +45,8 @@ describe('CLI', (): void => {
 })
 
 describe('EnvCmd', (): void => {
-  let getEnvVarsStub: sinon.SinonStub
-  let spawnStub: sinon.SinonStub
+  let getEnvVarsStub: sinon.SinonStub<any, any>
+  let spawnStub: sinon.SinonStub<any, any>
   before((): void => {
     getEnvVarsStub = sinon.stub(getEnvVarsLib, 'getEnvVars')
     spawnStub = sinon.stub(spawnLib, 'spawn')
