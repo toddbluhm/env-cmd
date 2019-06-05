@@ -55,7 +55,7 @@ export function parseEnvVars (envString: string): { [key: string]: string } {
     // remove any surrounding quotes
     matches[key] = value
       .replace(/(^['"]|['"]$)/g, '')
-      .replace(`\\n`, `\n`)
+      .replace(/\\n/g, `\n`)
   }
   return matches
 }

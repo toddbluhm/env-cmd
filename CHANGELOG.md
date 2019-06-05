@@ -1,5 +1,9 @@
 # Changelog
 
+## 9.0.3
+
+- **Fix**: Use global flag on regex when parsing and preserving newline characters in env values (thanks to MaximTovstashev)
+
 ## 9.0.2
 
 - **Fix**: CLI will now exit with non-zero error code when an error is encountered (thanks to blagh)

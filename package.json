@@ -1,6 +1,6 @@
 {
   "name": "env-cmd",
-  "version": "9.0.2",
+  "version": "9.0.3",
   "description": "Executes a command using the environment variables in an env file",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

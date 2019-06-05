@@ -62,6 +62,13 @@ describe('parseEnvVars', (): void => {
     assert(envVars.DOUBLE_TWO === '"double_two"')
   })
 
+  it('should preserve newlines when surrounded in quotes', (): void => {
+    const envVars = parseEnvVars(`ONE_NEWLINE="ONE\\n"\nTWO_NEWLINES="HELLO\\nWORLD\\n"\nTHREE_NEWLINES="HELLO\\n\\nWOR\\nLD"\n`)
+    assert(envVars.ONE_NEWLINE === 'ONE\n')
+    assert(envVars.TWO_NEWLINES === 'HELLO\nWORLD\n')
+    assert(envVars.THREE_NEWLINES === 'HELLO\n\nWOR\nLD')
+  })
+
   it('should preserve embedded single quotes', (): void => {
     const envVars = parseEnvVars('SINGLE=\'\'\'\'\nSINGLE_ONE=\'\'single_one\'\'\nSINGLE_TWO="\'single_two\'"\n')
     assert(envVars.SINGLE === '\'\'')
@@ -101,6 +108,16 @@ describe('getEnvFileVars', (): void => {
       'ANSWER': 42,
       'ONLY': 'IN PRODUCTION',
       'GALAXY': 'hitch\nhiking'
+    })
+  })
+
+  it('should parse a json file keeping all newlines intact', async (): Promise<void> => {
+    const env = await getEnvFileVars('./test/test-files/test-newlines.json')
+    assert.deepEqual(env, {
+      'THANKS': 'FOR WHAT?!',
+      'ANSWER': 42,
+      'ONLY': 'IN\n PRODUCTION',
+      'GALAXY': 'hitch\nhiking\n\n'
     })
   })
 

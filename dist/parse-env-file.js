@@ -62,7 +62,7 @@ function parseEnvVars(envString) {
         // remove any surrounding quotes
         matches[key] = value
             .replace(/(^['"]|['"]$)/g, '')
-            .replace(`\\n`, `\n`);
+            .replace(/\\n/g, `\n`);
     }
     return matches;
 }
