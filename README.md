@@ -1,5 +1,5 @@
-[![Travis](https://img.shields.io/travis/toddbluhm/env-cmd.svg)](https://travis-ci.org/toddbluhm/env-cmd)
-[![Coveralls](https://img.shields.io/coveralls/toddbluhm/env-cmd.svg)](https://coveralls.io/github/toddbluhm/env-cmd)
+[![Travis](https://travis-ci.org/toddbluhm/env-cmd.svg?branch=master)](https://travis-ci.org/toddbluhm/env-cmd)
+[![Coverage Status](https://coveralls.io/repos/github/toddbluhm/env-cmd/badge.svg?branch=master)](https://coveralls.io/github/toddbluhm/env-cmd?branch=master)
 [![npm](https://img.shields.io/npm/v/env-cmd.svg?maxAge=86400)](https://www.npmjs.com/package/env-cmd)
 [![npm](https://img.shields.io/npm/dm/env-cmd.svg?maxAge=86400)](https://www.npmjs.com/package/env-cmd)
 [![npm](https://img.shields.io/npm/l/env-cmd.svg?maxAge=2592000)](https://www.npmjs.com/package/env-cmd)

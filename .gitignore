@@ -6,6 +6,7 @@ coverage
 
 # Dependency directory
 node_modules
+package-lock.json
 
 # Code Editor directory
 .vscode

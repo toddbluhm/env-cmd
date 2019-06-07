@@ -25,11 +25,15 @@
   },
   "keywords": [
     "env",
+    "environment",
     "cli",
     "command",
-    "exec",
-    "environment",
-    "run"
+    "cmd",
+    "execute",
+    "run",
+    "file",
+    "variables",
+    "config"
   ],
   "author": "Todd Bluhm",
   "contributors": [
