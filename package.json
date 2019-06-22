@@ -61,7 +61,7 @@
     "@typescript-eslint/parser": "^1.0.0",
     "chai": "^4.0.0",
     "coveralls": "^3.0.0",
-    "eslint": "^5.0.0",
+    "eslint": "^6.0.0",
     "eslint-config-standard-with-typescript": "^7.0.0",
     "eslint-plugin-import": "^2.0.0",
     "eslint-plugin-node": "^9.0.0",
