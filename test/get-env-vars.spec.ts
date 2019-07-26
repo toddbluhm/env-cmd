@@ -7,6 +7,10 @@ import * as envFile from '../src/parse-env-file'
 describe('getEnvVars', (): void => {
   let getRCFileVarsStub: sinon.SinonStub<any, any>
   let getEnvFileVarsStub: sinon.SinonStub<any, any>
+
+  const pathError = new Error()
+  pathError.name = 'PathError'
+
   before((): void => {
     getRCFileVarsStub = sinon.stub(rcFile, 'getRCFileVars')
     getEnvFileVarsStub = sinon.stub(envFile, 'getEnvFileVars')
@@ -36,7 +40,7 @@ describe('getEnvVars', (): void => {
   )
 
   it('should search all default .rc file locations', async (): Promise<void> => {
-    getRCFileVarsStub.throws('Not found.')
+    getRCFileVarsStub.throws(pathError)
     getRCFileVarsStub.onThirdCall().returns({ THANKS: 'FORALLTHEFISH' })
     const envs = await getEnvVars({ rc: { environments: ['production'] } })
     assert.isOk(envs)
@@ -49,7 +53,7 @@ describe('getEnvVars', (): void => {
   })
 
   it('should fail to find .rc file at default location', async (): Promise<void> => {
-    getRCFileVarsStub.throws('Not found.')
+    getRCFileVarsStub.throws(pathError)
     try {
       await getEnvVars({ rc: { environments: ['production'] } })
       assert.fail('should not get here.')
@@ -73,7 +77,7 @@ describe('getEnvVars', (): void => {
   })
 
   it('should fail to find .rc file at custom path location', async (): Promise<void> => {
-    getRCFileVarsStub.throws('Not found.')
+    getRCFileVarsStub.throws(pathError)
     try {
       await getEnvVars({
         rc: { environments: ['production'], filePath: '../.custom-rc' }

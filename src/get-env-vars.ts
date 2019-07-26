@@ -44,15 +44,19 @@ export async function getRCFile (
     try {
       return getRCFileVars({ environments, filePath })
     } catch (e) {
+      if (e.name !== 'PathError') console.log(e)
       throw new Error(`Unable to locate .rc file at location (${filePath})`)
     }
   }
 
   // Use the default .rc file locations
-  for (const path of RC_FILE_DEFAULT_LOCATIONS) {
+  for (const filePath of RC_FILE_DEFAULT_LOCATIONS) {
     try {
-      return getRCFileVars({ environments, filePath: path })
-    } catch (e) { }
+      return await getRCFileVars({ environments, filePath })
+    } catch (e) {
+      if (e.name !== 'PathError') console.log(e)
+    }
   }
+
   throw new Error(`Unable to locate .rc file at default locations (${RC_FILE_DEFAULT_LOCATIONS})`)
 }

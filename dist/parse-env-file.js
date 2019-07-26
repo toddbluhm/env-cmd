@@ -1,12 +1,4 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 const fs = require("fs");
 const path = require("path");
@@ -15,25 +7,23 @@ const REQUIRE_HOOK_EXTENSIONS = ['.json', '.js'];
 /**
  * Gets the environment vars from an env file
  */
-function getEnvFileVars(envFilePath) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const absolutePath = utils_1.resolveEnvFilePath(envFilePath);
-        if (!fs.existsSync(absolutePath)) {
-            throw new Error(`Invalid env file path (${envFilePath}).`);
-        }
-        // Get the file extension
-        const ext = path.extname(absolutePath).toLowerCase();
-        let env = {};
-        if (~REQUIRE_HOOK_EXTENSIONS.indexOf(ext)) {
-            const possiblePromise = require(absolutePath); /* eslint-disable-line */
-            env = utils_1.isPromise(possiblePromise) ? yield possiblePromise : possiblePromise;
-        }
-        else {
-            const file = fs.readFileSync(absolutePath, { encoding: 'utf8' });
-            env = parseEnvString(file);
-        }
-        return env;
-    });
+async function getEnvFileVars(envFilePath) {
+    const absolutePath = utils_1.resolveEnvFilePath(envFilePath);
+    if (!fs.existsSync(absolutePath)) {
+        throw new Error(`Invalid env file path (${envFilePath}).`);
+    }
+    // Get the file extension
+    const ext = path.extname(absolutePath).toLowerCase();
+    let env = {};
+    if (~REQUIRE_HOOK_EXTENSIONS.indexOf(ext)) {
+        const possiblePromise = require(absolutePath); /* eslint-disable-line */
+        env = utils_1.isPromise(possiblePromise) ? await possiblePromise : possiblePromise;
+    }
+    else {
+        const file = fs.readFileSync(absolutePath, { encoding: 'utf8' });
+        env = parseEnvString(file);
+    }
+    return env;
 }
 exports.getEnvFileVars = getEnvFileVars;
 /**

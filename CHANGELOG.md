@@ -1,5 +1,10 @@
 # Changelog
 
+## 10.0.0
+
+- **BREAKING**: TS now targets ES2017
+- **Fix**: Default RC files will not properly be searched
+
 ## 9.0.3
 
 - **Fix**: Use global flag on regex when parsing and preserving newline characters in env values (thanks to MaximTovstashev)
