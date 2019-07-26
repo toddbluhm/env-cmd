@@ -196,7 +196,7 @@ usually just easier to have a file with all the vars in them, especially for dev
 
 ## 🎊 Special Thanks
 
-Special thanks to [`cross-env`](https://github.com/kentcdodds/cross-env) for inspiration (use's the
+Special thanks to [`cross-env`](https://github.com/kentcdodds/cross-env) for inspiration (uses the
 same `cross-spawn` lib underneath too).
 
 ## 🎉 Contributors
