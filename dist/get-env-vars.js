@@ -11,7 +11,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const parse_rc_file_1 = require("./parse-rc-file");
 const parse_env_file_1 = require("./parse-env-file");
 const RC_FILE_DEFAULT_LOCATIONS = ['./.env-cmdrc', './.env-cmdrc.js', './.env-cmdrc.json'];
-const ENV_FILE_DEFAULT_LOCATION = './.env';
+const ENV_FILE_DEFAULT_LOCATIONS = ['./.env', './.env.js', './.env.json'];
 function getEnvVars(options) {
     return __awaiter(this, void 0, void 0, function* () {
         options = options || {};
@@ -36,13 +36,14 @@ function getEnvFile({ filePath, fallback }) {
                 throw new Error(`Unable to locate env file at location (${filePath})`);
             }
         }
-        // Use the default env file location
-        try {
-            return yield parse_env_file_1.getEnvFileVars(ENV_FILE_DEFAULT_LOCATION);
+        // Use the default env file locations
+        for (const path of ENV_FILE_DEFAULT_LOCATIONS) {
+            try {
+                return yield parse_env_file_1.getEnvFileVars(path);
+            }
+            catch (e) { }
         }
-        catch (e) {
-            throw new Error(`Unable to locate env file at default location (${ENV_FILE_DEFAULT_LOCATION})`);
-        }
+        throw new Error(`Unable to locate env file at default locations (${ENV_FILE_DEFAULT_LOCATIONS})`);
     });
 }
 exports.getEnvFile = getEnvFile;

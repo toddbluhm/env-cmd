@@ -3,7 +3,7 @@ import { getRCFileVars } from './parse-rc-file'
 import { getEnvFileVars } from './parse-env-file'
 
 const RC_FILE_DEFAULT_LOCATIONS = ['./.env-cmdrc', './.env-cmdrc.js', './.env-cmdrc.json']
-const ENV_FILE_DEFAULT_LOCATION = './.env'
+const ENV_FILE_DEFAULT_LOCATIONS = ['./.env', './.env.js', './.env.json']
 
 export async function getEnvVars (options?: GetEnvVarOptions): Promise<{ [key: string]: any }> {
   options = options || {}
@@ -28,12 +28,14 @@ export async function getEnvFile (
     }
   }
 
-  // Use the default env file location
-  try {
-    return await getEnvFileVars(ENV_FILE_DEFAULT_LOCATION)
-  } catch (e) {
-    throw new Error(`Unable to locate env file at default location (${ENV_FILE_DEFAULT_LOCATION})`)
+  // Use the default env file locations
+  for (const path of ENV_FILE_DEFAULT_LOCATIONS) {
+    try {
+      return await getEnvFileVars(path)
+    } catch (e) { }
   }
+
+  throw new Error(`Unable to locate env file at default locations (${ENV_FILE_DEFAULT_LOCATIONS})`)
 }
 
 export async function getRCFile (
