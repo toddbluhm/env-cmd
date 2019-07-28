@@ -42,7 +42,7 @@ export async function getRCFile (
   // User provided an .rc file path
   if (filePath) {
     try {
-      return getRCFileVars({ environments, filePath })
+      return await getRCFileVars({ environments, filePath })
     } catch (e) {
       if (e.name !== 'PathError') console.log(e)
       throw new Error(`Unable to locate .rc file at location (${filePath})`)

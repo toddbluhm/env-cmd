@@ -38,7 +38,7 @@ async function getRCFile({ environments, filePath }) {
     // User provided an .rc file path
     if (filePath) {
         try {
-            return parse_rc_file_1.getRCFileVars({ environments, filePath });
+            return await parse_rc_file_1.getRCFileVars({ environments, filePath });
         }
         catch (e) {
             if (e.name !== 'PathError')
