@@ -128,6 +128,18 @@ describe('getEnvVars', (): void => {
     assert.equal(getEnvFileVarsStub.args[0][0], './.env')
   })
 
+  it('should search all default env file locations', async (): Promise<void> => {
+    getEnvFileVarsStub.throws('Not found.')
+    getEnvFileVarsStub.onThirdCall().returns({ THANKS: 'FORALLTHEFISH' })
+    const envs = await getEnvVars()
+    assert.isOk(envs)
+    assert.lengthOf(Object.keys(envs), 1)
+    assert.equal(envs.THANKS, 'FORALLTHEFISH')
+    assert.equal(getEnvFileVarsStub.callCount, 3)
+    assert.isTrue(getEnvFileVarsStub.calledWithExactly('./.env.json'))
+    assert.isTrue(getEnvFileVarsStub.calledWithExactly('./.env.json'))
+  })
+
   it('should fail to find env file at default location', async (): Promise<void> => {
     getEnvFileVarsStub.throws('Not found.')
     try {
