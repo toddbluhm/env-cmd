@@ -48,7 +48,7 @@
   },
   "homepage": "https://github.com/toddbluhm/env-cmd#readme",
   "dependencies": {
-    "commander": "^2.0.0",
+    "commander": "^3.0.0",
     "cross-spawn": "^6.0.0"
   },
   "devDependencies": {
