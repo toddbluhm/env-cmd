@@ -7,6 +7,10 @@ import * as envFile from '../src/parse-env-file'
 describe('getEnvVars', (): void => {
   let getRCFileVarsStub: sinon.SinonStub<any, any>
   let getEnvFileVarsStub: sinon.SinonStub<any, any>
+
+  const pathError = new Error()
+  pathError.name = 'PathError'
+
   before((): void => {
     getRCFileVarsStub = sinon.stub(rcFile, 'getRCFileVars')
     getEnvFileVarsStub = sinon.stub(envFile, 'getEnvFileVars')
@@ -36,7 +40,7 @@ describe('getEnvVars', (): void => {
   )
 
   it('should search all default .rc file locations', async (): Promise<void> => {
-    getRCFileVarsStub.throws('Not found.')
+    getRCFileVarsStub.rejects(pathError)
     getRCFileVarsStub.onThirdCall().returns({ THANKS: 'FORALLTHEFISH' })
     const envs = await getEnvVars({ rc: { environments: ['production'] } })
     assert.isOk(envs)
@@ -49,7 +53,7 @@ describe('getEnvVars', (): void => {
   })
 
   it('should fail to find .rc file at default location', async (): Promise<void> => {
-    getRCFileVarsStub.throws('Not found.')
+    getRCFileVarsStub.rejects(pathError)
     try {
       await getEnvVars({ rc: { environments: ['production'] } })
       assert.fail('should not get here.')
@@ -73,13 +77,14 @@ describe('getEnvVars', (): void => {
   })
 
   it('should fail to find .rc file at custom path location', async (): Promise<void> => {
-    getRCFileVarsStub.throws('Not found.')
+    getRCFileVarsStub.rejects(pathError)
     try {
       await getEnvVars({
         rc: { environments: ['production'], filePath: '../.custom-rc' }
       })
       assert.fail('should not get here.')
     } catch (e) {
+      console.log(e)
       assert.match(e.message, /locate \.rc/gi)
     }
   })
@@ -95,7 +100,7 @@ describe('getEnvVars', (): void => {
   })
 
   it('should fail to find env file at custom location', async (): Promise<void> => {
-    getEnvFileVarsStub.throws('Not found.')
+    getEnvFileVarsStub.rejects('Not found.')
     try {
       await getEnvVars({ envFile: { filePath: '../.env-file' } })
       assert.fail('should not get here.')
@@ -107,7 +112,7 @@ describe('getEnvVars', (): void => {
   it('should parse the env file from the default location if custom ' +
     'location not found and fallback option provided',
   async (): Promise<void> => {
-    getEnvFileVarsStub.onFirstCall().throws('File not found.')
+    getEnvFileVarsStub.onFirstCall().rejects('File not found.')
     getEnvFileVarsStub.returns({ THANKS: 'FORALLTHEFISH' })
     const envs = await getEnvVars({ envFile: { filePath: '../.env-file', fallback: true } })
     assert.isOk(envs)
@@ -129,7 +134,7 @@ describe('getEnvVars', (): void => {
   })
 
   it('should fail to find env file at default location', async (): Promise<void> => {
-    getEnvFileVarsStub.throws('Not found.')
+    getEnvFileVarsStub.rejects('Not found.')
     try {
       await getEnvVars()
       assert.fail('should not get here.')

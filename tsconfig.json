@@ -1,14 +1,11 @@
 {
   "compilerOptions": {
     "outDir": "./dist",
-    "target": "es2015",
+    "target": "es2017",
     "module": "commonjs",
     "strict": true,
     "declaration": true,
     "lib": [
-      "es2015",
-      "es2016",
-      "es2017",
       "es2018"
     ]
   },

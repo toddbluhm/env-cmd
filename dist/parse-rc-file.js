@@ -1,12 +1,4 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 const fs_1 = require("fs");
 const util_1 = require("util");
@@ -17,46 +9,46 @@ const readFileAsync = util_1.promisify(fs_1.readFile);
 /**
  * Gets the env vars from the rc file and rc environments
  */
-function getRCFileVars({ environments, filePath }) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const absolutePath = utils_1.resolveEnvFilePath(filePath);
-        try {
-            yield statAsync(absolutePath);
+async function getRCFileVars({ environments, filePath }) {
+    const absolutePath = utils_1.resolveEnvFilePath(filePath);
+    try {
+        await statAsync(absolutePath);
+    }
+    catch (e) {
+        const pathError = new Error('Invalid .rc file path.');
+        pathError.name = 'PathError';
+        throw pathError;
+    }
+    // Get the file extension
+    const ext = path_1.extname(absolutePath).toLowerCase();
+    let parsedData;
+    if (ext === '.json' || ext === '.js') {
+        const possiblePromise = require(absolutePath); /* eslint-disable-line */
+        parsedData = utils_1.isPromise(possiblePromise) ? await possiblePromise : possiblePromise;
+    }
+    else {
+        const file = await readFileAsync(absolutePath, { encoding: 'utf8' });
+        parsedData = parseRCFile(file);
+    }
+    // Parse and merge multiple rc environments together
+    let result = {};
+    let environmentFound = false;
+    environments.forEach((name) => {
+        const envVars = parsedData[name];
+        if (envVars) {
+            environmentFound = true;
+            result = Object.assign({}, result, envVars);
         }
-        catch (e) {
-            throw new Error('Invalid .rc file path.');
-        }
-        // Get the file extension
-        const ext = path_1.extname(absolutePath).toLowerCase();
-        let parsedData;
-        if (ext === '.json' || ext === '.js') {
-            const possiblePromise = require(absolutePath); /* eslint-disable-line */
-            parsedData = utils_1.isPromise(possiblePromise) ? yield possiblePromise : possiblePromise;
-        }
-        else {
-            const file = yield readFileAsync(absolutePath, { encoding: 'utf8' });
-            parsedData = parseRCFile(file);
-        }
-        // Parse and merge multiple rc environments together
-        let result = {};
-        let environmentFound = false;
-        environments.forEach((name) => {
-            const envVars = parsedData[name];
-            if (envVars) {
-                environmentFound = true;
-                result = Object.assign({}, result, envVars);
-            }
-        });
-        if (!environmentFound) {
-            console.error(`Error:
+    });
+    if (!environmentFound) {
+        console.error(`Error:
   Could not find any environments:
     ${environments}
   in .rc file:
     ${absolutePath}`);
-            throw new Error(`All environments (${environments}) are missing in in .rc file (${absolutePath}).`);
-        }
-        return result;
-    });
+        throw new Error(`All environments (${environments}) are missing in in .rc file (${absolutePath}).`);
+    }
+    return result;
 }
 exports.getRCFileVars = getRCFileVars;
 /**
