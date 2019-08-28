@@ -22,7 +22,7 @@ class TermSignals {
                 };
             process.once(signal, this.terminateSpawnedProcessFuncHandlers[signal]);
         });
-        process.once('exit', this.terminateSpawnedProcessFuncHandlers['SIGTERM']);
+        process.once('exit', this.terminateSpawnedProcessFuncHandlers.SIGTERM);
         // Terminate parent process if child process receives termination events
         proc.on('exit', (code, signal) => {
             this._removeProcessListeners();
@@ -42,10 +42,10 @@ class TermSignals {
      * Terminate parent process helper
      */
     _terminateProcess(code, signal) {
-        if (signal != null) {
+        if (signal !== undefined) {
             return process.kill(process.pid, signal);
         }
-        if (code != null) {
+        if (code !== undefined) {
             return process.exit(code);
         }
         throw new Error('Unable to terminate parent process successfully');
@@ -57,7 +57,7 @@ class TermSignals {
         SIGNALS_TO_HANDLE.forEach((signal) => {
             process.removeListener(signal, this.terminateSpawnedProcessFuncHandlers[signal]);
         });
-        process.removeListener('exit', this.terminateSpawnedProcessFuncHandlers['SIGTERM']);
+        process.removeListener('exit', this.terminateSpawnedProcessFuncHandlers.SIGTERM);
     }
     /**
     * General exception handler

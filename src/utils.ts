@@ -7,7 +7,7 @@ import * as os from 'os'
 export function resolveEnvFilePath (userPath: string): string {
   // Make sure a home directory exist
   const home = os.homedir()
-  if (home) {
+  if (home !== undefined) {
     userPath = userPath.replace(/^~($|\/|\\)/, `${home}$1`)
   }
   return path.resolve(process.cwd(), userPath)
@@ -22,6 +22,6 @@ export function parseArgList (list: string): string[] {
 /**
  * A simple function to test if the value is a promise
  */
-export function isPromise (value: any | PromiseLike<Object>): boolean {
-  return value && typeof value.then === 'function'
+export function isPromise (value: any | PromiseLike<Object>): value is Promise<any> {
+  return value !== undefined && typeof value.then === 'function'
 }

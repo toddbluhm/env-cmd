@@ -5,7 +5,7 @@ const SIGNALS_TO_HANDLE: NodeJS.Signals[] = [
 ]
 
 export class TermSignals {
-  private terminateSpawnedProcessFuncHandlers: { [key: string]: any } = {}
+  private readonly terminateSpawnedProcessFuncHandlers: { [key: string]: any } = {}
   public _exitCalled = false
 
   public handleTermSignals (proc: ChildProcess): void {
@@ -22,7 +22,7 @@ export class TermSignals {
         }
       process.once(signal, this.terminateSpawnedProcessFuncHandlers[signal])
     })
-    process.once('exit', this.terminateSpawnedProcessFuncHandlers['SIGTERM'])
+    process.once('exit', this.terminateSpawnedProcessFuncHandlers.SIGTERM)
 
     // Terminate parent process if child process receives termination events
     proc.on('exit', (code: number | undefined, signal: string | undefined): void => {
@@ -45,10 +45,10 @@ export class TermSignals {
    * Terminate parent process helper
    */
   public _terminateProcess (code?: number, signal?: string): void {
-    if (signal != null) {
+    if (signal !== undefined) {
       return process.kill(process.pid, signal)
     }
-    if (code != null) {
+    if (code !== undefined) {
       return process.exit(code)
     }
     throw new Error('Unable to terminate parent process successfully')
@@ -61,7 +61,7 @@ export class TermSignals {
     SIGNALS_TO_HANDLE.forEach((signal): void => {
       process.removeListener(signal, this.terminateSpawnedProcessFuncHandlers[signal])
     })
-    process.removeListener('exit', this.terminateSpawnedProcessFuncHandlers['SIGTERM'])
+    process.removeListener('exit', this.terminateSpawnedProcessFuncHandlers.SIGTERM)
   }
 
   /**

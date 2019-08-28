@@ -15,7 +15,7 @@ async function getEnvFileVars(envFilePath) {
     // Get the file extension
     const ext = path.extname(absolutePath).toLowerCase();
     let env = {};
-    if (~REQUIRE_HOOK_EXTENSIONS.indexOf(ext)) {
+    if (REQUIRE_HOOK_EXTENSIONS.indexOf(ext) > -1) {
         const possiblePromise = require(absolutePath); /* eslint-disable-line */
         env = utils_1.isPromise(possiblePromise) ? await possiblePromise : possiblePromise;
     }
@@ -48,11 +48,11 @@ function parseEnvVars(envString) {
     while ((match = envParseRegex.exec(envString)) !== null) {
         // Note: match[1] is the full env=var line
         const key = match[2].trim();
-        const value = match[3].trim() || '';
+        const value = match[3].trim();
         // remove any surrounding quotes
         matches[key] = value
             .replace(/(^['"]|['"]$)/g, '')
-            .replace(/\\n/g, `\n`);
+            .replace(/\\n/g, '\n');
     }
     return matches;
 }

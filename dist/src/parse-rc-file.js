@@ -35,7 +35,7 @@ async function getRCFileVars({ environments, filePath }) {
     let environmentFound = false;
     environments.forEach((name) => {
         const envVars = parsedData[name];
-        if (envVars) {
+        if (envVars !== undefined) {
             environmentFound = true;
             result = Object.assign({}, result, envVars);
         }
@@ -63,7 +63,7 @@ function parseRCFile(fileData) {
         console.error(`Error:
   Failed to parse the .rc file.
   Please make sure its a valid JSON format.`);
-        throw new Error(`Unable to parse JSON in .rc file.`);
+        throw new Error('Unable to parse JSON in .rc file.');
     }
     return data;
 }

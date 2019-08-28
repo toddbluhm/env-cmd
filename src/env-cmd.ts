@@ -32,12 +32,11 @@ export async function CLI (args: string[]): Promise<{ [key: string]: any }> {
  * @returns {Promise<{ [key: string]: any }>} Returns an object containing [environment variable name]: value
  */
 export async function EnvCmd (
-  { command, commandArgs, envFile, rc, options }: EnvCmdOptions
+  { command, commandArgs, envFile, rc, options = {} }: EnvCmdOptions
 ): Promise<{ [key: string]: any }> {
-  options = options || {}
   let env = await getEnvVars({ envFile, rc })
   // Override the merge order if --no-override flag set
-  if (options.noOverride) {
+  if (options.noOverride === true) {
     env = Object.assign({}, env, process.env)
   } else {
     // Add in the system environment variables to our environment list

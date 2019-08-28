@@ -5,11 +5,10 @@ import { getEnvFileVars } from './parse-env-file'
 const RC_FILE_DEFAULT_LOCATIONS = ['./.env-cmdrc', './.env-cmdrc.js', './.env-cmdrc.json']
 const ENV_FILE_DEFAULT_LOCATIONS = ['./.env', './.env.js', './.env.json']
 
-export async function getEnvVars (options?: GetEnvVarOptions): Promise<{ [key: string]: any }> {
-  options = options || {}
-  options.envFile = options.envFile || {}
+export async function getEnvVars (options: GetEnvVarOptions = {}): Promise<{ [key: string]: any }> {
+  options.envFile = options.envFile !== undefined ? options.envFile : {}
   // Check for rc file usage
-  if (options.rc) {
+  if (options.rc !== undefined) {
     return getRCFile({ environments: options.rc.environments, filePath: options.rc.filePath })
   }
   return getEnvFile({ filePath: options.envFile.filePath, fallback: options.envFile.fallback })
@@ -19,11 +18,11 @@ export async function getEnvFile (
   { filePath, fallback }: { filePath?: string, fallback?: boolean }
 ): Promise<{ [key: string]: any }> {
   // Use env file
-  if (filePath) {
+  if (filePath !== undefined) {
     try {
       return await getEnvFileVars(filePath)
     } catch (e) { }
-    if (!fallback) {
+    if (fallback !== true) {
       throw new Error(`Unable to locate env file at location (${filePath})`)
     }
   }
@@ -42,11 +41,11 @@ export async function getRCFile (
   { environments, filePath }: { environments: string[], filePath?: string }
 ): Promise<{ [key: string]: any }> {
   // User provided an .rc file path
-  if (filePath) {
+  if (filePath !== undefined) {
     try {
       return await getRCFileVars({ environments, filePath })
     } catch (e) {
-      if (e.name !== 'PathError') console.log(e)
+      if (e.name !== 'PathError') console.error(e)
       throw new Error(`Unable to locate .rc file at location (${filePath})`)
     }
   }
@@ -56,7 +55,7 @@ export async function getRCFile (
     try {
       return await getRCFileVars({ environments, filePath })
     } catch (e) {
-      if (e.name !== 'PathError') console.log(e)
+      if (e.name !== 'PathError') console.error(e)
     }
   }
 

@@ -63,7 +63,7 @@ describe('parseEnvVars', (): void => {
   })
 
   it('should preserve newlines when surrounded in quotes', (): void => {
-    const envVars = parseEnvVars(`ONE_NEWLINE="ONE\\n"\nTWO_NEWLINES="HELLO\\nWORLD\\n"\nTHREE_NEWLINES="HELLO\\n\\nWOR\\nLD"\n`)
+    const envVars = parseEnvVars('ONE_NEWLINE="ONE\\n"\nTWO_NEWLINES="HELLO\\nWORLD\\n"\nTHREE_NEWLINES="HELLO\\n\\nWOR\\nLD"\n')
     assert(envVars.ONE_NEWLINE === 'ONE\n')
     assert(envVars.TWO_NEWLINES === 'HELLO\nWORLD\n')
     assert(envVars.THREE_NEWLINES === 'HELLO\n\nWOR\nLD')
@@ -104,47 +104,47 @@ describe('getEnvFileVars', (): void => {
   it('should parse a json file', async (): Promise<void> => {
     const env = await getEnvFileVars('./test/test-files/test.json')
     assert.deepEqual(env, {
-      'THANKS': 'FOR WHAT?!',
-      'ANSWER': 42,
-      'ONLY': 'IN PRODUCTION',
-      'GALAXY': 'hitch\nhiking'
+      THANKS: 'FOR WHAT?!',
+      ANSWER: 42,
+      ONLY: 'IN PRODUCTION',
+      GALAXY: 'hitch\nhiking'
     })
   })
 
   it('should parse a json file keeping all newlines intact', async (): Promise<void> => {
     const env = await getEnvFileVars('./test/test-files/test-newlines.json')
     assert.deepEqual(env, {
-      'THANKS': 'FOR WHAT?!',
-      'ANSWER': 42,
-      'ONLY': 'IN\n PRODUCTION',
-      'GALAXY': 'hitch\nhiking\n\n'
+      THANKS: 'FOR WHAT?!',
+      ANSWER: 42,
+      ONLY: 'IN\n PRODUCTION',
+      GALAXY: 'hitch\nhiking\n\n'
     })
   })
 
   it('should parse a js file', async (): Promise<void> => {
     const env = await getEnvFileVars('./test/test-files/test.js')
     assert.deepEqual(env, {
-      'THANKS': 'FOR ALL THE FISH',
-      'ANSWER': 0,
-      'GALAXY': 'hitch\nhiking'
+      THANKS: 'FOR ALL THE FISH',
+      ANSWER: 0,
+      GALAXY: 'hitch\nhiking'
     })
   })
 
   it('should parse an async js file', async (): Promise<void> => {
     const env = await getEnvFileVars('./test/test-files/test-async.js')
     assert.deepEqual(env, {
-      'THANKS': 'FOR ALL THE FISH',
-      'ANSWER': 0
+      THANKS: 'FOR ALL THE FISH',
+      ANSWER: 0
     })
   })
 
   it('should parse an env file', async (): Promise<void> => {
     const env = await getEnvFileVars('./test/test-files/test')
     assert.deepEqual(env, {
-      'THANKS': 'FOR WHAT?!',
-      'ANSWER': '42',
-      'ONLY': 'IN=PRODUCTION',
-      'GALAXY': 'hitch\nhiking'
+      THANKS: 'FOR WHAT?!',
+      ANSWER: '42',
+      ONLY: 'IN=PRODUCTION',
+      GALAXY: 'hitch\nhiking'
     })
   })
 

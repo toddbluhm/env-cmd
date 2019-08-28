@@ -13,21 +13,23 @@ export function parseArgs (args: string[]): EnvCmdOptions {
 
   // Reprocess the args with the command and command args removed
   program = parseArgsUsingCommander(args.slice(0, args.indexOf(command)))
-  const noOverride = !program.override
-  const useShell = !!program.useShell
+  const noOverride = !(program.override as boolean)
+  const useShell = !!(program.useShell as boolean)
 
   let rc: any
-  if (program.environments && program.environments.length) {
-    rc = rc || {}
-    rc.environments = program.environments
-    rc.filePath = program.rcFile
+  if (program.environments !== undefined && program.environments.length !== 0) {
+    rc = {
+      environments: program.environments,
+      filePath: program.rcFile
+    }
   }
 
   let envFile: any
-  if (program.file) {
-    envFile = envFile || {}
-    envFile.filePath = program.file
-    envFile.fallback = program.fallback
+  if (program.file !== undefined) {
+    envFile = {
+      filePath: program.file,
+      fallback: program.fallback
+    }
   }
 
   return {

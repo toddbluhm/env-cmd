@@ -2,8 +2,8 @@
   "name": "env-cmd",
   "version": "10.0.0",
   "description": "Executes a command using the environment variables in an env file",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "dist/src/index.js",
+  "types": "dist/src/index.d.ts",
   "engines": {
     "node": ">=8.0.0"
   },
@@ -48,7 +48,7 @@
   },
   "homepage": "https://github.com/toddbluhm/env-cmd#readme",
   "dependencies": {
-    "commander": "^2.0.0",
+    "commander": "^3.0.0",
     "cross-spawn": "^6.0.0"
   },
   "devDependencies": {
@@ -57,12 +57,13 @@
     "@types/mocha": "^5.0.0",
     "@types/node": "^12.0.0",
     "@types/sinon": "^7.0.0",
-    "@typescript-eslint/eslint-plugin": "^1.0.0",
-    "@typescript-eslint/parser": "^1.0.0",
+    "@typescript-eslint/eslint-plugin": "^2.0.0",
+    "@typescript-eslint/parser": "^2.0.0",
     "chai": "^4.0.0",
     "coveralls": "^3.0.0",
-    "eslint": "^5.0.0",
-    "eslint-config-standard-with-typescript": "^8.0.0",
+    "eslint": "^6.0.0",
+    "eslint-config-standard": "^14.0.0",
+    "eslint-config-standard-with-typescript": "toddbluhm/eslint-config-standard-with-typescript#compiled",
     "eslint-plugin-import": "^2.0.0",
     "eslint-plugin-node": "^9.0.0",
     "eslint-plugin-promise": "^4.0.0",

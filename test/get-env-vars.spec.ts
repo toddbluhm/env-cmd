@@ -7,6 +7,7 @@ import * as envFile from '../src/parse-env-file'
 describe('getEnvVars', (): void => {
   let getRCFileVarsStub: sinon.SinonStub<any, any>
   let getEnvFileVarsStub: sinon.SinonStub<any, any>
+  let logStub: sinon.SinonStub<any, any>
 
   const pathError = new Error()
   pathError.name = 'PathError'
@@ -14,6 +15,7 @@ describe('getEnvVars', (): void => {
   before((): void => {
     getRCFileVarsStub = sinon.stub(rcFile, 'getRCFileVars')
     getEnvFileVarsStub = sinon.stub(envFile, 'getEnvFileVars')
+    logStub = sinon.stub(console, 'error')
   })
 
   after((): void => {
@@ -62,6 +64,17 @@ describe('getEnvVars', (): void => {
     }
   })
 
+  it('should log to error console on non-path errors', async (): Promise<void> => {
+    getRCFileVarsStub.rejects(new Error('Non-path Error'))
+    try {
+      await getEnvVars({ rc: { environments: ['production'] } })
+      assert.fail('should not get here.')
+    } catch (e) {
+      assert.match(logStub.getCall(0).args[0].message, /non-path error/gi)
+      assert.match(e.message, /locate \.rc/gi)
+    }
+  })
+
   it('should find .rc file at custom path location', async (): Promise<void> => {
     getRCFileVarsStub.returns({ THANKS: 'FORALLTHEFISH' })
     const envs = await getEnvVars({
@@ -84,7 +97,19 @@ describe('getEnvVars', (): void => {
       })
       assert.fail('should not get here.')
     } catch (e) {
-      console.log(e)
+      assert.match(e.message, /locate \.rc/gi)
+    }
+  })
+
+  it('should log to error console on non-path errors', async (): Promise<void> => {
+    getRCFileVarsStub.rejects(new Error('Non-path Error'))
+    try {
+      await getEnvVars({
+        rc: { environments: ['production'], filePath: '../.custom-rc' }
+      })
+      assert.fail('should not get here.')
+    } catch (e) {
+      assert.match(logStub.getCall(0).args[0].message, /non-path error/gi)
       assert.match(e.message, /locate \.rc/gi)
     }
   })

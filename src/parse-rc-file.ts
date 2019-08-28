@@ -38,7 +38,7 @@ export async function getRCFileVars (
   let environmentFound = false
   environments.forEach((name): void => {
     const envVars = parsedData[name]
-    if (envVars) {
+    if (envVars !== undefined) {
       environmentFound = true
       result = {
         ...result,
@@ -70,7 +70,7 @@ export function parseRCFile (fileData: string): { [key: string]: any } {
     console.error(`Error:
   Failed to parse the .rc file.
   Please make sure its a valid JSON format.`)
-    throw new Error(`Unable to parse JSON in .rc file.`)
+    throw new Error('Unable to parse JSON in .rc file.')
   }
   return data
 }

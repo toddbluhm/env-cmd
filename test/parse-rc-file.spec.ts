@@ -30,9 +30,9 @@ describe('getRCFileVars', (): void => {
     const res = await getRCFileVars({ environments: ['production'], filePath: rcFilePath })
     assert.exists(res)
     assert.deepEqual(res, {
-      'THANKS': 'FOR WHAT?!',
-      'ANSWER': 42,
-      'ONLY': 'IN PRODUCTION'
+      THANKS: 'FOR WHAT?!',
+      ANSWER: 42,
+      ONLY: 'IN PRODUCTION'
     })
   })
 
@@ -40,8 +40,8 @@ describe('getRCFileVars', (): void => {
     const res = await getRCFileVars({ environments: ['test'], filePath: rcJSONFilePath })
     assert.exists(res)
     assert.deepEqual(res, {
-      'THANKS': 'FOR MORE FISHIES',
-      'ANSWER': 21
+      THANKS: 'FOR MORE FISHIES',
+      ANSWER: 21
     })
   })
 
@@ -69,9 +69,9 @@ describe('getRCFileVars', (): void => {
       filePath: './test/test-files/.rc-test-async.js'
     })
     assert.deepEqual(env, {
-      'THANKS': 'FOR WHAT?!',
-      'ANSWER': 42,
-      'ONLY': 'IN PRODUCTION'
+      THANKS: 'FOR WHAT?!',
+      ANSWER: 42,
+      ONLY: 'IN PRODUCTION'
     })
   })
 })

@@ -16,7 +16,7 @@ export async function getEnvFileVars (envFilePath: string): Promise<{ [key: stri
   // Get the file extension
   const ext = path.extname(absolutePath).toLowerCase()
   let env = {}
-  if (~REQUIRE_HOOK_EXTENSIONS.indexOf(ext)) {
+  if (REQUIRE_HOOK_EXTENSIONS.indexOf(ext) > -1) {
     const possiblePromise = require(absolutePath) /* eslint-disable-line */
     env = isPromise(possiblePromise) ? await possiblePromise : possiblePromise
   } else {
@@ -50,12 +50,12 @@ export function parseEnvVars (envString: string): { [key: string]: string } {
   while ((match = envParseRegex.exec(envString)) !== null) {
     // Note: match[1] is the full env=var line
     const key = match[2].trim()
-    const value = match[3].trim() || ''
+    const value = match[3].trim()
 
     // remove any surrounding quotes
     matches[key] = value
       .replace(/(^['"]|['"]$)/g, '')
-      .replace(/\\n/g, `\n`)
+      .replace(/\\n/g, '\n')
   }
   return matches
 }

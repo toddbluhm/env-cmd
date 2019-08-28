@@ -8,7 +8,7 @@ const os = require("os");
 function resolveEnvFilePath(userPath) {
     // Make sure a home directory exist
     const home = os.homedir();
-    if (home) {
+    if (home !== undefined) {
         userPath = userPath.replace(/^~($|\/|\\)/, `${home}$1`);
     }
     return path.resolve(process.cwd(), userPath);
@@ -25,6 +25,6 @@ exports.parseArgList = parseArgList;
  * A simple function to test if the value is a promise
  */
 function isPromise(value) {
-    return value && typeof value.then === 'function';
+    return value !== undefined && typeof value.then === 'function';
 }
 exports.isPromise = isPromise;

@@ -1,7 +1,7 @@
 /// <reference types="node" />
 import { ChildProcess } from 'child_process';
 export declare class TermSignals {
-    private terminateSpawnedProcessFuncHandlers;
+    private readonly terminateSpawnedProcessFuncHandlers;
     _exitCalled: boolean;
     handleTermSignals(proc: ChildProcess): void;
     /**

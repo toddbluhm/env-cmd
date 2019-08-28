@@ -15,16 +15,18 @@ function parseArgs(args) {
     const noOverride = !program.override;
     const useShell = !!program.useShell;
     let rc;
-    if (program.environments && program.environments.length) {
-        rc = rc || {};
-        rc.environments = program.environments;
-        rc.filePath = program.rcFile;
+    if (program.environments !== undefined && program.environments.length !== 0) {
+        rc = {
+            environments: program.environments,
+            filePath: program.rcFile
+        };
     }
     let envFile;
-    if (program.file) {
-        envFile = envFile || {};
-        envFile.filePath = program.file;
-        envFile.fallback = program.fallback;
+    if (program.file !== undefined) {
+        envFile = {
+            filePath: program.file,
+            fallback: program.fallback
+        };
     }
     return {
         command,

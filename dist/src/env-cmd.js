@@ -31,11 +31,10 @@ exports.CLI = CLI;
  * @param {EnvCmdOptions} { command, commandArgs, envFile, rc, options }
  * @returns {Promise<{ [key: string]: any }>} Returns an object containing [environment variable name]: value
  */
-async function EnvCmd({ command, commandArgs, envFile, rc, options }) {
-    options = options || {};
+async function EnvCmd({ command, commandArgs, envFile, rc, options = {} }) {
     let env = await get_env_vars_1.getEnvVars({ envFile, rc });
     // Override the merge order if --no-override flag set
-    if (options.noOverride) {
+    if (options.noOverride === true) {
         env = Object.assign({}, env, process.env);
     }
     else {
