@@ -134,10 +134,11 @@ the examples repo [env-cmd-examples](https://github.com/toddbluhm/env-cmd-exampl
 ## Environment File Formats
 
 These are the currently accepted environment file formats. If any other formats are desired please create an issue.
-- `key=value`
-- Key/value pairs as JSON
-- JavaScript file exporting an `object` or a `Promise` that resolves to an `object`
-- `.env-cmdrc` file (as valid json) in execution directory
+- `.env` as `key=value`
+- `.env.json` Key/value pairs as JSON
+- `.env.js` JavaScript file exporting an `object` or a `Promise` that resolves to an `object`
+- `.env-cmdrc` as valid json or `.env-cmdrc.json` in execution directory with at least one environment `{ "dev": { "key1": "val1" } }`
+- `.env-cmdrc.js` JavaScript file exporting an `object` or a `Promise` that resolves to an `object` that contains at least one environment
 
 ## Path Rules
 
