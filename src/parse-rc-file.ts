@@ -17,7 +17,9 @@ export async function getRCFileVars (
   try {
     await statAsync(absolutePath)
   } catch (e) {
-    throw new Error('Invalid .rc file path.')
+    const pathError = new Error('Invalid .rc file path.')
+    pathError.name = 'PathError'
+    throw pathError
   }
 
   // Get the file extension
