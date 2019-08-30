@@ -3,18 +3,22 @@
 [![npm](https://img.shields.io/npm/v/env-cmd.svg?maxAge=86400)](https://www.npmjs.com/package/env-cmd)
 [![npm](https://img.shields.io/npm/dm/env-cmd.svg?maxAge=86400)](https://www.npmjs.com/package/env-cmd)
 [![npm](https://img.shields.io/npm/l/env-cmd.svg?maxAge=2592000)](https://www.npmjs.com/package/env-cmd)
-[![Standard - JavaScript Style Guide](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com/) [![Greenkeeper badge](https://badges.greenkeeper.io/toddbluhm/env-cmd.svg)](https://greenkeeper.io/)
+[![TS-Standard - Typescript Standard Style Guide](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](https://github.com/toddbluhm/ts-standard)
+[![Greenkeeper badge](https://badges.greenkeeper.io/toddbluhm/env-cmd.svg)](https://greenkeeper.io/)
 
 # env-cmd
+
 A simple node program for executing commands using an environment from an env file.
 
 ## Install
+
 `npm install env-cmd` or `npm install -g env-cmd`
 
 ## Basic Usage
 
 **Environment file `./.env`**
-```
+
+```text
 # This is a comment
 ENV1=THANKS
 ENV2=FOR ALL
@@ -22,6 +26,7 @@ ENV3=THE FISH
 ```
 
 **Package.json**
+
 ```json
 {
   "scripts": {
@@ -31,20 +36,24 @@ ENV3=THE FISH
 ```
 
 **Terminal**
+
 ```sh
 ./node_modules/.bin/env-cmd node index.js
 ```
 
 ## Using custom env file path
+
 To use a custom env filename or path, pass the `-f` flag. This is a major breaking change from prior versions < 9.0.0
 
 **Terminal**
+
 ```sh
 ./node_modules/.bin/env-cmd -f ./custom/path/.env node index.js
 ```
 
 ## 📜 Help
-```
+
+```text
 Usage: _ [options] <command> [...args]
 
 Options:
@@ -87,6 +96,7 @@ are found.
 ```
 
 **Terminal**
+
 ```sh
 ./node_modules/.bin/env-cmd -e production node index.js
 # Or for multiple environments (where `production` vars override `test` vars,
@@ -110,6 +120,7 @@ Executes the command within a new shell environment. This is useful if you want 
 commands together that share the same environment variables.
 
 **Terminal**
+
 ```sh
 ./node_modules/.bin/env-cmd -f ./test/.env --use-shell "npm run lint && npm test"
 ```
@@ -122,6 +133,7 @@ files are also supported using `.js` file extension and resolving to an object w
 names (`{ production: { ENV_VAR_NAME: value, ... } }`).
 
 **Terminal**
+
 ```sh
 ./node_modules/.bin/env-cmd -f ./async-file.js node index.js
 ```
@@ -134,6 +146,7 @@ the examples repo [env-cmd-examples](https://github.com/toddbluhm/env-cmd-exampl
 ## Environment File Formats
 
 These are the currently accepted environment file formats. If any other formats are desired please create an issue.
+
 - `.env` as `key=value`
 - `.env.json` Key/value pairs as JSON
 - `.env.js` JavaScript file exporting an `object` or a `Promise` that resolves to an `object`
@@ -158,31 +171,35 @@ Working Directory = `/Users/test/Development/app`
 ## ⚒ API Usage
 
 ### `EnvCmd`
+
 A function that executes a given command in a new child process with the given environment and options
+
+- **`options`** { `object` }
+  - **`command`** { `string` }: The command to execute (`node`, `mocha`, ...)
+  - **`commandArgs`** { `string[]` }: List of arguments to pass to the `command` (`['-R', 'Spec']`)
+  - **`envFile`** { `object` }
+    - **`filePath`** { `string` }: Custom path to .env file to read from (defaults to: `./.env`)
+    - **`fallback`** { `boolean` }: Should fall back to default `./.env` file if custom path does not exist
+  - **`rc`** { `object` }
+    - **`environments`** { `string[]` }: List of environment to read from the `.rc` file
+    - **`filePath`** { `string` }: Custom path to the `.rc` file (defaults to: `./.env-cmdrc(|.js|.json)`)
   - **`options`** { `object` }
-    - **`command`** { `string` }: The command to execute (`node`, `mocha`, ...)
-    - **`commandArgs`** { `string[]` }: List of arguments to pass to the `command` (`['-R', 'Spec']`)
-    - **`envFile`** { `object` }
-      - **`filePath`** { `string` }: Custom path to .env file to read from (defaults to: `./.env`)
-      - **`fallback`** { `boolean` }: Should fall back to default `./.env` file if custom path does not exist
-    - **`rc`** { `object` }
-      - **`environments`** { `string[]` }: List of environment to read from the `.rc` file
-      - **`filePath`** { `string` }: Custom path to the `.rc` file (defaults to: `./.env-cmdrc(|.js|.json)`)
-    - **`options`** { `object` }
-      - **`noOverride`** { `boolean` }: Prevent `.env` file vars from overriding existing `process.env` vars (default: `false`)
-      - **`useShell`** { `boolean` }: Runs command inside a new shell instance (default: `false`)
-    - **Returns** { `Promise<object>` }: key is env var name and value is the env var value
+    - **`noOverride`** { `boolean` }: Prevent `.env` file vars from overriding existing `process.env` vars (default: `false`)
+    - **`useShell`** { `boolean` }: Runs command inside a new shell instance (default: `false`)
+  - **Returns** { `Promise<object>` }: key is env var name and value is the env var value
 
 ### `GetEnvVars`
+
 A function that parses environment variables from a `.env` or a `.rc` file
-  - **`options`** { `object` }
-    - **`envFile`** { `object` }
-      - **`filePath`** { `string` }: Custom path to .env file to read from (defaults to: `./.env`)
-      - **`fallback`** { `boolean` }: Should fall back to default `./.env` file if custom path does not exist
-    - **`rc`** { `object` }
-      - **`environments`** { `string[]` }: List of environment to read from the `.rc` file
-      - **`filePath`** { `string` }: Custom path to the `.rc` file (defaults to: `./.env-cmdrc(|.js|.json)`)
-  - **Returns** { `Promise<object>` }: key is env var name and value is the env var value
+
+- **`options`** { `object` }
+  - **`envFile`** { `object` }
+    - **`filePath`** { `string` }: Custom path to .env file to read from (defaults to: `./.env`)
+    - **`fallback`** { `boolean` }: Should fall back to default `./.env` file if custom path does not exist
+  - **`rc`** { `object` }
+    - **`environments`** { `string[]` }: List of environment to read from the `.rc` file
+    - **`filePath`** { `string` }: Custom path to the `.rc` file (defaults to: `./.env-cmdrc(|.js|.json)`)
+- **Returns** { `Promise<object>` }: key is env var name and value is the env var value
 
 ## Why
 
@@ -208,6 +225,7 @@ same `cross-spawn` lib underneath too).
 - Anton Versal
 
 ## 📋 Contributing Guide
+
 I welcome all pull requests. Please make sure you add appropriate test cases for any features
 added. Before opening a PR please make sure to run the following scripts:
 
