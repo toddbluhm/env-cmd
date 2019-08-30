@@ -26,9 +26,10 @@ class TermSignals {
         // Terminate parent process if child process receives termination events
         proc.on('exit', (code, signal) => {
             this._removeProcessListeners();
+            const convertedSignal = signal != null ? signal : undefined;
             if (!this._exitCalled) {
                 this._exitCalled = true;
-                this._terminateProcess(code, signal);
+                this._terminateProcess(code, convertedSignal);
             }
         });
     }

@@ -1,5 +1,10 @@
 # Changelog
 
+## 10.0.1
+
+- **Fix**: Fixed bug introduced by strict equal checking for `undefined` when the value was `null`. This
+bug caused most executions of `env-cmd` to fail with an error, when in fact no error had occurred.
+
 ## 10.0.0
 
 - **BREAKING**: Typescript now targets ES2017

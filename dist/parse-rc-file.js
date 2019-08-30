@@ -37,7 +37,7 @@ async function getRCFileVars({ environments, filePath }) {
         const envVars = parsedData[name];
         if (envVars !== undefined) {
             environmentFound = true;
-            result = Object.assign({}, result, envVars);
+            result = Object.assign(Object.assign({}, result), envVars);
         }
     });
     if (!environmentFound) {

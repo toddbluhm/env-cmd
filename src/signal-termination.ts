@@ -25,11 +25,12 @@ export class TermSignals {
     process.once('exit', this.terminateSpawnedProcessFuncHandlers.SIGTERM)
 
     // Terminate parent process if child process receives termination events
-    proc.on('exit', (code: number | undefined, signal: string | undefined): void => {
+    proc.on('exit', (code: number | undefined, signal: string | null): void => {
       this._removeProcessListeners()
+      const convertedSignal = signal != null ? signal : undefined
       if (!this._exitCalled) {
         this._exitCalled = true
-        this._terminateProcess(code, signal)
+        this._terminateProcess(code, convertedSignal)
       }
     })
   }

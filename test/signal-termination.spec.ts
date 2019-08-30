@@ -187,6 +187,16 @@ describe('signal-termination', (): void => {
         assert.equal(_terminateProcessStub.callCount, 1)
         assert.isOk(term._exitCalled)
       })
+
+      it('should convert null signal value to undefined', (): void => {
+        assert.notOk(term._exitCalled)
+        term.handleTermSignals(proc)
+        procOnStub.args[0][1](0, null)
+        assert.equal(_removeProcessListenersStub.callCount, 1)
+        assert.equal(_terminateProcessStub.callCount, 1)
+        assert.strictEqual(_terminateProcessStub.firstCall.args[1], undefined)
+        assert.isOk(term._exitCalled)
+      })
     })
   })
 })
