@@ -2,8 +2,10 @@
 
 ## 10.0.0
 
-- **BREAKING**: TS now targets ES2017
-- **Fix**: Default RC files will not properly be searched
+- **BREAKING**: Typescript now targets ES2017
+- **Fix**: Default RC files will now properly be searched
+- **Change**: Fixed some documentation issues
+- **Change**: Use `ts-standard` instead of `eslint` for linting
 
 ## 9.0.3
 
