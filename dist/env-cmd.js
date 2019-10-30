@@ -32,7 +32,21 @@ exports.CLI = CLI;
  * @returns {Promise<{ [key: string]: any }>} Returns an object containing [environment variable name]: value
  */
 async function EnvCmd({ command, commandArgs, envFile, rc, options = {} }) {
-    let env = await get_env_vars_1.getEnvVars({ envFile, rc });
+    // Try to locate .env file
+    let env;
+    try {
+        env = await get_env_vars_1.getEnvVars({ envFile, rc });
+    }
+    catch (error) {
+        // Pass through without .env file if --optional flag is set
+        if (options.optional === true) {
+            console.warn('No .env files located. Continuing anyway...');
+            env = {};
+        }
+        else {
+            throw error;
+        }
+    }
     // Override the merge order if --no-override flag set
     if (options.noOverride === true) {
         env = Object.assign({}, env, process.env);

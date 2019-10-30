@@ -186,6 +186,7 @@ A function that executes a given command in a new child process with the given e
   - **`options`** { `object` }
     - **`noOverride`** { `boolean` }: Prevent `.env` file vars from overriding existing `process.env` vars (default: `false`)
     - **`useShell`** { `boolean` }: Runs command inside a new shell instance (default: `false`)
+    - **`optional`** { `boolean` }: Runs command even if no `.env` is found (default: `false`)
   - **Returns** { `Promise<object>` }: key is env var name and value is the env var value
 
 ### `GetEnvVars`

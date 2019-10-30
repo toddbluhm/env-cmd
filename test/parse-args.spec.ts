@@ -52,6 +52,12 @@ describe('parseArgs', (): void => {
     assert.isTrue(res.options!.useShell)
   })
 
+  it('should parse optional option', (): void => {
+    const res = parseArgs(['-e', environments[0], '--optional', command, ...commandArgs])
+    assert.exists(res.options)
+    assert.isTrue(res.options!.optional)
+  })
+
   it('should parse rc file path', (): void => {
     const res = parseArgs(['-e', environments[0], '-r', rcFilePath, command, ...commandArgs])
     assert.exists(res.rc)

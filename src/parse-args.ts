@@ -15,6 +15,7 @@ export function parseArgs (args: string[]): EnvCmdOptions {
   program = parseArgsUsingCommander(args.slice(0, args.indexOf(command)))
   const noOverride = !(program.override as boolean)
   const useShell = !!(program.useShell as boolean)
+  const optional = !!(program.optional as boolean)
 
   let rc: any
   if (program.environments !== undefined && program.environments.length !== 0) {
@@ -39,7 +40,8 @@ export function parseArgs (args: string[]): EnvCmdOptions {
     rc,
     options: {
       noOverride,
-      useShell
+      useShell,
+      optional
     }
   }
 }

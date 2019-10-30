@@ -14,6 +14,7 @@ function parseArgs(args) {
     program = parseArgsUsingCommander(args.slice(0, args.indexOf(command)));
     const noOverride = !program.override;
     const useShell = !!program.useShell;
+    const optional = !!program.optional;
     let rc;
     if (program.environments !== undefined && program.environments.length !== 0) {
         rc = {
@@ -35,7 +36,8 @@ function parseArgs(args) {
         rc,
         options: {
             noOverride,
-            useShell
+            useShell,
+            optional
         }
     };
 }
