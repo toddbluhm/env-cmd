@@ -53,7 +53,7 @@ describe('parseArgs', (): void => {
   })
 
   it('should parse optional option', (): void => {
-    const res = parseArgs(['-e', environments[0], '--optional', command, ...commandArgs])
+    const res = parseArgs(['--optional', command, ...commandArgs])
     assert.exists(res.options)
     assert.isTrue(res.options!.optional)
   })

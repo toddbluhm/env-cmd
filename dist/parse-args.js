@@ -53,6 +53,7 @@ function parseArgsUsingCommander(args) {
         .option('--fallback', 'Fallback to default env file path, if custom env file path not found')
         .option('--no-override', 'Do not override existing environment variables')
         .option('--use-shell', 'Execute the command in a new shell with the given environment')
+        .option('--optional', 'Runs command even if no .env is found')
         .parse(['_', '_', ...args]);
 }
 exports.parseArgsUsingCommander = parseArgsUsingCommander;
