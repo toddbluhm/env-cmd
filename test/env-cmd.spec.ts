@@ -154,17 +154,10 @@ describe('EnvCmd', (): void => {
   it('should not fail without an .env file if optional option is true',
     async (): Promise<void> => {
       process.env.BOB = 'cool'
-      getEnvVarsStub.returns({ BOB: 'test' })
+      getEnvVarsStub.throwsException('Error')
       await envCmdLib.EnvCmd({
         command: 'node',
         commandArgs: ['-v'],
-        envFile: {
-          filePath: './.doesnt_exist'
-        },
-        rc: {
-          environments: ['dev'],
-          filePath: './.doesnt_exist'
-        },
         options: {
           optional: true
         }
