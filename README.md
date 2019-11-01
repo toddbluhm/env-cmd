@@ -229,6 +229,6 @@ same `cross-spawn` lib underneath too).
 I welcome all pull requests. Please make sure you add appropriate test cases for any features
 added. Before opening a PR please make sure to run the following scripts:
 
-- `npm run lint` checks for code errors and format according to [js-standard](https://github.com/feross/standard)
+- `npm run lint` checks for code errors and format according to [ts-standard](https://github.com/toddbluhm/ts-standard)
 - `npm test` make sure all tests pass
 - `npm run test-cover` make sure the coverage has not decreased from current master
