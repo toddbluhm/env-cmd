@@ -111,7 +111,7 @@ environment.
 
 ### `--fallback` file usage option
 
-If the `.env` file does not exist at the provieded custom path, then use the default
+If the `.env` file does not exist at the provided custom path, then use the default
 fallback location `./.env` env file instead.
 
 ### `--use-shell`
