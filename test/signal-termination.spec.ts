@@ -8,6 +8,7 @@ describe('signal-termination', (): void => {
       const term = new TermSignals()
       let logStub: sinon.SinonStub<any, any>
       let processStub: sinon.SinonStub<any, any>
+
       beforeEach((): void => {
         logStub = sinon.stub(console, 'error')
         processStub = sinon.stub(process, 'exit')
@@ -118,9 +119,11 @@ describe('signal-termination', (): void => {
       let processOnceStub: sinon.SinonStub<any, any>
       let _removeProcessListenersStub: sinon.SinonStub<any, any>
       let _terminateProcessStub: sinon.SinonStub<any, any>
+      let logInfoStub: sinon.SinonStub<any, any>
       let proc: any
-      beforeEach((): void => {
-        term = new TermSignals()
+
+      function setup (verbose: boolean = false): void {
+        term = new TermSignals({ verbose })
         procKillStub = sinon.stub()
         procOnStub = sinon.stub()
         processOnceStub = sinon.stub(process, 'once')
@@ -130,6 +133,10 @@ describe('signal-termination', (): void => {
           kill: procKillStub,
           on: procOnStub
         }
+      }
+
+      beforeEach((): void => {
+        setup()
       })
 
       afterEach((): void => {
@@ -153,6 +160,16 @@ describe('signal-termination', (): void => {
         assert.isOk(term._exitCalled)
       })
 
+      it('should print child process terminated to info for verbose', (): void => {
+        sinon.restore()
+        setup(true)
+        logInfoStub = sinon.stub(console, 'info')
+        assert.notOk(term._exitCalled)
+        term.handleTermSignals(proc)
+        processOnceStub.args[0][1]('SIGTERM', 1)
+        assert.equal(logInfoStub.callCount, 1)
+      })
+
       it('should not terminate child process if child process termination ' +
         'has already been called by parent', (): void => {
         assert.notOk(term._exitCalled)
@@ -174,6 +191,16 @@ describe('signal-termination', (): void => {
         assert.equal(_removeProcessListenersStub.callCount, 1)
         assert.equal(_terminateProcessStub.callCount, 1)
         assert.isOk(term._exitCalled)
+      })
+
+      it('should print parent process terminated to info for verbose', (): void => {
+        sinon.restore()
+        setup(true)
+        logInfoStub = sinon.stub(console, 'info')
+        assert.notOk(term._exitCalled)
+        term.handleTermSignals(proc)
+        procOnStub.args[0][1](1, 'SIGTERM')
+        assert.equal(logInfoStub.callCount, 1)
       })
 
       it('should not terminate parent process if parent process already terminating', (): void => {

@@ -1,29 +1,8 @@
 import { assert } from 'chai'
-import { readFileSync } from 'fs'
-import { getRCFileVars, parseRCFile } from '../src/parse-rc-file'
+import { getRCFileVars } from '../src/parse-rc-file'
 
 const rcFilePath = './test/test-files/.rc-test'
 const rcJSONFilePath = './test/test-files/.rc-test.json'
-
-describe('parseRCFile', (): void => {
-  it('should parse an .rc file', (): void => {
-    const file = readFileSync(rcFilePath, { encoding: 'utf8' })
-    const res = parseRCFile(file)
-    assert.exists(res)
-    assert.hasAllKeys(res, ['development', 'test', 'production'])
-    assert.equal(res.development.ANSWER, 0)
-    assert.equal(res.production.THANKS, 'FOR WHAT?!')
-  })
-
-  it('should fail to parse an .rc file', (): void => {
-    try {
-      parseRCFile('fdsjk dsjfksdjkla')
-      assert.fail('Should not get here!')
-    } catch (e) {
-      assert.match(e.message, /parse/gi)
-    }
-  })
-})
 
 describe('getRCFileVars', (): void => {
   it('should parse an .rc file with the given environment', async (): Promise<void> => {
@@ -45,6 +24,15 @@ describe('getRCFileVars', (): void => {
     })
   })
 
+  it('should fail to find .rc file', async (): Promise<void> => {
+    try {
+      await getRCFileVars({ environments: ['bad'], filePath: 'bad-path' })
+      assert.fail('Should not get here!')
+    } catch (e) {
+      assert.match(e.message, /\.rc file at path/gi)
+    }
+  })
+
   it('should fail to parse a .rc file if environment does not exist', async (): Promise<void> => {
     try {
       await getRCFileVars({ environments: ['bad'], filePath: rcFilePath })
@@ -56,10 +44,10 @@ describe('getRCFileVars', (): void => {
 
   it('should fail to parse an .rc file', async (): Promise<void> => {
     try {
-      await getRCFileVars({ environments: ['bad'], filePath: './non-existent-file' })
+      await getRCFileVars({ environments: ['bad'], filePath: './test/test-files/.rc-test-bad-format' })
       assert.fail('Should not get here!')
     } catch (e) {
-      assert.match(e.message, /path/gi)
+      assert.match(e.message, /parse/gi)
     }
   })
 

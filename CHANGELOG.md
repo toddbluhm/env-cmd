@@ -1,5 +1,9 @@
 # Changelog
 
+## 10.1.0
+
+- **Feature**: Added a new `--verbose` flag that prints additional debugging info to `console.info`
+
 ## 10.0.1
 
 - **Fix**: Fixed bug introduced by strict equal checking for `undefined` when the value was `null`. This

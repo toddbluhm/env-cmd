@@ -32,7 +32,7 @@ exports.CLI = CLI;
  * @returns {Promise<{ [key: string]: any }>} Returns an object containing [environment variable name]: value
  */
 async function EnvCmd({ command, commandArgs, envFile, rc, options = {} }) {
-    let env = await get_env_vars_1.getEnvVars({ envFile, rc });
+    let env = await get_env_vars_1.getEnvVars({ envFile, rc, verbose: options.verbose });
     // Override the merge order if --no-override flag set
     if (options.noOverride === true) {
         env = Object.assign({}, env, process.env);
@@ -48,7 +48,7 @@ async function EnvCmd({ command, commandArgs, envFile, rc, options = {} }) {
         env
     });
     // Handle any termination signals for parent and child proceses
-    const signals = new signal_termination_1.TermSignals();
+    const signals = new signal_termination_1.TermSignals({ verbose: options.verbose });
     signals.handleUncaughtExceptions();
     signals.handleTermSignals(proc);
     return env;

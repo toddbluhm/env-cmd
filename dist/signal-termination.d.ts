@@ -2,7 +2,11 @@
 import { ChildProcess } from 'child_process';
 export declare class TermSignals {
     private readonly terminateSpawnedProcessFuncHandlers;
+    private readonly verbose;
     _exitCalled: boolean;
+    constructor(options?: {
+        verbose?: boolean;
+    });
     handleTermSignals(proc: ChildProcess): void;
     /**
      * Enables catching of unhandled exceptions
