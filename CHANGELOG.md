@@ -1,8 +1,9 @@
 # Changelog
 
-## 10.1.0
+## 10.1.0 - Pending
 
 - **Feature**: Added a new `--verbose` flag that prints additional debugging info to `console.info`
+- **Change**: Updated `commander` dependency to `v4`
 
 ## 10.0.1
 

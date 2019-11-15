@@ -1,6 +1,6 @@
 {
   "name": "env-cmd",
-  "version": "10.0.1",
+  "version": "10.1.0",
   "description": "Executes a command using the environment variables in an env file",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -47,7 +47,7 @@
   },
   "homepage": "https://github.com/toddbluhm/env-cmd#readme",
   "dependencies": {
-    "commander": "^3.0.0",
+    "commander": "^4.0.0",
     "cross-spawn": "^7.0.0"
   },
   "devDependencies": {
@@ -63,7 +63,7 @@
     "sinon": "^7.0.0",
     "ts-node": "^8.0.0",
     "ts-standard": "^3.0.0",
-    "typescript": "^3.0.0"
+    "typescript": "^3.7.0"
   },
   "nyc": {
     "include": [
