@@ -7,9 +7,3 @@ export declare function getRCFileVars({ environments, filePath }: {
 }): Promise<{
     [key: string]: any;
 }>;
-/**
- * Reads and parses the .rc file
- */
-export declare function parseRCFile(fileData: string): {
-    [key: string]: any;
-};

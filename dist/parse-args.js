@@ -14,6 +14,7 @@ function parseArgs(args) {
     program = parseArgsUsingCommander(args.slice(0, args.indexOf(command)));
     const noOverride = !program.override;
     const useShell = !!program.useShell;
+    const verbose = !!program.verbose;
     let rc;
     if (program.environments !== undefined && program.environments.length !== 0) {
         rc = {
@@ -28,16 +29,21 @@ function parseArgs(args) {
             fallback: program.fallback
         };
     }
-    return {
+    const options = {
         command,
         commandArgs,
         envFile,
         rc,
         options: {
             noOverride,
-            useShell
+            useShell,
+            verbose
         }
     };
+    if (verbose === true) {
+        console.info(`Options: ${JSON.stringify(options, null, 0)}`);
+    }
+    return options;
 }
 exports.parseArgs = parseArgs;
 function parseArgsUsingCommander(args) {
@@ -51,6 +57,7 @@ function parseArgsUsingCommander(args) {
         .option('--fallback', 'Fallback to default env file path, if custom env file path not found')
         .option('--no-override', 'Do not override existing environment variables')
         .option('--use-shell', 'Execute the command in a new shell with the given environment')
+        .option('--verbose', 'Print helpful debugging information')
         .parse(['_', '_', ...args]);
 }
 exports.parseArgsUsingCommander = parseArgsUsingCommander;

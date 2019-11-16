@@ -6,7 +6,12 @@ const SIGNALS_TO_HANDLE: NodeJS.Signals[] = [
 
 export class TermSignals {
   private readonly terminateSpawnedProcessFuncHandlers: { [key: string]: any } = {}
+  private readonly verbose: boolean = false;
   public _exitCalled = false
+
+  constructor (options: { verbose?: boolean } = {}) {
+    this.verbose = options.verbose === true
+  }
 
   public handleTermSignals (proc: ChildProcess): void {
     // Terminate child process if parent process receives termination events
@@ -15,6 +20,9 @@ export class TermSignals {
         (signal: any, code: any): void => {
           this._removeProcessListeners()
           if (!this._exitCalled) {
+            if (this.verbose === true) {
+              console.info(`Parent process exited with signal: ${signal}. Terminating child process...`)
+            }
             this._exitCalled = true
             proc.kill(signal)
             this._terminateProcess(code, signal)
@@ -29,6 +37,12 @@ export class TermSignals {
       this._removeProcessListeners()
       const convertedSignal = signal != null ? signal : undefined
       if (!this._exitCalled) {
+        if (this.verbose === true) {
+          console.info(
+            `Child process exited with code: ${code} and signal: ${signal}. ` +
+            'Terminating parent process...'
+          )
+        }
         this._exitCalled = true
         this._terminateProcess(code, convertedSignal)
       }

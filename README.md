@@ -64,6 +64,7 @@ Options:
   --fallback                          Fallback to default env file path, if custom env file path not found
   --no-override                       Do not override existing environment variables
   --use-shell                         Execute the command in a new shell with the given environment
+  --verbose                           Print helpful debugging information
   -h, --help                          output usage information
 ```
 
@@ -186,6 +187,7 @@ A function that executes a given command in a new child process with the given e
   - **`options`** { `object` }
     - **`noOverride`** { `boolean` }: Prevent `.env` file vars from overriding existing `process.env` vars (default: `false`)
     - **`useShell`** { `boolean` }: Runs command inside a new shell instance (default: `false`)
+    - **`verbose`** { `boolean` }: Prints extra debug logs to `console.info` (default: `false`)
   - **Returns** { `Promise<object>` }: key is env var name and value is the env var value
 
 ### `GetEnvVars`
@@ -199,6 +201,7 @@ A function that parses environment variables from a `.env` or a `.rc` file
   - **`rc`** { `object` }
     - **`environments`** { `string[]` }: List of environment to read from the `.rc` file
     - **`filePath`** { `string` }: Custom path to the `.rc` file (defaults to: `./.env-cmdrc(|.js|.json)`)
+  - **`verbose`** { `boolean` }: Prints extra debug logs to `console.info` (default: `false`)
 - **Returns** { `Promise<object>` }: key is env var name and value is the env var value
 
 ## Why

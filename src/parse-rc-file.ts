@@ -17,7 +17,7 @@ export async function getRCFileVars (
   try {
     await statAsync(absolutePath)
   } catch (e) {
-    const pathError = new Error('Invalid .rc file path.')
+    const pathError = new Error(`Failed to find .rc file at path: ${absolutePath}`)
     pathError.name = 'PathError'
     throw pathError
   }
@@ -25,12 +25,18 @@ export async function getRCFileVars (
   // Get the file extension
   const ext = extname(absolutePath).toLowerCase()
   let parsedData: { [key: string]: any }
-  if (ext === '.json' || ext === '.js') {
-    const possiblePromise = require(absolutePath) /* eslint-disable-line */
-    parsedData = isPromise(possiblePromise) ? await possiblePromise : possiblePromise
-  } else {
-    const file = await readFileAsync(absolutePath, { encoding: 'utf8' })
-    parsedData = parseRCFile(file)
+  try {
+    if (ext === '.json' || ext === '.js') {
+      const possiblePromise = require(absolutePath) /* eslint-disable-line */
+      parsedData = isPromise(possiblePromise) ? await possiblePromise : possiblePromise
+    } else {
+      const file = await readFileAsync(absolutePath, { encoding: 'utf8' })
+      parsedData = JSON.parse(file)
+    }
+  } catch (e) {
+    const parseError = new Error(`Failed to parse .rc file at path: ${absolutePath}`)
+    parseError.name = 'ParseError'
+    throw parseError
   }
 
   // Parse and merge multiple rc environments together
@@ -48,29 +54,12 @@ export async function getRCFileVars (
   })
 
   if (!environmentFound) {
-    console.error(`Error:
-  Could not find any environments:
-    ${environments}
-  in .rc file:
-    ${absolutePath}`)
-    throw new Error(`All environments (${environments}) are missing in in .rc file (${absolutePath}).`)
+    const environmentError = new Error(
+      `Failed to find environments ${environments} at .rc file location: ${absolutePath}`
+    )
+    environmentError.name = 'EnvironmentError'
+    throw environmentError
   }
 
   return result
-}
-
-/**
- * Reads and parses the .rc file
- */
-export function parseRCFile (fileData: string): { [key: string]: any } {
-  let data
-  try {
-    data = JSON.parse(fileData)
-  } catch (e) {
-    console.error(`Error:
-  Failed to parse the .rc file.
-  Please make sure its a valid JSON format.`)
-    throw new Error('Unable to parse JSON in .rc file.')
-  }
-  return data
 }

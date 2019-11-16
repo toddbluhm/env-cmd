@@ -10,7 +10,9 @@ const REQUIRE_HOOK_EXTENSIONS = ['.json', '.js'];
 async function getEnvFileVars(envFilePath) {
     const absolutePath = utils_1.resolveEnvFilePath(envFilePath);
     if (!fs.existsSync(absolutePath)) {
-        throw new Error(`Invalid env file path (${envFilePath}).`);
+        const pathError = new Error(`Invalid env file path (${envFilePath}).`);
+        pathError.name = 'PathError';
+        throw pathError;
     }
     // Get the file extension
     const ext = path.extname(absolutePath).toLowerCase();

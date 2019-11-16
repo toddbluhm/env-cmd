@@ -9,55 +9,106 @@ export async function getEnvVars (options: GetEnvVarOptions = {}): Promise<{ [ke
   options.envFile = options.envFile !== undefined ? options.envFile : {}
   // Check for rc file usage
   if (options.rc !== undefined) {
-    return getRCFile({ environments: options.rc.environments, filePath: options.rc.filePath })
+    return getRCFile({
+      environments: options.rc.environments,
+      filePath: options.rc.filePath,
+      verbose: options.verbose
+    })
   }
-  return getEnvFile({ filePath: options.envFile.filePath, fallback: options.envFile.fallback })
+  return getEnvFile({
+    filePath: options.envFile.filePath,
+    fallback: options.envFile.fallback,
+    verbose: options.verbose
+  })
 }
 
 export async function getEnvFile (
-  { filePath, fallback }: { filePath?: string, fallback?: boolean }
+  { filePath, fallback, verbose }: { filePath?: string, fallback?: boolean, verbose?: boolean }
 ): Promise<{ [key: string]: any }> {
   // Use env file
   if (filePath !== undefined) {
     try {
-      return await getEnvFileVars(filePath)
-    } catch (e) { }
+      const env = await getEnvFileVars(filePath)
+      if (verbose === true) {
+        console.info(`Found .env file at path: ${filePath}`)
+      }
+      return env
+    } catch (e) {
+      if (verbose === true) {
+        console.info(`Failed to find .env file at path: ${filePath}`)
+      }
+    }
     if (fallback !== true) {
-      throw new Error(`Unable to locate env file at location (${filePath})`)
+      throw new Error(`Failed to find .env file at path: ${filePath}`)
     }
   }
 
   // Use the default env file locations
   for (const path of ENV_FILE_DEFAULT_LOCATIONS) {
     try {
-      return await getEnvFileVars(path)
+      const env = await getEnvFileVars(path)
+      if (verbose === true) {
+        console.info(`Found .env file at default path: ${path}`)
+      }
+      return env
     } catch (e) { }
   }
 
-  throw new Error(`Unable to locate env file at default locations (${ENV_FILE_DEFAULT_LOCATIONS})`)
+  const error = `Failed to find .env file at default paths: ${ENV_FILE_DEFAULT_LOCATIONS}`
+  if (verbose === true) {
+    console.info(error)
+  }
+  throw new Error(error)
 }
 
 export async function getRCFile (
-  { environments, filePath }: { environments: string[], filePath?: string }
+  { environments, filePath, verbose }: { environments: string[], filePath?: string, verbose?: boolean }
 ): Promise<{ [key: string]: any }> {
   // User provided an .rc file path
   if (filePath !== undefined) {
     try {
-      return await getRCFileVars({ environments, filePath })
+      const env = await getRCFileVars({ environments, filePath })
+      if (verbose === true) {
+        console.info(`Found environments: ${environments} for .rc file at path: ${filePath}`)
+      }
+      return env
     } catch (e) {
-      if (e.name !== 'PathError') console.error(e)
-      throw new Error(`Unable to locate .rc file at location (${filePath})`)
+      if (e.name === 'PathError') {
+        if (verbose === true) {
+          console.info(`Failed to find .rc file at path: ${filePath}`)
+        }
+      }
+      if (e.name === 'EnvironmentError') {
+        if (verbose === true) {
+          console.info(`Failed to find environments: ${environments} for .rc file at path: ${filePath}`)
+        }
+      }
+      throw e
     }
   }
 
   // Use the default .rc file locations
-  for (const filePath of RC_FILE_DEFAULT_LOCATIONS) {
+  for (const path of RC_FILE_DEFAULT_LOCATIONS) {
     try {
-      return await getRCFileVars({ environments, filePath })
+      const env = await getRCFileVars({ environments, filePath: path })
+      if (verbose === true) {
+        console.info(`Found environments: ${environments} for default .rc file at path: ${path}`)
+      }
+      return env
     } catch (e) {
-      if (e.name !== 'PathError') console.error(e)
+      if (e.name === 'EnvironmentError') {
+        const errorText = `Failed to find environments: ${environments} for .rc file at path: ${path}`
+        if (verbose === true) {
+          console.info(errorText)
+        }
+        throw new Error(errorText)
+      }
     }
   }
 
-  throw new Error(`Unable to locate .rc file at default locations (${RC_FILE_DEFAULT_LOCATIONS})`)
+  const errorText = `Failed to find .rc file at default paths: ${RC_FILE_DEFAULT_LOCATIONS}`
+  if (verbose === true) {
+    console.info(errorText)
+  }
+  throw new Error(errorText)
 }

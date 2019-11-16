@@ -1,4 +1,5 @@
 /* eslint @typescript-eslint/no-non-null-assertion: 0 */
+import * as sinon from 'sinon'
 import { assert } from 'chai'
 import { parseArgs } from '../src/parse-args'
 
@@ -8,6 +9,21 @@ describe('parseArgs', (): void => {
   const environments = ['development', 'production']
   const rcFilePath = './.env-cmdrc'
   const envFilePath = './.env'
+  let logInfoStub: sinon.SinonStub<any, any>
+
+  before((): void => {
+    logInfoStub = sinon.stub(console, 'info')
+  })
+
+  after((): void => {
+    sinon.restore()
+  })
+
+  afterEach((): void => {
+    sinon.resetHistory()
+    sinon.resetBehavior()
+  })
+
   it('should parse environment value', (): void => {
     const res = parseArgs(['-e', environments[0], command])
     assert.exists(res.rc)
@@ -68,5 +84,11 @@ describe('parseArgs', (): void => {
     const res = parseArgs(['-f', envFilePath, '--fallback', command, ...commandArgs])
     assert.exists(res.envFile)
     assert.isTrue(res.envFile!.fallback)
+  })
+
+  it('should print to console.info if --verbose flag is passed', (): void => {
+    const res = parseArgs(['-f', envFilePath, '--verbose', command, ...commandArgs])
+    assert.exists(res.options!.verbose)
+    assert.equal(logInfoStub.callCount, 1)
   })
 })

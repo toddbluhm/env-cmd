@@ -7,6 +7,7 @@ export interface GetEnvVarOptions {
         environments: string[];
         filePath?: string;
     };
+    verbose?: boolean;
 }
 export interface EnvCmdOptions extends GetEnvVarOptions {
     command: string;
@@ -14,5 +15,6 @@ export interface EnvCmdOptions extends GetEnvVarOptions {
     options?: {
         noOverride?: boolean;
         useShell?: boolean;
+        verbose?: boolean;
     };
 }
