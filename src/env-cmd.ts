@@ -3,6 +3,7 @@ import { EnvCmdOptions } from './types'
 import { TermSignals } from './signal-termination'
 import { parseArgs } from './parse-args'
 import { getEnvVars } from './get-env-vars'
+import { expandEnvs } from './expand-envs'
 
 /**
  * Executes env - cmd using command line arguments
@@ -41,6 +42,11 @@ export async function EnvCmd (
   } else {
     // Add in the system environment variables to our environment list
     env = Object.assign({}, process.env, env)
+  }
+
+  if (options.expandEnvs === true) {
+    command = expandEnvs(command, env)
+    commandArgs = commandArgs.map(arg => expandEnvs(arg, env))
   }
 
   // Execute the command with the given environment variables

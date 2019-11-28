@@ -16,5 +16,6 @@ export interface EnvCmdOptions extends GetEnvVarOptions {
         noOverride?: boolean;
         useShell?: boolean;
         verbose?: boolean;
+        expandEnvs?: boolean;
     };
 }

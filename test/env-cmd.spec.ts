@@ -2,6 +2,7 @@ import * as sinon from 'sinon'
 import { assert } from 'chai'
 import * as parseArgsLib from '../src/parse-args'
 import * as getEnvVarsLib from '../src/get-env-vars'
+import * as expandEnvsLib from '../src/expand-envs'
 import * as spawnLib from '../src/spawn'
 import * as envCmdLib from '../src/env-cmd'
 
@@ -9,7 +10,6 @@ describe('CLI', (): void => {
   let parseArgsStub: sinon.SinonStub<any, any>
   let envCmdStub: sinon.SinonStub<any, any>
   let processExitStub: sinon.SinonStub<any, any>
-
   before((): void => {
     parseArgsStub = sinon.stub(parseArgsLib, 'parseArgs')
     envCmdStub = sinon.stub(envCmdLib, 'EnvCmd')
@@ -47,10 +47,12 @@ describe('CLI', (): void => {
 describe('EnvCmd', (): void => {
   let getEnvVarsStub: sinon.SinonStub<any, any>
   let spawnStub: sinon.SinonStub<any, any>
+  let expandEnvsSpy: sinon.SinonSpy<any, any>
   before((): void => {
     getEnvVarsStub = sinon.stub(getEnvVarsLib, 'getEnvVars')
     spawnStub = sinon.stub(spawnLib, 'spawn')
     spawnStub.returns({ on: (): void => {}, kill: (): void => {} })
+    expandEnvsSpy = sinon.spy(expandEnvsLib, 'expandEnvs')
   })
 
   after((): void => {
@@ -148,6 +150,36 @@ describe('EnvCmd', (): void => {
       assert.equal(getEnvVarsStub.callCount, 1)
       assert.equal(spawnStub.callCount, 1)
       assert.equal(spawnStub.args[0][2].shell, true)
+    }
+  )
+
+  it('should should spawn process with command and args expanded if expandEnvs option is true',
+    async (): Promise<void> => {
+      getEnvVarsStub.returns({ PING: 'PONG', CMD: 'node' })
+      await envCmdLib.EnvCmd({
+        command: '$CMD',
+        commandArgs: ['$PING', '\\$IP'],
+        envFile: {
+          filePath: './.env',
+          fallback: true
+        },
+        rc: {
+          environments: ['dev'],
+          filePath: './.rc'
+        },
+        options: {
+          expandEnvs: true
+        }
+      })
+
+      const spawnArgs = spawnStub.args[0]
+
+      assert.equal(getEnvVarsStub.callCount, 1, 'getEnvVars must be called once')
+      assert.equal(spawnStub.callCount, 1)
+      assert.equal(expandEnvsSpy.callCount, 3, 'command + number of args')
+      assert.equal(spawnArgs[0], 'node')
+      assert.sameOrderedMembers(spawnArgs[1], ['PONG', '\\$IP'])
+      assert.equal(spawnArgs[2].env.PING, 'PONG')
     }
   )
 })
