@@ -4,6 +4,7 @@ const spawn_1 = require("./spawn");
 const signal_termination_1 = require("./signal-termination");
 const parse_args_1 = require("./parse-args");
 const get_env_vars_1 = require("./get-env-vars");
+const expand_envs_1 = require("./expand-envs");
 /**
  * Executes env - cmd using command line arguments
  * @export
@@ -40,6 +41,10 @@ async function EnvCmd({ command, commandArgs, envFile, rc, options = {} }) {
     else {
         // Add in the system environment variables to our environment list
         env = Object.assign({}, process.env, env);
+    }
+    if (options.expandEnvs === true) {
+        command = expand_envs_1.expandEnvs(command, env);
+        commandArgs = commandArgs.map(arg => expand_envs_1.expandEnvs(arg, env));
     }
     // Execute the command with the given environment variables
     const proc = spawn_1.spawn(command, commandArgs, {

@@ -61,6 +61,7 @@ Options:
   -f, --file [path]                   Custom env file path (default path: ./.env)
   -r, --rc-file [path]                Custom rc file path (default path: ./.env-cmdrc(|.js|.json)
   -e, --environments [env1,env2,...]  The rc file environment(s) to use
+  -x, --expand-envs                   Replace $var in args and command with environment variables 
   --fallback                          Fallback to default env file path, if custom env file path not found
   --no-override                       Do not override existing environment variables
   --use-shell                         Execute the command in a new shell with the given environment
