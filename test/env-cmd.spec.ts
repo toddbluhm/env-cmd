@@ -51,7 +51,10 @@ describe('EnvCmd', (): void => {
   before((): void => {
     getEnvVarsStub = sinon.stub(getEnvVarsLib, 'getEnvVars')
     spawnStub = sinon.stub(spawnLib, 'spawn')
-    spawnStub.returns({ on: (): void => {}, kill: (): void => {} })
+    spawnStub.returns({
+      on: (): void => { /* Fake the on method */ },
+      kill: (): void => { /* Fake the kill method */ }
+    })
     expandEnvsSpy = sinon.spy(expandEnvsLib, 'expandEnvs')
   })
 

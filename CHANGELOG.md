@@ -3,7 +3,10 @@
 ## 10.1.0 - Pending
 
 - **Feature**: Added a new `--verbose` flag that prints additional debugging info to `console.info`
-- **Change**: Updated `commander` dependency to `v4`
+- **Feature**: Added support for expanding vars using the `-x` flag. 
+Note: only supports for `$var` syntax
+- **Upgrade**: Updated `commander` dependency to `v4`
+- **Upgrade**: Updated `sinon` and `nyc` dev dependencies
 
 ## 10.0.1
 
