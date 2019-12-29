@@ -1,5 +1,6 @@
 import * as sinon from 'sinon'
 import { assert } from 'chai'
+import * as signalTermLib from '../src/signal-termination'
 import * as parseArgsLib from '../src/parse-args'
 import * as getEnvVarsLib from '../src/get-env-vars'
 import * as expandEnvsLib from '../src/expand-envs'
@@ -7,22 +8,24 @@ import * as spawnLib from '../src/spawn'
 import * as envCmdLib from '../src/env-cmd'
 
 describe('CLI', (): void => {
+  let sandbox: sinon.SinonSandbox
   let parseArgsStub: sinon.SinonStub<any, any>
   let envCmdStub: sinon.SinonStub<any, any>
   let processExitStub: sinon.SinonStub<any, any>
   before((): void => {
-    parseArgsStub = sinon.stub(parseArgsLib, 'parseArgs')
-    envCmdStub = sinon.stub(envCmdLib, 'EnvCmd')
-    processExitStub = sinon.stub(process, 'exit')
+    sandbox = sinon.createSandbox()
+    parseArgsStub = sandbox.stub(parseArgsLib, 'parseArgs')
+    envCmdStub = sandbox.stub(envCmdLib, 'EnvCmd')
+    processExitStub = sandbox.stub(process, 'exit')
   })
 
   after((): void => {
-    sinon.restore()
+    sandbox.restore()
   })
 
   afterEach((): void => {
-    sinon.resetHistory()
-    sinon.resetBehavior()
+    sandbox.resetHistory()
+    sandbox.resetBehavior()
   })
 
   it('should parse the provided args and execute the EnvCmd', async (): Promise<void> => {
@@ -45,25 +48,29 @@ describe('CLI', (): void => {
 })
 
 describe('EnvCmd', (): void => {
+  let sandbox: sinon.SinonSandbox
   let getEnvVarsStub: sinon.SinonStub<any, any>
   let spawnStub: sinon.SinonStub<any, any>
   let expandEnvsSpy: sinon.SinonSpy<any, any>
   before((): void => {
-    getEnvVarsStub = sinon.stub(getEnvVarsLib, 'getEnvVars')
-    spawnStub = sinon.stub(spawnLib, 'spawn')
+    sandbox = sinon.createSandbox()
+    getEnvVarsStub = sandbox.stub(getEnvVarsLib, 'getEnvVars')
+    spawnStub = sandbox.stub(spawnLib, 'spawn')
     spawnStub.returns({
       on: (): void => { /* Fake the on method */ },
       kill: (): void => { /* Fake the kill method */ }
     })
-    expandEnvsSpy = sinon.spy(expandEnvsLib, 'expandEnvs')
+    expandEnvsSpy = sandbox.spy(expandEnvsLib, 'expandEnvs')
+    sandbox.stub(signalTermLib.TermSignals.prototype, 'handleTermSignals')
+    sandbox.stub(signalTermLib.TermSignals.prototype, 'handleUncaughtExceptions')
   })
 
   after((): void => {
-    sinon.restore()
+    sandbox.restore()
   })
 
   afterEach((): void => {
-    sinon.resetHistory()
+    sandbox.resetHistory()
   })
 
   it('should parse the provided args and execute the EnvCmd', async (): Promise<void> => {

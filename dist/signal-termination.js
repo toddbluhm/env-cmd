@@ -17,12 +17,26 @@ class TermSignals {
                 (signal, code) => {
                     this._removeProcessListeners();
                     if (!this._exitCalled) {
-                        if (this.verbose === true) {
+                        if (this.verbose) {
                             console.info(`Parent process exited with signal: ${signal}. Terminating child process...`);
                         }
+                        // Mark shared state so we do not run into a signal/exit loop
                         this._exitCalled = true;
-                        proc.kill(signal);
-                        this._terminateProcess(code, signal);
+                        // Use the signal code if it is an error code
+                        let correctSignal;
+                        if (typeof signal === 'number') {
+                            if (signal > ((code !== null && code !== void 0 ? code : 0))) {
+                                code = signal;
+                                correctSignal = 'SIGINT';
+                            }
+                        }
+                        else {
+                            correctSignal = signal;
+                        }
+                        // Kill the child process
+                        proc.kill((correctSignal !== null && correctSignal !== void 0 ? correctSignal : code));
+                        // Terminate the parent process
+                        this._terminateProcess(code, correctSignal);
                     }
                 };
             process.once(signal, this.terminateSpawnedProcessFuncHandlers[signal]);
@@ -31,14 +45,26 @@ class TermSignals {
         // Terminate parent process if child process receives termination events
         proc.on('exit', (code, signal) => {
             this._removeProcessListeners();
-            const convertedSignal = signal != null ? signal : undefined;
             if (!this._exitCalled) {
-                if (this.verbose === true) {
+                if (this.verbose) {
                     console.info(`Child process exited with code: ${code} and signal: ${signal}. ` +
                         'Terminating parent process...');
                 }
+                // Mark shared state so we do not run into a signal/exit loop
                 this._exitCalled = true;
-                this._terminateProcess(code, convertedSignal);
+                // Use the signal code if it is an error code
+                let correctSignal;
+                if (typeof signal === 'number') {
+                    if (signal > ((code !== null && code !== void 0 ? code : 0))) {
+                        code = signal;
+                        correctSignal = 'SIGINT';
+                    }
+                }
+                else {
+                    correctSignal = (signal !== null && signal !== void 0 ? signal : undefined);
+                }
+                // Terminate the parent process
+                this._terminateProcess(code, correctSignal);
             }
         });
     }

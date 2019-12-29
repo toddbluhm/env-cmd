@@ -1,4 +1,4 @@
-import { ChildProcess } from 'child_process' // eslint-disable-line
+import { ChildProcess } from 'child_process'
 
 const SIGNALS_TO_HANDLE: NodeJS.Signals[] = [
   'SIGINT', 'SIGTERM', 'SIGHUP'
@@ -17,15 +17,28 @@ export class TermSignals {
     // Terminate child process if parent process receives termination events
     SIGNALS_TO_HANDLE.forEach((signal): void => {
       this.terminateSpawnedProcessFuncHandlers[signal] =
-        (signal: any, code: any): void => {
+        (signal: NodeJS.Signals | number, code: number): void => {
           this._removeProcessListeners()
           if (!this._exitCalled) {
-            if (this.verbose === true) {
+            if (this.verbose) {
               console.info(`Parent process exited with signal: ${signal}. Terminating child process...`)
             }
+            // Mark shared state so we do not run into a signal/exit loop
             this._exitCalled = true
-            proc.kill(signal)
-            this._terminateProcess(code, signal)
+            // Use the signal code if it is an error code
+            let correctSignal: NodeJS.Signals | undefined
+            if (typeof signal === 'number') {
+              if (signal > (code ?? 0)) {
+                code = signal
+                correctSignal = 'SIGINT'
+              }
+            } else {
+              correctSignal = signal
+            }
+            // Kill the child process
+            proc.kill(correctSignal ?? code)
+            // Terminate the parent process
+            this._terminateProcess(code, correctSignal)
           }
         }
       process.once(signal, this.terminateSpawnedProcessFuncHandlers[signal])
@@ -33,18 +46,29 @@ export class TermSignals {
     process.once('exit', this.terminateSpawnedProcessFuncHandlers.SIGTERM)
 
     // Terminate parent process if child process receives termination events
-    proc.on('exit', (code: number | undefined, signal: string | null): void => {
+    proc.on('exit', (code: number | undefined, signal: NodeJS.Signals | number | null): void => {
       this._removeProcessListeners()
-      const convertedSignal = signal != null ? signal : undefined
       if (!this._exitCalled) {
-        if (this.verbose === true) {
+        if (this.verbose) {
           console.info(
             `Child process exited with code: ${code} and signal: ${signal}. ` +
             'Terminating parent process...'
           )
         }
+        // Mark shared state so we do not run into a signal/exit loop
         this._exitCalled = true
-        this._terminateProcess(code, convertedSignal)
+        // Use the signal code if it is an error code
+        let correctSignal: NodeJS.Signals | undefined
+        if (typeof signal === 'number') {
+          if (signal > (code ?? 0)) {
+            code = signal
+            correctSignal = 'SIGINT'
+          }
+        } else {
+          correctSignal = signal ?? undefined
+        }
+        // Terminate the parent process
+        this._terminateProcess(code, correctSignal)
       }
     })
   }
@@ -59,7 +83,7 @@ export class TermSignals {
   /**
    * Terminate parent process helper
    */
-  public _terminateProcess (code?: number, signal?: string): void {
+  public _terminateProcess (code?: number, signal?: NodeJS.Signals): void {
     if (signal !== undefined) {
       return process.kill(process.pid, signal)
     }

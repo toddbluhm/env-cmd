@@ -3,6 +3,15 @@ import * as sinon from 'sinon'
 import { TermSignals } from '../src/signal-termination'
 
 describe('signal-termination', (): void => {
+  let sandbox: sinon.SinonSandbox
+  before(() => {
+    sandbox = sinon.createSandbox()
+  })
+
+  after(() => {
+    sandbox.restore()
+  })
+
   describe('TermSignals', (): void => {
     describe('_uncaughtExceptionHandler', (): void => {
       const term = new TermSignals()
@@ -10,12 +19,12 @@ describe('signal-termination', (): void => {
       let processStub: sinon.SinonStub<any, any>
 
       beforeEach((): void => {
-        logStub = sinon.stub(console, 'error')
-        processStub = sinon.stub(process, 'exit')
+        logStub = sandbox.stub(console, 'error')
+        processStub = sandbox.stub(process, 'exit')
       })
 
       afterEach((): void => {
-        sinon.restore()
+        sandbox.restore()
       })
 
       it('should print the error message and exit the process with error code 1 ', (): void => {
@@ -32,11 +41,11 @@ describe('signal-termination', (): void => {
       const term = new TermSignals()
       let removeListenerStub: sinon.SinonStub<any, any>
       before((): void => {
-        removeListenerStub = sinon.stub(process, 'removeListener')
+        removeListenerStub = sandbox.stub(process, 'removeListener')
       })
 
       after((): void => {
-        sinon.restore()
+        sandbox.restore()
       })
 
       it('should remove all listeners from default signals and exit signal', (): void => {
@@ -52,12 +61,12 @@ describe('signal-termination', (): void => {
       let killStub: sinon.SinonStub<any, any>
 
       beforeEach((): void => {
-        exitStub = sinon.stub(process, 'exit')
-        killStub = sinon.stub(process, 'kill')
+        exitStub = sandbox.stub(process, 'exit')
+        killStub = sandbox.stub(process, 'kill')
       })
 
       afterEach((): void => {
-        sinon.restore()
+        sandbox.restore()
       })
 
       it('should call exit method on parent process if no signal provided', (): void => {
@@ -95,12 +104,12 @@ describe('signal-termination', (): void => {
       let _uncaughtExceptionHandlerStub: sinon.SinonStub<any, any>
 
       before((): void => {
-        processOnStub = sinon.stub(process, 'on')
-        _uncaughtExceptionHandlerStub = sinon.stub(term, '_uncaughtExceptionHandler')
+        processOnStub = sandbox.stub(process, 'on')
+        _uncaughtExceptionHandlerStub = sandbox.stub(term, '_uncaughtExceptionHandler')
       })
 
       after((): void => {
-        sinon.restore()
+        sandbox.restore()
       })
 
       it('attach handler to the process `uncaughtException` event', (): void => {
@@ -124,11 +133,11 @@ describe('signal-termination', (): void => {
 
       function setup (verbose: boolean = false): void {
         term = new TermSignals({ verbose })
-        procKillStub = sinon.stub()
-        procOnStub = sinon.stub()
-        processOnceStub = sinon.stub(process, 'once')
-        _removeProcessListenersStub = sinon.stub(term, '_removeProcessListeners')
-        _terminateProcessStub = sinon.stub(term, '_terminateProcess')
+        procKillStub = sandbox.stub()
+        procOnStub = sandbox.stub()
+        processOnceStub = sandbox.stub(process, 'once')
+        _removeProcessListenersStub = sandbox.stub(term, '_removeProcessListeners')
+        _terminateProcessStub = sandbox.stub(term, '_terminateProcess')
         proc = {
           kill: procKillStub,
           on: procOnStub
@@ -140,7 +149,7 @@ describe('signal-termination', (): void => {
       })
 
       afterEach((): void => {
-        sinon.restore()
+        sandbox.restore()
       })
 
       it('should setup 4 listeners for the parent process and 1 listen for the child process', (): void => {
@@ -161,9 +170,9 @@ describe('signal-termination', (): void => {
       })
 
       it('should print child process terminated to info for verbose', (): void => {
-        sinon.restore()
+        sandbox.restore()
         setup(true)
-        logInfoStub = sinon.stub(console, 'info')
+        logInfoStub = sandbox.stub(console, 'info')
         assert.notOk(term._exitCalled)
         term.handleTermSignals(proc)
         processOnceStub.args[0][1]('SIGTERM', 1)
@@ -181,8 +190,40 @@ describe('signal-termination', (): void => {
         assert.equal(procKillStub.callCount, 1)
         assert.equal(_terminateProcessStub.callCount, 1)
         assert.isOk(term._exitCalled)
-      }
-      )
+      })
+
+      it('should convert and use number signal as code', (): void => {
+        assert.notOk(term._exitCalled)
+        term.handleTermSignals(proc)
+        processOnceStub.args[0][1](4, 1)
+        assert.equal(_removeProcessListenersStub.callCount, 1)
+        assert.equal(procKillStub.callCount, 1)
+        assert.equal(procKillStub.args[0][0], 'SIGINT')
+        assert.equal(_terminateProcessStub.callCount, 1)
+        assert.isOk(term._exitCalled)
+      })
+
+      it('should not use signal number as code if value is 0', (): void => {
+        assert.notOk(term._exitCalled)
+        term.handleTermSignals(proc)
+        processOnceStub.args[0][1](0, 1)
+        assert.equal(_removeProcessListenersStub.callCount, 1)
+        assert.equal(procKillStub.callCount, 1)
+        assert.equal(procKillStub.args[0], 1)
+        assert.equal(_terminateProcessStub.callCount, 1)
+        assert.isOk(term._exitCalled)
+      })
+
+      it('should use signal value and default SIGINT signal if code is undefined', (): void => {
+        assert.notOk(term._exitCalled)
+        term.handleTermSignals(proc)
+        processOnceStub.args[0][1](4, undefined)
+        assert.equal(_removeProcessListenersStub.callCount, 1)
+        assert.equal(procKillStub.callCount, 1)
+        assert.equal(procKillStub.args[0][0], 'SIGINT')
+        assert.equal(_terminateProcessStub.callCount, 1)
+        assert.isOk(term._exitCalled)
+      })
 
       it('should terminate parent process if child process terminated', (): void => {
         assert.notOk(term._exitCalled)
@@ -194,9 +235,9 @@ describe('signal-termination', (): void => {
       })
 
       it('should print parent process terminated to info for verbose', (): void => {
-        sinon.restore()
+        sandbox.restore()
         setup(true)
-        logInfoStub = sinon.stub(console, 'info')
+        logInfoStub = sandbox.stub(console, 'info')
         assert.notOk(term._exitCalled)
         term.handleTermSignals(proc)
         procOnStub.args[0][1](1, 'SIGTERM')
@@ -222,6 +263,39 @@ describe('signal-termination', (): void => {
         assert.equal(_removeProcessListenersStub.callCount, 1)
         assert.equal(_terminateProcessStub.callCount, 1)
         assert.strictEqual(_terminateProcessStub.firstCall.args[1], undefined)
+        assert.isOk(term._exitCalled)
+      })
+
+      it('should convert and use number signal as code', (): void => {
+        assert.notOk(term._exitCalled)
+        term.handleTermSignals(proc)
+        procOnStub.args[0][1](1, 4)
+        assert.equal(_removeProcessListenersStub.callCount, 1)
+        assert.equal(_terminateProcessStub.callCount, 1)
+        assert.strictEqual(_terminateProcessStub.firstCall.args[0], 4)
+        assert.strictEqual(_terminateProcessStub.firstCall.args[1], 'SIGINT')
+        assert.isOk(term._exitCalled)
+      })
+
+      it('should not use signal number as code if value is 0', (): void => {
+        assert.notOk(term._exitCalled)
+        term.handleTermSignals(proc)
+        procOnStub.args[0][1](1, 0)
+        assert.equal(_removeProcessListenersStub.callCount, 1)
+        assert.equal(_terminateProcessStub.callCount, 1)
+        assert.strictEqual(_terminateProcessStub.firstCall.args[0], 1)
+        assert.isUndefined(_terminateProcessStub.firstCall.args[1])
+        assert.isOk(term._exitCalled)
+      })
+
+      it('should use signal value and default SIGINT signal if code is undefined', (): void => {
+        assert.notOk(term._exitCalled)
+        term.handleTermSignals(proc)
+        procOnStub.args[0][1](null, 1)
+        assert.equal(_removeProcessListenersStub.callCount, 1)
+        assert.equal(_terminateProcessStub.callCount, 1)
+        assert.strictEqual(_terminateProcessStub.firstCall.args[0], 1)
+        assert.strictEqual(_terminateProcessStub.firstCall.args[1], 'SIGINT')
         assert.isOk(term._exitCalled)
       })
     })

@@ -7,6 +7,7 @@
 Note: only supports for `$var` syntax
 - **Upgrade**: Updated `commander` dependency to `v4`
 - **Upgrade**: Updated `sinon` and `nyc` dev dependencies
+- **Fix**: Handle case where the termination signal is the termination code
 
 ## 10.0.1
 

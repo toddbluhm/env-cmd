@@ -15,7 +15,7 @@ export declare class TermSignals {
     /**
      * Terminate parent process helper
      */
-    _terminateProcess(code?: number, signal?: string): void;
+    _terminateProcess(code?: number, signal?: NodeJS.Signals): void;
     /**
      * Exit event listener clean up helper
      */
