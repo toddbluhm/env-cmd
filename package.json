@@ -54,7 +54,7 @@
     "@types/chai": "^4.0.0",
     "@types/cross-spawn": "^6.0.0",
     "@types/mocha": "^5.0.0",
-    "@types/node": "^12.0.0",
+    "@types/node": "^13.1.6",
     "@types/sinon": "^7.0.0",
     "chai": "^4.0.0",
     "coveralls": "^3.0.0",
