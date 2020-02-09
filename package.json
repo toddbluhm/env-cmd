@@ -62,7 +62,7 @@
     "nyc": "^15.0.0",
     "sinon": "^8.0.0",
     "ts-node": "^8.0.0",
-    "ts-standard": "^3.0.0",
+    "ts-standard": "^4.0.0",
     "typescript": "^3.7.0"
   },
   "nyc": {
