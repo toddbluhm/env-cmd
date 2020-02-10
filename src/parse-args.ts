@@ -2,6 +2,8 @@ import { Command } from 'commander'
 import { EnvCmdOptions } from './types'
 import { parseArgList } from './utils'
 
+import packageJson = require('../package.json');
+
 /**
 * Parses the arguments passed into the cli
 */
@@ -55,7 +57,7 @@ export function parseArgs (args: string[]): EnvCmdOptions {
 export function parseArgsUsingCommander (args: string[]): Command {
   const program = new Command()
   return program
-    .version('9.0.1', '-v, --version')
+    .version(packageJson.version, '-v, --version')
     .usage('[options] <command> [...args]')
     .option('-f, --file [path]', 'Custom env file path (default path: ./.env)')
     .option('-r, --rc-file [path]', 'Custom rc file path (default path: ./.env-cmdrc(|.js|.json)')
