@@ -43,7 +43,7 @@ function parseArgs(args) {
             noOverride,
             silent,
             useShell,
-            verbose,
+            verbose
         }
     };
     if (verbose === true) {

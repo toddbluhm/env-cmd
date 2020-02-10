@@ -1,14 +1,14 @@
 # Changelog
 
-## 10.1.0 - Pending
+## 10.1.0
 
-- **Feature**: Added a new `--verbose` flag that prints additional debugging info to `console.info`
 - **Feature**: Added support for expanding vars using the `-x` flag. 
-Note: only supports for `$var` syntax
+Note: only supports `$var` syntax
 - **Feature**: Added support for `--silent` flag that ignores env-cmd errors and missing files and 
 only terminates on caught signals
-- **Upgrade**: Updated `commander` dependency to `v4`
-- **Upgrade**: Updated `sinon`, `nyc`, `ts-standard` dev dependencies
+- **Feature**: Added a new `--verbose` flag that prints additional debugging info to `console.info`
+- **Upgrade**: Updated dependency `commander` to `v4`
+- **Upgrade**: Updated devDependencies `sinon`, `nyc`, and `ts-standard`
 - **Fix**: Handle case where the termination signal is the termination code
 
 ## 10.0.1

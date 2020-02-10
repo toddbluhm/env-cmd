@@ -195,8 +195,8 @@ describe('EnvCmd', (): void => {
 
   it('should ignore errors if silent flag provided',
     async (): Promise<void> => {
-      delete process.env.BOB;
-      getEnvVarsStub.throws('MissingFile');
+      delete process.env.BOB
+      getEnvVarsStub.throws('MissingFile')
       await envCmdLib.EnvCmd({
         command: 'node',
         commandArgs: ['-v'],
@@ -215,7 +215,7 @@ describe('EnvCmd', (): void => {
 
   it('should allow errors if silent flag not provided',
     async (): Promise<void> => {
-      getEnvVarsStub.throws('MissingFile');
+      getEnvVarsStub.throws('MissingFile')
       try {
         await envCmdLib.EnvCmd({
           command: 'node',
@@ -224,10 +224,9 @@ describe('EnvCmd', (): void => {
             filePath: './.env'
           }
         })
-      }
-      catch (e) {
+      } catch (e) {
         assert.equal(e.name, 'MissingFile')
-        return;
+        return
       }
       assert.fail('Should not get here.')
     }

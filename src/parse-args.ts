@@ -48,7 +48,7 @@ export function parseArgs (args: string[]): EnvCmdOptions {
       noOverride,
       silent,
       useShell,
-      verbose,
+      verbose
     }
   }
   if (verbose === true) {

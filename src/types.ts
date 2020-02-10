@@ -10,7 +10,7 @@ export interface GetEnvVarOptions {
   verbose?: boolean
 }
 
-export interface EnvCmdOptions extends GetEnvVarOptions {
+export interface EnvCmdOptions extends Pick<GetEnvVarOptions, 'envFile' | 'rc'> {
   command: string
   commandArgs: string[]
   options?: {

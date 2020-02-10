@@ -33,13 +33,18 @@ export async function CLI (args: string[]): Promise<{ [key: string]: any }> {
  * @returns {Promise<{ [key: string]: any }>} Returns an object containing [environment variable name]: value
  */
 export async function EnvCmd (
-  { command, commandArgs, envFile, rc, options = {} }: EnvCmdOptions
+  {
+    command,
+    commandArgs,
+    envFile,
+    rc,
+    options = {}
+  }: EnvCmdOptions
 ): Promise<{ [key: string]: any }> {
   let env: { [name: string]: string } = {}
   try {
     env = await getEnvVars({ envFile, rc, verbose: options.verbose })
-  }
-  catch (e) {
+  } catch (e) {
     if (!(options.silent ?? false)) {
       throw e
     }
