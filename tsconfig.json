@@ -3,12 +3,14 @@
     "outDir": "./dist",
     "target": "es2017",
     "module": "commonjs",
+    "resolveJsonModule": true,
     "strict": true,
     "declaration": true,
     "lib": [
-      "es2018"
-    ],
-    "resolveJsonModule": true
+      "es2018",
+      "es2019",
+      "es2020"
+    ]
   },
   "include": [
     "./src/**/*"

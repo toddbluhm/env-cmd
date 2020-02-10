@@ -2,6 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const commander_1 = require("commander");
 const utils_1 = require("./utils");
+// Use commonjs require to prevent a weird folder hierarchy in dist
+const packageJson = require('../package.json'); /* eslint-disable-line */
 /**
 * Parses the arguments passed into the cli
 */
@@ -51,7 +53,7 @@ exports.parseArgs = parseArgs;
 function parseArgsUsingCommander(args) {
     const program = new commander_1.Command();
     return program
-        .version('9.0.1', '-v, --version')
+        .version(packageJson.version, '-v, --version')
         .usage('[options] <command> [...args]')
         .option('-f, --file [path]', 'Custom env file path (default path: ./.env)')
         .option('-r, --rc-file [path]', 'Custom rc file path (default path: ./.env-cmdrc(|.js|.json)')
