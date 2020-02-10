@@ -35,7 +35,15 @@ export async function CLI (args: string[]): Promise<{ [key: string]: any }> {
 export async function EnvCmd (
   { command, commandArgs, envFile, rc, options = {} }: EnvCmdOptions
 ): Promise<{ [key: string]: any }> {
-  let env = await getEnvVars({ envFile, rc, verbose: options.verbose })
+  let env: { [name: string]: string } = {}
+  try {
+    env = await getEnvVars({ envFile, rc, verbose: options.verbose })
+  }
+  catch (e) {
+    if (!(options.silent ?? false)) {
+      throw e
+    }
+  }
   // Override the merge order if --no-override flag set
   if (options.noOverride === true) {
     env = Object.assign({}, env, process.env)

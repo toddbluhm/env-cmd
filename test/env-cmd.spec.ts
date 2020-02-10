@@ -192,4 +192,44 @@ describe('EnvCmd', (): void => {
       assert.equal(spawnArgs[2].env.PING, 'PONG')
     }
   )
+
+  it('should ignore errors if silent flag provided',
+    async (): Promise<void> => {
+      delete process.env.BOB;
+      getEnvVarsStub.throws('MissingFile');
+      await envCmdLib.EnvCmd({
+        command: 'node',
+        commandArgs: ['-v'],
+        envFile: {
+          filePath: './.env'
+        },
+        options: {
+          silent: true
+        }
+      })
+      assert.equal(getEnvVarsStub.callCount, 1)
+      assert.equal(spawnStub.callCount, 1)
+      assert.isUndefined(spawnStub.args[0][2].env.BOB)
+    }
+  )
+
+  it('should allow errors if silent flag not provided',
+    async (): Promise<void> => {
+      getEnvVarsStub.throws('MissingFile');
+      try {
+        await envCmdLib.EnvCmd({
+          command: 'node',
+          commandArgs: ['-v'],
+          envFile: {
+            filePath: './.env'
+          }
+        })
+      }
+      catch (e) {
+        assert.equal(e.name, 'MissingFile')
+        return;
+      }
+      assert.fail('Should not get here.')
+    }
+  )
 })

@@ -18,6 +18,7 @@ function parseArgs(args) {
     const useShell = !!program.useShell;
     const expandEnvs = !!program.expandEnvs;
     const verbose = !!program.verbose;
+    const silent = !!program.silent;
     let rc;
     if (program.environments !== undefined && program.environments.length !== 0) {
         rc = {
@@ -38,10 +39,11 @@ function parseArgs(args) {
         envFile,
         rc,
         options: {
+            expandEnvs,
             noOverride,
+            silent,
             useShell,
             verbose,
-            expandEnvs
         }
     };
     if (verbose === true) {
@@ -55,14 +57,15 @@ function parseArgsUsingCommander(args) {
     return program
         .version(packageJson.version, '-v, --version')
         .usage('[options] <command> [...args]')
-        .option('-f, --file [path]', 'Custom env file path (default path: ./.env)')
-        .option('-r, --rc-file [path]', 'Custom rc file path (default path: ./.env-cmdrc(|.js|.json)')
         .option('-e, --environments [env1,env2,...]', 'The rc file environment(s) to use', utils_1.parseArgList)
+        .option('-f, --file [path]', 'Custom env file path (default path: ./.env)')
         .option('--fallback', 'Fallback to default env file path, if custom env file path not found')
         .option('--no-override', 'Do not override existing environment variables')
+        .option('-r, --rc-file [path]', 'Custom rc file path (default path: ./.env-cmdrc(|.js|.json)')
+        .option('--silent', 'Ignore any env-cmd errors and only fail on executed program failure.')
         .option('--use-shell', 'Execute the command in a new shell with the given environment')
-        .option('-x, --expand-envs', 'Replace $var in args and command with environment variables')
         .option('--verbose', 'Print helpful debugging information')
+        .option('-x, --expand-envs', 'Replace $var in args and command with environment variables')
         .parse(['_', '_', ...args]);
 }
 exports.parseArgsUsingCommander = parseArgsUsingCommander;
