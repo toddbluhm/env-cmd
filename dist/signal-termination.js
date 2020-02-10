@@ -18,7 +18,9 @@ class TermSignals {
                     this._removeProcessListeners();
                     if (!this._exitCalled) {
                         if (this.verbose) {
-                            console.info(`Parent process exited with signal: ${signal}. Terminating child process...`);
+                            console.info('Parent process exited with signal: ' +
+                                signal.toString() +
+                                '. Terminating child process...');
                         }
                         // Mark shared state so we do not run into a signal/exit loop
                         this._exitCalled = true;
@@ -47,8 +49,9 @@ class TermSignals {
             this._removeProcessListeners();
             if (!this._exitCalled) {
                 if (this.verbose) {
-                    console.info(`Child process exited with code: ${code} and signal: ${signal}. ` +
-                        'Terminating parent process...');
+                    console.info(`Child process exited with code: ${((code !== null && code !== void 0 ? code : '')).toString()} and signal:` +
+                        ((signal !== null && signal !== void 0 ? signal : '')).toString() +
+                        '. Terminating parent process...');
                 }
                 // Mark shared state so we do not run into a signal/exit loop
                 this._exitCalled = true;

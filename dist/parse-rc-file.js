@@ -48,7 +48,7 @@ async function getRCFileVars({ environments, filePath }) {
         }
     });
     if (!environmentFound) {
-        const environmentError = new Error(`Failed to find environments ${environments} at .rc file location: ${absolutePath}`);
+        const environmentError = new Error(`Failed to find environments [${environments.join(',')}] at .rc file location: ${absolutePath}`);
         environmentError.name = 'EnvironmentError';
         throw environmentError;
     }

@@ -1,6 +1,7 @@
 .DS_Store
 .nyc_output
 .vscode
+.idea
 coverage/
 node_modules/
 src/

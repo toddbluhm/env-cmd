@@ -244,6 +244,20 @@ describe('signal-termination', (): void => {
         assert.equal(logInfoStub.callCount, 1)
       })
 
+      it(
+        'should print parent process terminated to info for verbose when ' +
+        'code and signal are undefined',
+        (): void => {
+          sandbox.restore()
+          setup(true)
+          logInfoStub = sandbox.stub(console, 'info')
+          assert.notOk(term._exitCalled)
+          term.handleTermSignals(proc)
+          procOnStub.args[0][1](undefined, null)
+          assert.equal(logInfoStub.callCount, 1)
+        }
+      )
+
       it('should not terminate parent process if parent process already terminating', (): void => {
         assert.notOk(term._exitCalled)
         term.handleTermSignals(proc)

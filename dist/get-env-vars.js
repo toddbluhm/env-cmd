@@ -51,7 +51,7 @@ async function getEnvFile({ filePath, fallback, verbose }) {
         }
         catch (e) { }
     }
-    const error = `Failed to find .env file at default paths: ${ENV_FILE_DEFAULT_LOCATIONS}`;
+    const error = `Failed to find .env file at default paths: [${ENV_FILE_DEFAULT_LOCATIONS.join(',')}]`;
     if (verbose === true) {
         console.info(error);
     }
@@ -64,7 +64,7 @@ async function getRCFile({ environments, filePath, verbose }) {
         try {
             const env = await parse_rc_file_1.getRCFileVars({ environments, filePath });
             if (verbose === true) {
-                console.info(`Found environments: ${environments} for .rc file at path: ${filePath}`);
+                console.info(`Found environments: [${environments.join(',')}] for .rc file at path: ${filePath}`);
             }
             return env;
         }
@@ -76,7 +76,7 @@ async function getRCFile({ environments, filePath, verbose }) {
             }
             if (e.name === 'EnvironmentError') {
                 if (verbose === true) {
-                    console.info(`Failed to find environments: ${environments} for .rc file at path: ${filePath}`);
+                    console.info(`Failed to find environments: [${environments.join(',')}] for .rc file at path: ${filePath}`);
                 }
             }
             throw e;
@@ -87,13 +87,13 @@ async function getRCFile({ environments, filePath, verbose }) {
         try {
             const env = await parse_rc_file_1.getRCFileVars({ environments, filePath: path });
             if (verbose === true) {
-                console.info(`Found environments: ${environments} for default .rc file at path: ${path}`);
+                console.info(`Found environments: [${environments.join(',')}] for default .rc file at path: ${path}`);
             }
             return env;
         }
         catch (e) {
             if (e.name === 'EnvironmentError') {
-                const errorText = `Failed to find environments: ${environments} for .rc file at path: ${path}`;
+                const errorText = `Failed to find environments: [${environments.join(',')}] for .rc file at path: ${path}`;
                 if (verbose === true) {
                     console.info(errorText);
                 }
@@ -101,7 +101,7 @@ async function getRCFile({ environments, filePath, verbose }) {
             }
         }
     }
-    const errorText = `Failed to find .rc file at default paths: ${RC_FILE_DEFAULT_LOCATIONS}`;
+    const errorText = `Failed to find .rc file at default paths: [${RC_FILE_DEFAULT_LOCATIONS.join(',')}]`;
     if (verbose === true) {
         console.info(errorText);
     }

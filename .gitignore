@@ -10,6 +10,7 @@ package-lock.json
 
 # Code Editor directory
 .vscode
+.idea
 
 # Ignore compiled dist/tests
 dist/test

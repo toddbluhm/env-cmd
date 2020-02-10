@@ -55,7 +55,7 @@ export async function getRCFileVars (
 
   if (!environmentFound) {
     const environmentError = new Error(
-      `Failed to find environments ${environments} at .rc file location: ${absolutePath}`
+      `Failed to find environments [${environments.join(',')}] at .rc file location: ${absolutePath}`
     )
     environmentError.name = 'EnvironmentError'
     throw environmentError
