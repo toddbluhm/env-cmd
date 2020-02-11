@@ -146,12 +146,24 @@ commands together that share the same environment variables.
 EnvCmd supports expanding `$var` values passed in as arguments to the command. The allows a user
 to provide arguments to a command that are based on environment variable values at runtime.
 
+**NOTE:** You must escape the `$` character with `\` or your terminal might try to auto expand it before passing it to `env-cmd`.
+
 **Terminal**
 
 ```sh
-# $USER will be expanded into the env value it contains at runtime
-./node_modules/.bin/env-cmd -x node index.js --user=$USER
+# $VAR will be expanded into the env value it contains at runtime
+./node_modules/.bin/env-cmd -x node index.js --arg=\$VAR
 ```
+
+or in `package.json` (use `\\` to insert a literal backslash)
+```json
+{
+  "script": {
+    "start": "env-cmd -x node index.js --arg=\\$VAR"
+  }
+}
+```
+
 
 ### `--silent` suppresses env-cmd errors
 
