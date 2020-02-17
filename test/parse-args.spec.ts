@@ -91,4 +91,16 @@ describe('parseArgs', (): void => {
     assert.exists(res.options!.verbose)
     assert.equal(logInfoStub.callCount, 1)
   })
+
+  it('should parse expandEnvs option', (): void => {
+    const res = parseArgs(['-f', envFilePath, '-x', command, ...commandArgs])
+    assert.exists(res.envFile)
+    assert.isTrue(res.options!.expandEnvs)
+  })
+
+  it('should parse silent option', (): void => {
+    const res = parseArgs(['-f', envFilePath, '--silent', command, ...commandArgs])
+    assert.exists(res.envFile)
+    assert.isTrue(res.options!.silent)
+  })
 })

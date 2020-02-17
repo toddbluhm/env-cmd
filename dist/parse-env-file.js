@@ -17,7 +17,7 @@ async function getEnvFileVars(envFilePath) {
     // Get the file extension
     const ext = path.extname(absolutePath).toLowerCase();
     let env = {};
-    if (REQUIRE_HOOK_EXTENSIONS.indexOf(ext) > -1) {
+    if (REQUIRE_HOOK_EXTENSIONS.includes(ext)) {
         const possiblePromise = require(absolutePath); /* eslint-disable-line */
         env = utils_1.isPromise(possiblePromise) ? await possiblePromise : possiblePromise;
     }

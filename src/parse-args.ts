@@ -16,11 +16,29 @@ export function parseArgs (args: string[]): EnvCmdOptions {
 
   // Reprocess the args with the command and command args removed
   program = parseArgsUsingCommander(args.slice(0, args.indexOf(command)))
-  const noOverride = !(program.override as boolean)
-  const useShell = !!(program.useShell as boolean)
-  const expandEnvs = !!(program.expandEnvs as boolean)
-  const verbose = !!(program.verbose as boolean)
-  const silent = !!(program.silent as boolean)
+
+  // Set values for provided options
+  let noOverride = false
+  // In commander `no-` negates the original value `override`
+  if (program.override === false) {
+    noOverride = true
+  }
+  let useShell = false
+  if (program.useShell === true) {
+    useShell = true
+  }
+  let expandEnvs = false
+  if (program.expandEnvs === true) {
+    expandEnvs = true
+  }
+  let verbose = false
+  if (program.verbose === true) {
+    verbose = true
+  }
+  let silent = false
+  if (program.silent === true) {
+    silent = true
+  }
 
   let rc: any
   if (program.environments !== undefined && program.environments.length !== 0) {
@@ -51,7 +69,7 @@ export function parseArgs (args: string[]): EnvCmdOptions {
       verbose
     }
   }
-  if (verbose === true) {
+  if (verbose) {
     console.info(`Options: ${JSON.stringify(options, null, 0)}`)
   }
   return options

@@ -1,5 +1,8 @@
 # Changelog
 
+## 10.1.1 - Pending
+- **Upgrade**: Updated devDependencies `ts-standard`
+
 ## 10.1.0
 
 - **Feature**: Added support for expanding vars using the `-x` flag. 
