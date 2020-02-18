@@ -51,6 +51,8 @@
     "cross-spawn": "^7.0.0"
   },
   "devDependencies": {
+    "@commitlint/cli": "^8.0.0",
+    "@commitlint/config-conventional": "^8.0.0",
     "@types/chai": "^4.0.0",
     "@types/cross-spawn": "^6.0.0",
     "@types/mocha": "^7.0.0",
@@ -58,6 +60,7 @@
     "@types/sinon": "^7.0.0",
     "chai": "^4.0.0",
     "coveralls": "^3.0.0",
+    "husky": "^4.0.0",
     "mocha": "^7.0.0",
     "nyc": "^15.0.0",
     "sinon": "^8.0.0",
@@ -91,6 +94,20 @@
   "greenkeeper": {
     "ignore": [
       "@types/node"
-    ]
+    ],
+    "commitMessages": {
+      "initialBadge": "docs: add greenkeeper badge",
+      "initialDependencies": "chore: update dependencies",
+      "initialBranches": "chore: whitelist greenkeeper branches",
+      "dependencyUpdate": "chore: update dependency ${dependency}",
+      "devDependencyUpdate": "chore: update devDependecy ${dependency}",
+      "dependencyPin": "fix: pin dependency ${dependency}",
+      "devDependencyPin": "fix: pin devDependecy ${dependency}"
+    }
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
   }
 }
