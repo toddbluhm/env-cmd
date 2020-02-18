@@ -1,0 +1,45 @@
+name: tests
+
+on: [push, pull_request]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [8.x, 10.x, 12.x]
+
+    steps:
+    - name: Checkout project
+      uses: actions/checkout@v2
+
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+
+    - name: Install Dependencies
+      run: npm install
+
+    - name: Lint Files
+      run: npm run lint
+
+    - name: Run Tests and Converage
+      env:
+        CI: true
+      run: npm run test-cover
+
+    - name: Coveralls Parallel
+      uses: coverallsapp/github-action@master
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        parallel: true
+        path-to-lcov: ./coverage/lcov.info
+
+    - name: Coveralls Finished
+      uses: coverallsapp/github-action@master
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        parallel-finished: true
