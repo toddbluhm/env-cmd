@@ -1,4 +1,5 @@
-[![Tests](https://github.com/toddbluhm/env-cmd/workflows/tests/badge.svg?branch=master)](https://github.com/toddbluhm/env-cmd/actions?query=workflow%3A%22tests%22)
+[![Linux Tests](https://github.com/toddbluhm/env-cmd/workflows/linux%20tests/badge.svg)](https://github.com/toddbluhm/env-cmd/actions?query=workflow%3A%22linux%20tests%22)
+[![Windows Tests](https://github.com/toddbluhm/env-cmd/workflows/windows%20tests/badge.svg)](https://github.com/toddbluhm/env-cmd/actions?query=workflow%3A%22windows%20tests%22)
 [![Coverage Status](https://coveralls.io/repos/github/toddbluhm/env-cmd/badge.svg?branch=master)](https://coveralls.io/github/toddbluhm/env-cmd?branch=master)
 [![npm](https://img.shields.io/npm/v/env-cmd.svg?maxAge=86400)](https://www.npmjs.com/package/env-cmd)
 [![npm](https://img.shields.io/npm/dm/env-cmd.svg?maxAge=86400)](https://www.npmjs.com/package/env-cmd)
