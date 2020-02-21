@@ -1,5 +1,6 @@
 import * as os from 'os'
 import * as process from 'process'
+import * as path from 'path'
 import { assert } from 'chai'
 import * as sinon from 'sinon'
 import { resolveEnvFilePath, parseArgList, isPromise } from '../src/utils'
@@ -15,18 +16,18 @@ describe('utils', (): void => {
 
     it('should return an absolute path, given a relative path', (): void => {
       const res = resolveEnvFilePath('./bob')
-      assert.equal(res, `${currentDir}/bob`)
+      assert.equal(res, path.normalize(`${currentDir}/bob`))
     })
 
     it('should return an absolute path, given a path with ~ for home directory', (): void => {
       const res = resolveEnvFilePath('~/bob')
-      assert.equal(res, `${homePath}/bob`)
+      assert.equal(res, path.normalize(`${homePath}/bob`))
     })
 
     it('should not attempt to replace ~ if home dir does not exist', (): void => {
       sinon.stub(os, 'homedir')
       const res = resolveEnvFilePath('~/bob')
-      assert.equal(res, `${currentDir}/~/bob`)
+      assert.equal(res, path.normalize(`${currentDir}/~/bob`))
     })
   })
 
