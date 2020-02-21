@@ -1,4 +1,4 @@
-name: tests
+name: linux tests
 
 on: [push, pull_request]
 
@@ -19,6 +19,8 @@ jobs:
 
     - name: Lint the Commit Messages
       uses: wagoid/commitlint-github-action@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v1
