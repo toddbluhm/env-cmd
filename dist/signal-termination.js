@@ -27,7 +27,7 @@ class TermSignals {
                         // Use the signal code if it is an error code
                         let correctSignal;
                         if (typeof signal === 'number') {
-                            if (signal > ((code !== null && code !== void 0 ? code : 0))) {
+                            if (signal > (code !== null && code !== void 0 ? code : 0)) {
                                 code = signal;
                                 correctSignal = 'SIGINT';
                             }
@@ -36,7 +36,7 @@ class TermSignals {
                             correctSignal = signal;
                         }
                         // Kill the child process
-                        proc.kill((correctSignal !== null && correctSignal !== void 0 ? correctSignal : code));
+                        proc.kill(correctSignal !== null && correctSignal !== void 0 ? correctSignal : code);
                         // Terminate the parent process
                         this._terminateProcess(code, correctSignal);
                     }
@@ -49,8 +49,8 @@ class TermSignals {
             this._removeProcessListeners();
             if (!this._exitCalled) {
                 if (this.verbose) {
-                    console.info(`Child process exited with code: ${((code !== null && code !== void 0 ? code : '')).toString()} and signal:` +
-                        ((signal !== null && signal !== void 0 ? signal : '')).toString() +
+                    console.info(`Child process exited with code: ${(code !== null && code !== void 0 ? code : '').toString()} and signal:` +
+                        (signal !== null && signal !== void 0 ? signal : '').toString() +
                         '. Terminating parent process...');
                 }
                 // Mark shared state so we do not run into a signal/exit loop
@@ -58,13 +58,13 @@ class TermSignals {
                 // Use the signal code if it is an error code
                 let correctSignal;
                 if (typeof signal === 'number') {
-                    if (signal > ((code !== null && code !== void 0 ? code : 0))) {
+                    if (signal > (code !== null && code !== void 0 ? code : 0)) {
                         code = signal;
                         correctSignal = 'SIGINT';
                     }
                 }
                 else {
-                    correctSignal = (signal !== null && signal !== void 0 ? signal : undefined);
+                    correctSignal = signal !== null && signal !== void 0 ? signal : undefined;
                 }
                 // Terminate the parent process
                 this._terminateProcess(code, correctSignal);

@@ -39,7 +39,7 @@ async function EnvCmd({ command, commandArgs, envFile, rc, options = {} }) {
         env = await get_env_vars_1.getEnvVars({ envFile, rc, verbose: options.verbose });
     }
     catch (e) {
-        if (!(_a = options.silent, (_a !== null && _a !== void 0 ? _a : false))) {
+        if (!((_a = options.silent) !== null && _a !== void 0 ? _a : false)) {
             throw e;
         }
     }

@@ -9,13 +9,13 @@ export async function getEnvVars (options: GetEnvVarOptions = {}): Promise<{ [ke
   options.envFile = options.envFile !== undefined ? options.envFile : {}
   // Check for rc file usage
   if (options.rc !== undefined) {
-    return getRCFile({
+    return await getRCFile({
       environments: options.rc.environments,
       filePath: options.rc.filePath,
       verbose: options.verbose
     })
   }
-  return getEnvFile({
+  return await getEnvFile({
     filePath: options.envFile.filePath,
     fallback: options.envFile.fallback,
     verbose: options.verbose

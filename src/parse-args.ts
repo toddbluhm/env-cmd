@@ -1,4 +1,4 @@
-import { Command } from 'commander'
+import * as commander from 'commander'
 import { EnvCmdOptions } from './types'
 import { parseArgList } from './utils'
 
@@ -9,12 +9,14 @@ const packageJson = require('../package.json') /* eslint-disable-line */
 * Parses the arguments passed into the cli
 */
 export function parseArgs (args: string[]): EnvCmdOptions {
-  // Get the command and command args
+  // Run the initial arguments through commander in order to determine
+  // which value in the args array is the `command` to execute
   let program = parseArgsUsingCommander(args)
   const command = program.args[0]
+  // Grab all arguments after the `command` in the args array
   const commandArgs = args.splice(args.indexOf(command) + 1)
 
-  // Reprocess the args with the command and command args removed
+  // Reprocess the args with the command and command arguments removed
   program = parseArgsUsingCommander(args.slice(0, args.indexOf(command)))
 
   // Set values for provided options
@@ -75,8 +77,8 @@ export function parseArgs (args: string[]): EnvCmdOptions {
   return options
 }
 
-export function parseArgsUsingCommander (args: string[]): Command {
-  const program = new Command()
+export function parseArgsUsingCommander (args: string[]): commander.Command {
+  const program = new commander.Command()
   return program
     .version(packageJson.version, '-v, --version')
     .usage('[options] <command> [...args]')
@@ -89,5 +91,6 @@ export function parseArgsUsingCommander (args: string[]): Command {
     .option('--use-shell', 'Execute the command in a new shell with the given environment')
     .option('--verbose', 'Print helpful debugging information')
     .option('-x, --expand-envs', 'Replace $var in args and command with environment variables')
+    .allowUnknownOption(true)
     .parse(['_', '_', ...args])
 }

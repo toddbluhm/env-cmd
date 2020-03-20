@@ -5,7 +5,7 @@ import { parseArgs } from '../src/parse-args'
 
 describe('parseArgs', (): void => {
   const command = 'command'
-  const commandArgs = ['cmda1', 'cmda2', '--cmda3', '-4', 'cmda4']
+  const commandArgs = ['cmda1', 'cmda2', '--cmda3', '-4', 'cmda4', '--fallback']
   const environments = ['development', 'production']
   const rcFilePath = './.env-cmdrc'
   const envFilePath = './.env'
