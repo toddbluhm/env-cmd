@@ -2,7 +2,7 @@ import * as fs from 'fs'
 import * as path from 'path'
 import { resolveEnvFilePath, isPromise } from './utils'
 
-const REQUIRE_HOOK_EXTENSIONS = ['.json', '.js']
+const REQUIRE_HOOK_EXTENSIONS = ['.json', '.js', '.cjs']
 
 /**
  * Gets the environment vars from an env file
