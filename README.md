@@ -1,11 +1,11 @@
 [![Linux Tests](https://github.com/toddbluhm/env-cmd/workflows/linux%20tests/badge.svg)](https://github.com/toddbluhm/env-cmd/actions?query=workflow%3A%22linux%20tests%22)
 [![Windows Tests](https://github.com/toddbluhm/env-cmd/workflows/windows%20tests/badge.svg)](https://github.com/toddbluhm/env-cmd/actions?query=workflow%3A%22windows%20tests%22)
-[![Coverage Status](https://coveralls.io/repos/github/toddbluhm/env-cmd/badge.svg?branch=master)](https://coveralls.io/github/toddbluhm/env-cmd?branch=master)
-[![npm](https://img.shields.io/npm/v/env-cmd.svg?maxAge=86400)](https://www.npmjs.com/package/env-cmd)
-[![npm](https://img.shields.io/npm/dm/env-cmd.svg?maxAge=86400)](https://www.npmjs.com/package/env-cmd)
-[![npm](https://img.shields.io/npm/l/env-cmd.svg?maxAge=2592000)](https://www.npmjs.com/package/env-cmd)
-[![TS-Standard - Typescript Standard Style Guide](https://img.shields.io/badge/code%20style-ts--standard-blue.svg)](https://github.com/toddbluhm/ts-standard)
-[![Greenkeeper badge](https://badges.greenkeeper.io/toddbluhm/env-cmd.svg)](https://greenkeeper.io/)
+[![Coverage Status](https://badgen.net/coveralls/c/github/toddbluhm/env-cmd)](https://coveralls.io/github/toddbluhm/env-cmd?branch=master)
+[![npm](https://badgen.net/npm/v/env-cmd)](https://www.npmjs.com/package/env-cmd)
+[![npm](https://badgen.net/npm/dm/env-cmd)](https://www.npmjs.com/package/env-cmd)
+[![License](https://badgen.net/github/license/toddbluhm/env-cmd)](https://github.com/toddbluhm/env-cmd/blob/master/LICENSE)
+[![TS-Standard - Typescript Standard Style Guide](https://badgen.net/badge/code%20style/ts-standard/blue?icon=typescript)](https://github.com/toddbluhm/ts-standard)
+[![Dependabot badge](https://badgen.net/dependabot/toddbluhm/env-cmd?icon=dependabot)](https://dependabot.com/)
 
 # env-cmd
 
