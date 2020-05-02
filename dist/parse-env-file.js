@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const fs = require("fs");
 const path = require("path");
 const utils_1 = require("./utils");
-const REQUIRE_HOOK_EXTENSIONS = ['.json', '.js'];
+const REQUIRE_HOOK_EXTENSIONS = ['.json', '.js', '.cjs'];
 /**
  * Gets the environment vars from an env file
  */
