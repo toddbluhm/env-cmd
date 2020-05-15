@@ -91,7 +91,7 @@ describe('EnvCmd', (): void => {
     assert.equal(spawnStub.callCount, 1)
   })
 
-  it('should should override existing env vars if noOverride option is false/missing',
+  it('should override existing env vars if noOverride option is false/missing',
     async (): Promise<void> => {
       process.env.BOB = 'cool'
       getEnvVarsStub.returns({ BOB: 'test' })
@@ -113,7 +113,7 @@ describe('EnvCmd', (): void => {
     }
   )
 
-  it('should should not override existing env vars if noOverride option is true',
+  it('should not override existing env vars if noOverride option is true',
     async (): Promise<void> => {
       process.env.BOB = 'cool'
       getEnvVarsStub.returns({ BOB: 'test' })
@@ -138,7 +138,7 @@ describe('EnvCmd', (): void => {
     }
   )
 
-  it('should should spawn process with shell option if useShell option is true',
+  it('should spawn process with shell option if useShell option is true',
     async (): Promise<void> => {
       process.env.BOB = 'cool'
       getEnvVarsStub.returns({ BOB: 'test' })
@@ -163,7 +163,7 @@ describe('EnvCmd', (): void => {
     }
   )
 
-  it('should should spawn process with command and args expanded if expandEnvs option is true',
+  it('should spawn process with command and args expanded if expandEnvs option is true',
     async (): Promise<void> => {
       getEnvVarsStub.returns({ PING: 'PONG', CMD: 'node' })
       await envCmdLib.EnvCmd({
