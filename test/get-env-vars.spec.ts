@@ -28,11 +28,11 @@ describe('getEnvVars', (): void => {
 
   it('should parse the json .rc file from the default path with the given environment',
     async (): Promise<void> => {
-      getRCFileVarsStub.returns({ THANKS: 'FORALLTHEFISH' })
+      getRCFileVarsStub.returns({ THANKS: 'FOR ALL THE FISH' })
       const envs = await getEnvVars({ rc: { environments: ['production'] } })
       assert.isOk(envs)
       assert.lengthOf(Object.keys(envs), 1)
-      assert.equal(envs.THANKS, 'FORALLTHEFISH')
+      assert.equal(envs.THANKS, 'FOR ALL THE FISH')
       assert.equal(getRCFileVarsStub.callCount, 1)
       assert.lengthOf(getRCFileVarsStub.args[0][0].environments, 1)
       assert.equal(getRCFileVarsStub.args[0][0].environments[0], 'production')
@@ -43,7 +43,7 @@ describe('getEnvVars', (): void => {
   it('should print path of custom .rc file and environments to info for verbose',
     async (): Promise<void> => {
       logInfoStub = sinon.stub(console, 'info')
-      getRCFileVarsStub.returns({ THANKS: 'FORALLTHEFISH' })
+      getRCFileVarsStub.returns({ THANKS: 'FOR ALL THE FISH' })
       await getEnvVars({ rc: { environments: ['production'] }, verbose: true })
       assert.equal(logInfoStub.callCount, 1)
     }
@@ -53,11 +53,11 @@ describe('getEnvVars', (): void => {
     const pathError = new Error()
     pathError.name = 'PathError'
     getRCFileVarsStub.rejects(pathError)
-    getRCFileVarsStub.onThirdCall().returns({ THANKS: 'FORALLTHEFISH' })
+    getRCFileVarsStub.onThirdCall().returns({ THANKS: 'FOR ALL THE FISH' })
     const envs = await getEnvVars({ rc: { environments: ['production'] } })
     assert.isOk(envs)
     assert.lengthOf(Object.keys(envs), 1)
-    assert.equal(envs.THANKS, 'FORALLTHEFISH')
+    assert.equal(envs.THANKS, 'FOR ALL THE FISH')
     assert.equal(getRCFileVarsStub.callCount, 3)
     assert.lengthOf(getRCFileVarsStub.args[2][0].environments, 1)
     assert.equal(getRCFileVarsStub.args[2][0].environments[0], 'production')
@@ -118,13 +118,13 @@ describe('getEnvVars', (): void => {
   })
 
   it('should find .rc file at custom path path', async (): Promise<void> => {
-    getRCFileVarsStub.returns({ THANKS: 'FORALLTHEFISH' })
+    getRCFileVarsStub.returns({ THANKS: 'FOR ALL THE FISH' })
     const envs = await getEnvVars({
       rc: { environments: ['production'], filePath: '../.custom-rc' }
     })
     assert.isOk(envs)
     assert.lengthOf(Object.keys(envs), 1)
-    assert.equal(envs.THANKS, 'FORALLTHEFISH')
+    assert.equal(envs.THANKS, 'FOR ALL THE FISH')
     assert.equal(getRCFileVarsStub.callCount, 1)
     assert.lengthOf(getRCFileVarsStub.args[0][0].environments, 1)
     assert.equal(getRCFileVarsStub.args[0][0].environments[0], 'production')
@@ -133,7 +133,7 @@ describe('getEnvVars', (): void => {
 
   it('should print custom .rc file path to info for verbose', async (): Promise<void> => {
     logInfoStub = sinon.stub(console, 'info')
-    getRCFileVarsStub.returns({ THANKS: 'FORALLTHEFISH' })
+    getRCFileVarsStub.returns({ THANKS: 'FOR ALL THE FISH' })
     await getEnvVars({
       rc: { environments: ['production'], filePath: '../.custom-rc' },
       verbose: true
@@ -206,18 +206,18 @@ describe('getEnvVars', (): void => {
   )
 
   it('should parse the env file from a custom path', async (): Promise<void> => {
-    getEnvFileVarsStub.returns({ THANKS: 'FORALLTHEFISH' })
+    getEnvFileVarsStub.returns({ THANKS: 'FOR ALL THE FISH' })
     const envs = await getEnvVars({ envFile: { filePath: '../.env-file' } })
     assert.isOk(envs)
     assert.lengthOf(Object.keys(envs), 1)
-    assert.equal(envs.THANKS, 'FORALLTHEFISH')
+    assert.equal(envs.THANKS, 'FOR ALL THE FISH')
     assert.equal(getEnvFileVarsStub.callCount, 1)
     assert.equal(getEnvFileVarsStub.args[0][0], '../.env-file')
   })
 
   it('should print path of .env file to info for verbose', async (): Promise<void> => {
     logInfoStub = sinon.stub(console, 'info')
-    getEnvFileVarsStub.returns({ THANKS: 'FORALLTHEFISH' })
+    getEnvFileVarsStub.returns({ THANKS: 'FOR ALL THE FISH' })
     await getEnvVars({ envFile: { filePath: '../.env-file' }, verbose: true })
     assert.equal(logInfoStub.callCount, 1)
   })
@@ -249,11 +249,11 @@ describe('getEnvVars', (): void => {
     'path not found and fallback option provided',
     async (): Promise<void> => {
       getEnvFileVarsStub.onFirstCall().rejects('File not found.')
-      getEnvFileVarsStub.returns({ THANKS: 'FORALLTHEFISH' })
+      getEnvFileVarsStub.returns({ THANKS: 'FOR ALL THE FISH' })
       const envs = await getEnvVars({ envFile: { filePath: '../.env-file', fallback: true } })
       assert.isOk(envs)
       assert.lengthOf(Object.keys(envs), 1)
-      assert.equal(envs.THANKS, 'FORALLTHEFISH')
+      assert.equal(envs.THANKS, 'FOR ALL THE FISH')
       assert.equal(getEnvFileVarsStub.callCount, 2)
       assert.equal(getEnvFileVarsStub.args[1][0], './.env')
     }
@@ -265,36 +265,36 @@ describe('getEnvVars', (): void => {
     async (): Promise<void> => {
       logInfoStub = sinon.stub(console, 'info')
       getEnvFileVarsStub.onFirstCall().rejects('File not found.')
-      getEnvFileVarsStub.returns({ THANKS: 'FORALLTHEFISH' })
+      getEnvFileVarsStub.returns({ THANKS: 'FOR ALL THE FISH' })
       await getEnvVars({ envFile: { filePath: '../.env-file', fallback: true }, verbose: true })
       assert.equal(logInfoStub.callCount, 2)
     }
   )
 
   it('should parse the env file from the default path', async (): Promise<void> => {
-    getEnvFileVarsStub.returns({ THANKS: 'FORALLTHEFISH' })
+    getEnvFileVarsStub.returns({ THANKS: 'FOR ALL THE FISH' })
     const envs = await getEnvVars()
     assert.isOk(envs)
     assert.lengthOf(Object.keys(envs), 1)
-    assert.equal(envs.THANKS, 'FORALLTHEFISH')
+    assert.equal(envs.THANKS, 'FOR ALL THE FISH')
     assert.equal(getEnvFileVarsStub.callCount, 1)
     assert.equal(getEnvFileVarsStub.args[0][0], './.env')
   })
 
   it('should print path of .env file to info for verbose', async (): Promise<void> => {
     logInfoStub = sinon.stub(console, 'info')
-    getEnvFileVarsStub.returns({ THANKS: 'FORALLTHEFISH' })
+    getEnvFileVarsStub.returns({ THANKS: 'FOR ALL THE FISH' })
     await getEnvVars({ verbose: true })
     assert.equal(logInfoStub.callCount, 1)
   })
 
   it('should search all default env file paths', async (): Promise<void> => {
     getEnvFileVarsStub.throws('Not found.')
-    getEnvFileVarsStub.onThirdCall().returns({ THANKS: 'FORALLTHEFISH' })
+    getEnvFileVarsStub.onThirdCall().returns({ THANKS: 'FOR ALL THE FISH' })
     const envs = await getEnvVars()
     assert.isOk(envs)
     assert.lengthOf(Object.keys(envs), 1)
-    assert.equal(envs.THANKS, 'FORALLTHEFISH')
+    assert.equal(envs.THANKS, 'FOR ALL THE FISH')
     assert.equal(getEnvFileVarsStub.callCount, 3)
     assert.isTrue(getEnvFileVarsStub.calledWithExactly('./.env.json'))
   })

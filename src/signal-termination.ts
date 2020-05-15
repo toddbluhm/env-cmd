@@ -6,7 +6,7 @@ const SIGNALS_TO_HANDLE: NodeJS.Signals[] = [
 
 export class TermSignals {
   private readonly terminateSpawnedProcessFuncHandlers: { [key: string]: any } = {}
-  private readonly verbose: boolean = false;
+  private readonly verbose: boolean = false
   public _exitCalled = false
 
   constructor (options: { verbose?: boolean } = {}) {
