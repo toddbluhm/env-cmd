@@ -1,10 +1,14 @@
 import { stat, readFile } from 'fs'
 import { promisify } from 'util'
 import { extname } from 'path'
-import { resolveEnvFilePath, isPromise } from './utils'
+import { resolveEnvFilePath } from './utils'
 
 const statAsync = promisify(stat)
 const readFileAsync = promisify(readFile)
+
+const parserMapping: {[ext: string]: (src: string) => object } = {
+  '.json': JSON.parse
+}
 
 /**
  * Gets the env vars from the rc file and rc environments
@@ -26,12 +30,12 @@ export async function getRCFileVars (
   const ext = extname(absolutePath).toLowerCase()
   let parsedData: { [key: string]: any }
   try {
-    if (ext === '.json' || ext === '.js' || ext === '.cjs') {
-      const possiblePromise = require(absolutePath) /* eslint-disable-line */
-      parsedData = isPromise(possiblePromise) ? await possiblePromise : possiblePromise
+    if ( ext === '.js' || ext === '.cjs') {
+      parsedData = await import(absolutePath)
     } else {
       const file = await readFileAsync(absolutePath, { encoding: 'utf8' })
-      parsedData = JSON.parse(file)
+      if (ext in parserMapping) parsedData = await parserMapping[ext](file)
+      else parsedData = JSON.parse(file)
     }
   } catch (e) {
     const parseError = new Error(`Failed to parse .rc file at path: ${absolutePath}`)

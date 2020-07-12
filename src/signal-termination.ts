@@ -89,12 +89,10 @@ export class TermSignals {
    */
   public _terminateProcess (code?: number, signal?: NodeJS.Signals): void {
     if (signal !== undefined) {
-      return process.kill(process.pid, signal)
-    }
-    if (code !== undefined) {
-      return process.exit(code)
-    }
-    throw new Error('Unable to terminate parent process successfully')
+      process.kill(process.pid, signal)
+    } else if (code !== undefined) {
+      process.exit(code)
+    } else throw new Error('Unable to terminate parent process successfully')
   }
 
   /**
