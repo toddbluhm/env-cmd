@@ -52,7 +52,7 @@
   },
   "devDependencies": {
     "@commitlint/cli": "^8.0.0",
-    "@commitlint/config-conventional": "^8.0.0",
+    "@commitlint/config-conventional": "^11.0.0",
     "@types/chai": "^4.0.0",
     "@types/cross-spawn": "^6.0.0",
     "@types/mocha": "^7.0.0",
