@@ -15,6 +15,7 @@ export interface EnvCmdOptions extends Pick<GetEnvVarOptions, 'envFile' | 'rc'> 
   commandArgs: string[]
   options?: {
     expandEnvs?: boolean
+    recursive?: boolean
     noOverride?: boolean
     silent?: boolean
     useShell?: boolean

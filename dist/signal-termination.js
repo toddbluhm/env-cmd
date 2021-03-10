@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.TermSignals = void 0;
 const SIGNALS_TO_HANDLE = [
     'SIGINT', 'SIGTERM', 'SIGHUP'
 ];

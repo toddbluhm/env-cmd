@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.getRCFile = exports.getEnvFile = exports.getEnvVars = void 0;
 const parse_rc_file_1 = require("./parse-rc-file");
 const parse_env_file_1 = require("./parse-env-file");
 const RC_FILE_DEFAULT_LOCATIONS = ['./.env-cmdrc', './.env-cmdrc.js', './.env-cmdrc.json'];

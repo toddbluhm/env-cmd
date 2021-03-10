@@ -9,8 +9,8 @@ describe('expandEnvs', (): void => {
     PING: 'PONG',
     IP1: '127.0.0.1'
   }
-  const args = ['notvar', '$dollar', '\\$notvar', '-4', '$PING', '$IP1', '\\$IP1', '$NONEXIST']
-  const argsExpanded = ['notvar', 'money', '\\$notvar', '-4', 'PONG', '127.0.0.1', '\\$IP1', '$NONEXIST']
+  const args = ['notvar', '$dollar', '\\$notvar', '-4', '$PING', '$IP1', '\\$IP1', '$NONEXIST', '${PING}', '${NONEXIST}'] /* eslint-disable-line */
+  const argsExpanded = ['notvar', 'money', '\\$notvar', '-4', 'PONG', '127.0.0.1', '\\$IP1', '$NONEXIST', 'PONG', '${NONEXIST}'] /* eslint-disable-line */
 
   it('should replace environment variables in args', (): void => {
     const res = args.map(arg => expandEnvs(arg, envs))

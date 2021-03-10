@@ -87,7 +87,7 @@ export class TermSignals {
   /**
    * Terminate parent process helper
    */
-  public _terminateProcess (code?: number, signal?: NodeJS.Signals): void {
+  public _terminateProcess (code?: number, signal?: NodeJS.Signals): boolean | void {
     if (signal !== undefined) {
       return process.kill(process.pid, signal)
     }

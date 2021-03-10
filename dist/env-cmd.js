@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.EnvCmd = exports.CLI = void 0;
 const spawn_1 = require("./spawn");
 const signal_termination_1 = require("./signal-termination");
 const parse_args_1 = require("./parse-args");
@@ -50,6 +51,11 @@ async function EnvCmd({ command, commandArgs, envFile, rc, options = {} }) {
     else {
         // Add in the system environment variables to our environment list
         env = Object.assign({}, process.env, env);
+    }
+    if (options.recursive === true) {
+        for (const key of Object.keys(env)) {
+            env[key] = expand_envs_1.expandEnvs(env[key], env);
+        }
     }
     if (options.expandEnvs === true) {
         command = expand_envs_1.expandEnvs(command, env);
