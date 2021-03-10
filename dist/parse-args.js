@@ -31,6 +31,10 @@ function parseArgs(args) {
     if (program.expandEnvs === true) {
         expandEnvs = true;
     }
+    let recursive = false;
+    if (program.recursive === true) {
+        recursive = true;
+    }
     let verbose = false;
     if (program.verbose === true) {
         verbose = true;
@@ -60,6 +64,7 @@ function parseArgs(args) {
         rc,
         options: {
             expandEnvs,
+            recursive,
             noOverride,
             silent,
             useShell,
@@ -85,7 +90,8 @@ function parseArgsUsingCommander(args) {
         .option('--silent', 'Ignore any env-cmd errors and only fail on executed program failure.')
         .option('--use-shell', 'Execute the command in a new shell with the given environment')
         .option('--verbose', 'Print helpful debugging information')
-        .option('-x, --expand-envs', 'Replace $var in args and command with environment variables')
+        .option('-x, --expand-envs', 'Replace $var and $\\{var\\} in args and command with environment variables')
+        .option('--recursive', 'Replace $var and $\\{var\\} in env file with the referenced environment variable')
         .allowUnknownOption(true)
         .parse(['_', '_', ...args]);
 }

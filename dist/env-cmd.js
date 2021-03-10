@@ -52,6 +52,11 @@ async function EnvCmd({ command, commandArgs, envFile, rc, options = {} }) {
         // Add in the system environment variables to our environment list
         env = Object.assign({}, process.env, env);
     }
+    if (options.recursive === true) {
+        for (const key of Object.keys(env)) {
+            env[key] = expand_envs_1.expandEnvs(env[key], env);
+        }
+    }
     if (options.expandEnvs === true) {
         command = expand_envs_1.expandEnvs(command, env);
         commandArgs = commandArgs.map(arg => expand_envs_1.expandEnvs(arg, env));

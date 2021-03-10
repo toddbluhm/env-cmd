@@ -57,6 +57,12 @@ export async function EnvCmd (
     env = Object.assign({}, process.env, env)
   }
 
+  if (options.recursive === true) {
+    for (const key of Object.keys(env)) {
+      env[key] = expandEnvs(env[key], env)
+    }
+  }
+
   if (options.expandEnvs === true) {
     command = expandEnvs(command, env)
     commandArgs = commandArgs.map(arg => expandEnvs(arg, env))
