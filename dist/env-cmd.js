@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.EnvCmd = exports.CLI = void 0;
 const spawn_1 = require("./spawn");
 const signal_termination_1 = require("./signal-termination");
 const parse_args_1 = require("./parse-args");
