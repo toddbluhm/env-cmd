@@ -169,6 +169,35 @@ describe('EnvCmd', (): void => {
     },
   )
 
+  it('should spawn process with args expanded if recursive option is true',
+    async (): Promise<void> => {
+      getEnvVarsStub.returns({ PING: 'PONG', recursive: 'PING ${PING}' }) /* eslint-disable-line */
+      await envCmdLib.EnvCmd({
+        command: 'node',
+        commandArgs: [],
+        envFile: {
+          filePath: './.env',
+          fallback: true
+        },
+        rc: {
+          environments: ['dev'],
+          filePath: './.rc'
+        },
+        options: {
+          recursive: true
+        }
+      })
+
+      const spawnArgs = spawnStub.args[0]
+
+      assert.equal(getEnvVarsStub.callCount, 1, 'getEnvVars must be called once')
+      assert.equal(spawnStub.callCount, 1)
+      assert.isAtLeast(expandEnvsSpy.callCount, 3, 'total number of env args')
+      assert.equal(spawnArgs[0], 'node')
+      assert.equal(spawnArgs[2].env.recursive, 'PING PONG')
+    }
+  )
+
   it('should ignore errors if silent flag provided',
     async (): Promise<void> => {
       delete process.env.BOB

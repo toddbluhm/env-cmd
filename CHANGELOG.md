@@ -5,6 +5,7 @@
 - **Upgrade**: Upgraded dependency `commander` to `5.x`
 - **Upgrade**: Upgraded devDependencies `ts-standard`, `sinon`
 - **Feature**: support both `$var` and `${var}` when expanding vars
+- **Feature**: Added support for nested env variables with the `--recursive` flag
 
 ## 10.1.0
 

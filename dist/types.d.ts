@@ -29,6 +29,7 @@ export interface EnvCmdOptions extends GetEnvVarOptions {
     commandArgs: string[];
     options?: {
         expandEnvs?: boolean;
+        recursive?: boolean;
         noOverride?: boolean;
         silent?: boolean;
         useShell?: boolean;
