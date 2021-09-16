@@ -39,7 +39,7 @@ ENV3=THE FISH
 **Terminal**
 
 ```sh
-./node_modules/.bin/env-cmd node index.js
+npx env-cmd node index.js
 ```
 
 ### Using custom env file path
@@ -49,7 +49,7 @@ To use a custom env filename or path, pass the `-f` flag. This is a major breaki
 **Terminal**
 
 ```sh
-./node_modules/.bin/env-cmd -f ./custom/path/.env node index.js
+npx env-cmd -f ./custom/path/.env node index.js
 ```
 
 ## 📜 Help
@@ -102,10 +102,10 @@ are found.
 **Terminal**
 
 ```sh
-./node_modules/.bin/env-cmd -e production node index.js
+npx env-cmd -e production node index.js
 # Or for multiple environments (where `production` vars override `test` vars,
 # but both are included)
-./node_modules/.bin/env-cmd -e test,production node index.js
+npx env-cmd -e test,production node index.js
 ```
 
 ### `--no-override` option
@@ -126,7 +126,7 @@ commands together that share the same environment variables.
 **Terminal**
 
 ```sh
-./node_modules/.bin/env-cmd -f ./test/.env --use-shell "npm run lint && npm test"
+npx env-cmd -f ./test/.env --use-shell "npm run lint && npm test"
 ```
 
 ### Asynchronous env file support
@@ -139,7 +139,7 @@ commands together that share the same environment variables.
    **Terminal**
    
    ```sh
-   ./node_modules/.bin/env-cmd -f ./async-file.js node index.js
+   npx env-cmd -f ./async-file.js node index.js
    ```
 
 ### `-x` expands vars in arguments
@@ -153,7 +153,7 @@ to provide arguments to a command that are based on environment variable values 
 
 ```sh
 # $VAR will be expanded into the env value it contains at runtime
-./node_modules/.bin/env-cmd -x node index.js --arg=\$VAR
+npx env-cmd -x node index.js --arg=\$VAR
 ```
 
 or in `package.json` (use `\\` to insert a literal backslash)
