@@ -66,14 +66,8 @@ export function parseEnvVars (envString: string): { [key: string]: string } {
  * Strips out comments from env file string
  */
 export function stripComments (envString: string): string {
-  const commentsRegex = /(^#.*$)/gim
-  let match = commentsRegex.exec(envString)
-  let newString = envString
-  while (match != null) {
-    newString = newString.replace(match[1], '')
-    match = commentsRegex.exec(envString)
-  }
-  return newString
+  const commentsRegex = /(^\s*#.*$)/gim
+  return envString.replace(commentsRegex, '')
 }
 
 /**
