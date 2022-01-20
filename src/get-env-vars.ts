@@ -103,6 +103,12 @@ export async function getRCFile (
         }
         throw new Error(errorText)
       }
+      if (e.name === 'ParseError') {
+        if (verbose === true) {
+            console.info(e.message);
+        }
+        throw new Error(e.message);
+      }
     }
   }
 
