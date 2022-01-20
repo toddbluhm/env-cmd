@@ -34,7 +34,7 @@ export async function getRCFileVars (
       parsedData = JSON.parse(file)
     }
   } catch (e) {
-    const parseError = new Error(`Failed to parse .rc file at path: ${absolutePath}`)
+    const parseError = new Error(`Failed to parse .rc file at path: ${absolutePath}.\n${e.message}`)
     parseError.name = 'ParseError'
     throw parseError
   }
