@@ -165,6 +165,22 @@ or in `package.json` (use `\\` to insert a literal backslash)
 }
 ```
 
+It will also work with parameter expansion
+
+```sh
+./node_modules/.bin/env-cmd -x echo "Hello ${WHO}!"
+```
+
+or in `package.json`:
+
+```json
+{
+  "script": {
+    "hello": "env-cmd -x echo \"Hello ${WHO}!\""
+  }
+}
+```
+
 
 ### `--silent` suppresses env-cmd errors
 
