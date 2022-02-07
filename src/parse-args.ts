@@ -33,9 +33,9 @@ export function parseArgs (args: string[]): EnvCmdOptions {
   if (program.expandEnvs === true) {
     expandEnvs = true
   }
-  let interpolate = false
+  let interpolateEnvs = false
   if (program.interpolate === true) {
-    interpolate = true
+    interpolateEnvs = true
   }
 
   let verbose = false
@@ -74,7 +74,7 @@ export function parseArgs (args: string[]): EnvCmdOptions {
       silent,
       useShell,
       verbose,
-      interpolate,
+      interpolateEnvs,
     }
   }
   if (verbose) {

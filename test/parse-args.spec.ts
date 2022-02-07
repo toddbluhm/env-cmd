@@ -99,7 +99,7 @@ describe('parseArgs', (): void => {
   })
 
   it('should parse interpolateEnvs option', (): void => {
-    const res = parseArgs(['-f', envFilePath, '--interpolate', command, ...commandArgs])
+    const res = parseArgs(['-f', envFilePath, '-i', command, ...commandArgs])
     assert.exists(res.envFile)
     assert.isTrue(res.options!.interpolateEnvs)
   })

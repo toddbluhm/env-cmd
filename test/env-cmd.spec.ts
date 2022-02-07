@@ -200,7 +200,7 @@ describe('EnvCmd', (): void => {
     async (): Promise<void> => {
       getEnvVarsStub.returns({ PING: 'PONG', CMD: 'node' })
       await envCmdLib.EnvCmd({
-        command: '$CMD',
+        command: '{{CMD}}',
         commandArgs: ['{{PING}}', '\\{{IP}}'],
         envFile: {
           filePath: './.env',

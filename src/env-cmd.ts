@@ -63,7 +63,7 @@ export async function EnvCmd (
     commandArgs = commandArgs.map(arg => expandEnvs(arg, env))
   }
   if (options.interpolateEnvs === true) {
-    command = expandEnvs(command, env)
+    command = interpolateEnvs(command, env)
     commandArgs = commandArgs.map(arg => interpolateEnvs(arg, env))
   }
 
