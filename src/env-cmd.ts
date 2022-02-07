@@ -4,6 +4,7 @@ import { TermSignals } from './signal-termination'
 import { parseArgs } from './parse-args'
 import { getEnvVars } from './get-env-vars'
 import { expandEnvs } from './expand-envs'
+import { interpolateEnvs } from './interpolate-envs';
 
 /**
  * Executes env - cmd using command line arguments
@@ -60,6 +61,10 @@ export async function EnvCmd (
   if (options.expandEnvs === true) {
     command = expandEnvs(command, env)
     commandArgs = commandArgs.map(arg => expandEnvs(arg, env))
+  }
+  if (options.interpolateEnvs === true) {
+    command = expandEnvs(command, env)
+    commandArgs = commandArgs.map(arg => interpolateEnvs(arg, env))
   }
 
   // Execute the command with the given environment variables

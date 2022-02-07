@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.TermSignals = void 0;
 const SIGNALS_TO_HANDLE = [
     'SIGINT', 'SIGTERM', 'SIGHUP'
 ];
@@ -82,7 +83,8 @@ class TermSignals {
      */
     _terminateProcess(code, signal) {
         if (signal !== undefined) {
-            return process.kill(process.pid, signal);
+            process.kill(process.pid, signal);
+            return;
         }
         if (code !== undefined) {
             return process.exit(code);

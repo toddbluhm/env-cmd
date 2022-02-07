@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.expandEnvs = void 0;
 /**
  * expandEnvs Replaces $var in args and command with environment variables
  * the environment variable doesn't exist, it leaves it as is.

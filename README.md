@@ -62,9 +62,9 @@ Options:
   -e, --environments [env1,env2,...]  The rc file environment(s) to use
   -f, --file [path]                   Custom env file path (default path: ./.env)
   --fallback                          Fallback to default env file path, if custom env file path not found
-  --no-override                       Do not override existing environment variables
+  -n, --no-override                   Do not override existing environment variables
   -r, --rc-file [path]                Custom rc file path (default path: ./.env-cmdrc(|.js|.json)
-  --silent                            Ignore any env-cmd errors and only fail on executed program failure.
+  -s, --silent                        Ignore any env-cmd errors and only fail on executed program failure.
   --use-shell                         Execute the command in a new shell with the given environment
   --verbose                           Print helpful debugging information
   -x, --expand-envs                   Replace $var in args and command with environment variables
@@ -165,6 +165,30 @@ or in `package.json` (use `\\` to insert a literal backslash)
 }
 ```
 
+### `-i` interpolate vars in arguments
+
+EnvCmd supports interpolation `{{var}}` values passed in as arguments to the command. The allows a user
+to provide arguments using "moustache" syntax to a command that are based on environment variable values at runtime.
+
+**NOTE:** Main difference between `-i` and `-x` is that you do not need to escape the `{{` & `}}` characters with `\`
+unlike using `$` in order to avoid terminal trying to auto expand it before passing it to `env-cmd`.
+
+**Terminal**
+
+```sh
+# $VAR will be expanded into the env value it contains at runtime
+./node_modules/.bin/env-cmd -x node index.js --arg={{VAR}}
+```
+
+or in `package.json`
+```json
+{
+  "script": {
+    "start": "env-cmd -x node index.js --arg={{VAR}}"
+  }
+}
+```
+
 
 ### `--silent` suppresses env-cmd errors
 
@@ -222,6 +246,7 @@ A function that executes a given command in a new child process with the given e
     - **`filePath`** { `string` }: Custom path to the `.rc` file (defaults to: `./.env-cmdrc(|.js|.json)`)
   - **`options`** { `object` }
     - **`expandEnvs`** { `boolean` }: Expand `$var` values passed to `commandArgs` (default: `false`)
+    - **`interpolateEnvs`** { `boolean` }: Interpolates `{{var}}` values passed to `commandArgs` (default: `false`)
     - **`noOverride`** { `boolean` }: Prevent `.env` file vars from overriding existing `process.env` vars (default: `false`)
     - **`silent`** { `boolean` }: Ignore any errors thrown by env-cmd, used to ignore missing file errors (default: `false`)
     - **`useShell`** { `boolean` }: Runs command inside a new shell instance (default: `false`)

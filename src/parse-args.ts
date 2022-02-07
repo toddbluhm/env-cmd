@@ -33,6 +33,11 @@ export function parseArgs (args: string[]): EnvCmdOptions {
   if (program.expandEnvs === true) {
     expandEnvs = true
   }
+  let interpolate = false
+  if (program.interpolate === true) {
+    interpolate = true
+  }
+
   let verbose = false
   if (program.verbose === true) {
     verbose = true
@@ -68,7 +73,8 @@ export function parseArgs (args: string[]): EnvCmdOptions {
       noOverride,
       silent,
       useShell,
-      verbose
+      verbose,
+      interpolate,
     }
   }
   if (verbose) {
@@ -85,12 +91,13 @@ export function parseArgsUsingCommander (args: string[]): commander.Command {
     .option('-e, --environments [env1,env2,...]', 'The rc file environment(s) to use', parseArgList)
     .option('-f, --file [path]', 'Custom env file path (default path: ./.env)')
     .option('--fallback', 'Fallback to default env file path, if custom env file path not found')
-    .option('--no-override', 'Do not override existing environment variables')
+    .option('-n, --no-override', 'Do not override existing environment variables')
     .option('-r, --rc-file [path]', 'Custom rc file path (default path: ./.env-cmdrc(|.js|.json)')
-    .option('--silent', 'Ignore any env-cmd errors and only fail on executed program failure.')
+    .option('-s, --silent', 'Ignore any env-cmd errors and only fail on executed program failure.')
     .option('--use-shell', 'Execute the command in a new shell with the given environment')
     .option('--verbose', 'Print helpful debugging information')
     .option('-x, --expand-envs', 'Replace $var in args and command with environment variables')
+    .option('-i, --interpolate', 'Interpolates {{var}} in args and command with environment variables')
     .allowUnknownOption(true)
     .parse(['_', '_', ...args])
 }

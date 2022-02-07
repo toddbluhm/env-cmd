@@ -18,5 +18,6 @@ export interface EnvCmdOptions extends Pick<GetEnvVarOptions, 'envFile' | 'rc'> 
         silent?: boolean;
         useShell?: boolean;
         verbose?: boolean;
+        interpolateEnvs?: boolean;
     };
 }
