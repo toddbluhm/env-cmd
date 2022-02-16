@@ -94,6 +94,7 @@ export class TermSignals {
     }
     if (code !== undefined) {
       process.exit(code)
+      return // eslint-disable-line no-unreachable
     }
     throw new Error('Unable to terminate parent process successfully')
   }
