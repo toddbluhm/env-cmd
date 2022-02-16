@@ -71,6 +71,7 @@ describe('signal-termination', (): void => {
 
       it('should call exit method on parent process if no signal provided', (): void => {
         term._terminateProcess(0)
+        // We here test code that in reality is unreachable.
         assert.equal(exitStub.callCount, 1)
       })
 
