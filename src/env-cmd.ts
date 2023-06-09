@@ -19,7 +19,6 @@ export async function CLI (args: string[]): Promise<{ [key: string]: any }> {
   try {
     return await (exports.EnvCmd(parsedArgs) as Promise<{ [key: string]: any }>)
   } catch (e) {
-    console.error(e)
     return process.exit(1)
   }
 }
