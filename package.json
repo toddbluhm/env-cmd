@@ -48,13 +48,13 @@
   "homepage": "https://github.com/toddbluhm/env-cmd#readme",
   "dependencies": {
     "commander": "^5.0.0",
-    "cross-spawn": "^7.0.0"
+    "cross-spawn": "^7.0.6"
   },
   "devDependencies": {
     "@commitlint/cli": "^8.0.0",
     "@commitlint/config-conventional": "^8.0.0",
     "@types/chai": "^4.0.0",
-    "@types/cross-spawn": "^6.0.0",
+    "@types/cross-spawn": "^6.0.6",
     "@types/mocha": "^7.0.0",
     "@types/node": "^12.0.0",
     "@types/sinon": "^9.0.0",
