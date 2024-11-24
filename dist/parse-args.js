@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.parseArgsUsingCommander = exports.parseArgs = void 0;
 const commander = require("commander");
 const utils_1 = require("./utils");
 // Use commonjs require to prevent a weird folder hierarchy in dist
