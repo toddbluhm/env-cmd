@@ -14,7 +14,7 @@
     "test": "mocha -r ts-node/register ./test/**/*.ts",
     "test-cover": "nyc npm test",
     "coveralls": "coveralls < coverage/lcov.info",
-    "lint": "ts-standard --fix && tsc --noEmit",
+    "lint": "npx eslint .",
     "build": "tsc",
     "watch": "tsc -w"
   },
@@ -53,6 +53,8 @@
   "devDependencies": {
     "@commitlint/cli": "^8.0.0",
     "@commitlint/config-conventional": "^8.0.0",
+    "@eslint/js": "^9.15.0",
+    "@stylistic/eslint-plugin": "^2.11.0",
     "@types/chai": "^4.0.0",
     "@types/cross-spawn": "^6.0.0",
     "@types/mocha": "^7.0.0",
@@ -60,13 +62,14 @@
     "@types/sinon": "^9.0.0",
     "chai": "^4.0.0",
     "coveralls": "^3.0.0",
+    "globals": "^15.12.0",
     "husky": "^4.0.0",
     "mocha": "^7.0.0",
     "nyc": "^15.0.0",
     "sinon": "^9.0.0",
     "ts-node": "^8.0.0",
-    "ts-standard": "^8.0.0",
-    "typescript": "^5.7.2"
+    "typescript": "^5.7.2",
+    "typescript-eslint": "^8.15.0"
   },
   "nyc": {
     "include": [
@@ -84,12 +87,6 @@
     ],
     "sourceMap": true,
     "instrument": true
-  },
-  "ts-standard": {
-    "project": "./tsconfig.eslint.json",
-    "ignore": [
-      "dist"
-    ]
   },
   "greenkeeper": {
     "ignore": [

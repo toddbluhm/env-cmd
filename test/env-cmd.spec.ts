@@ -9,9 +9,9 @@ import * as envCmdLib from '../src/env-cmd'
 
 describe('CLI', (): void => {
   let sandbox: sinon.SinonSandbox
-  let parseArgsStub: sinon.SinonStub<any, any>
-  let envCmdStub: sinon.SinonStub<any, any>
-  let processExitStub: sinon.SinonStub<any, any>
+  let parseArgsStub: sinon.SinonStub<any>
+  let envCmdStub: sinon.SinonStub<any>
+  let processExitStub: sinon.SinonStub<any>
   before((): void => {
     sandbox = sinon.createSandbox()
     parseArgsStub = sandbox.stub(parseArgsLib, 'parseArgs')
@@ -49,16 +49,16 @@ describe('CLI', (): void => {
 
 describe('EnvCmd', (): void => {
   let sandbox: sinon.SinonSandbox
-  let getEnvVarsStub: sinon.SinonStub<any, any>
-  let spawnStub: sinon.SinonStub<any, any>
-  let expandEnvsSpy: sinon.SinonSpy<any, any>
+  let getEnvVarsStub: sinon.SinonStub<any>
+  let spawnStub: sinon.SinonStub<any>
+  let expandEnvsSpy: sinon.SinonSpy<any>
   before((): void => {
     sandbox = sinon.createSandbox()
     getEnvVarsStub = sandbox.stub(getEnvVarsLib, 'getEnvVars')
     spawnStub = sandbox.stub(spawnLib, 'spawn')
     spawnStub.returns({
       on: (): void => { /* Fake the on method */ },
-      kill: (): void => { /* Fake the kill method */ }
+      kill: (): void => { /* Fake the kill method */ },
     })
     expandEnvsSpy = sandbox.spy(expandEnvsLib, 'expandEnvs')
     sandbox.stub(signalTermLib.TermSignals.prototype, 'handleTermSignals')
@@ -80,12 +80,12 @@ describe('EnvCmd', (): void => {
       commandArgs: ['-v'],
       envFile: {
         filePath: './.env',
-        fallback: true
+        fallback: true,
       },
       rc: {
         environments: ['dev'],
-        filePath: './.rc'
-      }
+        filePath: './.rc',
+      },
     })
     assert.equal(getEnvVarsStub.callCount, 1)
     assert.equal(spawnStub.callCount, 1)
@@ -100,17 +100,17 @@ describe('EnvCmd', (): void => {
         commandArgs: ['-v'],
         envFile: {
           filePath: './.env',
-          fallback: true
+          fallback: true,
         },
         rc: {
           environments: ['dev'],
-          filePath: './.rc'
-        }
+          filePath: './.rc',
+        },
       })
       assert.equal(getEnvVarsStub.callCount, 1)
       assert.equal(spawnStub.callCount, 1)
       assert.equal(spawnStub.args[0][2].env.BOB, 'test')
-    }
+    },
   )
 
   it('should not override existing env vars if noOverride option is true',
@@ -122,20 +122,20 @@ describe('EnvCmd', (): void => {
         commandArgs: ['-v'],
         envFile: {
           filePath: './.env',
-          fallback: true
+          fallback: true,
         },
         rc: {
           environments: ['dev'],
-          filePath: './.rc'
+          filePath: './.rc',
         },
         options: {
-          noOverride: true
-        }
+          noOverride: true,
+        },
       })
       assert.equal(getEnvVarsStub.callCount, 1)
       assert.equal(spawnStub.callCount, 1)
       assert.equal(spawnStub.args[0][2].env.BOB, 'cool')
-    }
+    },
   )
 
   it('should spawn process with shell option if useShell option is true',
@@ -147,20 +147,20 @@ describe('EnvCmd', (): void => {
         commandArgs: ['-v'],
         envFile: {
           filePath: './.env',
-          fallback: true
+          fallback: true,
         },
         rc: {
           environments: ['dev'],
-          filePath: './.rc'
+          filePath: './.rc',
         },
         options: {
-          useShell: true
-        }
+          useShell: true,
+        },
       })
       assert.equal(getEnvVarsStub.callCount, 1)
       assert.equal(spawnStub.callCount, 1)
       assert.equal(spawnStub.args[0][2].shell, true)
-    }
+    },
   )
 
   it('should spawn process with command and args expanded if expandEnvs option is true',
@@ -171,15 +171,15 @@ describe('EnvCmd', (): void => {
         commandArgs: ['$PING', '\\$IP'],
         envFile: {
           filePath: './.env',
-          fallback: true
+          fallback: true,
         },
         rc: {
           environments: ['dev'],
-          filePath: './.rc'
+          filePath: './.rc',
         },
         options: {
-          expandEnvs: true
-        }
+          expandEnvs: true,
+        },
       })
 
       const spawnArgs = spawnStub.args[0]
@@ -188,9 +188,9 @@ describe('EnvCmd', (): void => {
       assert.equal(spawnStub.callCount, 1)
       assert.equal(expandEnvsSpy.callCount, 3, 'command + number of args')
       assert.equal(spawnArgs[0], 'node')
-      assert.sameOrderedMembers(spawnArgs[1], ['PONG', '\\$IP'])
+      assert.sameOrderedMembers(spawnArgs[1] as string[], ['PONG', '\\$IP'])
       assert.equal(spawnArgs[2].env.PING, 'PONG')
-    }
+    },
   )
 
   it('should ignore errors if silent flag provided',
@@ -201,16 +201,16 @@ describe('EnvCmd', (): void => {
         command: 'node',
         commandArgs: ['-v'],
         envFile: {
-          filePath: './.env'
+          filePath: './.env',
         },
         options: {
-          silent: true
-        }
+          silent: true,
+        },
       })
       assert.equal(getEnvVarsStub.callCount, 1)
       assert.equal(spawnStub.callCount, 1)
       assert.isUndefined(spawnStub.args[0][2].env.BOB)
-    }
+    },
   )
 
   it('should allow errors if silent flag not provided',
@@ -221,14 +221,16 @@ describe('EnvCmd', (): void => {
           command: 'node',
           commandArgs: ['-v'],
           envFile: {
-            filePath: './.env'
-          }
+            filePath: './.env',
+          },
         })
-      } catch (e) {
+      }
+      catch (e) {
+        assert.instanceOf(e, Error)
         assert.equal(e.name, 'MissingFile')
         return
       }
       assert.fail('Should not get here.')
-    }
+    },
   )
 })

@@ -1,7 +1,7 @@
 import { assert } from 'chai'
 import {
   stripEmptyLines, stripComments, parseEnvVars,
-  parseEnvString, getEnvFileVars
+  parseEnvString, getEnvFileVars,
 } from '../src/parse-env-file'
 
 describe('stripEmptyLines', (): void => {
@@ -20,10 +20,12 @@ describe('stripComments', (): void => {
 
 describe('parseEnvVars', (): void => {
   it('should parse out all env vars in string when not ending with \'\\n\'', (): void => {
-    const envVars = parseEnvVars('BOB=COOL\nNODE_ENV=dev\nANSWER=42 AND COUNTING')
+    const envVars = parseEnvVars('BOB=COOL\nNODE_ENV=dev\nANSWER=42 AND COUNTING\nNUMBER=42\nBOOLEAN=true')
     assert(envVars.BOB === 'COOL')
     assert(envVars.NODE_ENV === 'dev')
     assert(envVars.ANSWER === '42 AND COUNTING')
+    assert(envVars.NUMBER === 42)
+    assert(envVars.BOOLEAN === true)
   })
 
   it('should parse out all env vars in string with format \'key=value\'', (): void => {
@@ -96,7 +98,7 @@ describe('parseEnvString', (): void => {
     const env = parseEnvString('BOB=COOL\nNODE_ENV=dev\nANSWER=42\n')
     assert(env.BOB === 'COOL')
     assert(env.NODE_ENV === 'dev')
-    assert(env.ANSWER === '42')
+    assert(env.ANSWER === 42)
   })
 })
 
@@ -107,7 +109,8 @@ describe('getEnvFileVars', (): void => {
       THANKS: 'FOR WHAT?!',
       ANSWER: 42,
       ONLY: 'IN PRODUCTION',
-      GALAXY: 'hitch\nhiking'
+      GALAXY: 'hitch\nhiking',
+      BRINGATOWEL: true,
     })
   })
 
@@ -117,7 +120,8 @@ describe('getEnvFileVars', (): void => {
       THANKS: 'FOR WHAT?!',
       ANSWER: 42,
       ONLY: 'IN\n PRODUCTION',
-      GALAXY: 'hitch\nhiking\n\n'
+      GALAXY: 'hitch\nhiking\n\n',
+      BRINGATOWEL: true,
     })
   })
 
@@ -126,7 +130,7 @@ describe('getEnvFileVars', (): void => {
     assert.deepEqual(env, {
       THANKS: 'FOR ALL THE FISH',
       ANSWER: 0,
-      GALAXY: 'hitch\nhiking'
+      GALAXY: 'hitch\nhiking',
     })
   })
 
@@ -134,7 +138,7 @@ describe('getEnvFileVars', (): void => {
     const env = await getEnvFileVars('./test/test-files/test-async.js')
     assert.deepEqual(env, {
       THANKS: 'FOR ALL THE FISH',
-      ANSWER: 0
+      ANSWER: 0,
     })
   })
 
@@ -142,9 +146,10 @@ describe('getEnvFileVars', (): void => {
     const env = await getEnvFileVars('./test/test-files/test')
     assert.deepEqual(env, {
       THANKS: 'FOR WHAT?!',
-      ANSWER: '42',
+      ANSWER: 42,
       ONLY: 'IN=PRODUCTION',
-      GALAXY: 'hitch\nhiking'
+      GALAXY: 'hitch\nhiking',
+      BRINGATOWEL: true,
     })
   })
 
@@ -152,7 +157,9 @@ describe('getEnvFileVars', (): void => {
     try {
       await getEnvFileVars('./test/test-files/non-existent-file')
       assert.fail('Should not get here!')
-    } catch (e) {
+    }
+    catch (e) {
+      assert.instanceOf(e, Error)
       assert.match(e.message, /file path/gi)
     }
   })

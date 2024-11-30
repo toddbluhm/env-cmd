@@ -4,6 +4,4 @@
 export declare function getRCFileVars({ environments, filePath }: {
     environments: string[];
     filePath: string;
-}): Promise<{
-    [key: string]: any;
-}>;
+}): Promise<Record<string, any>>;

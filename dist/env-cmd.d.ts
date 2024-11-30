@@ -5,9 +5,7 @@ import { EnvCmdOptions } from './types';
  * @param {string[]} args Command line argument to pass in ['-f', './.env']
  * @returns {Promise<{ [key: string]: any }>}
  */
-export declare function CLI(args: string[]): Promise<{
-    [key: string]: any;
-}>;
+export declare function CLI(args: string[]): Promise<Record<string, any>>;
 /**
  * The main env-cmd program. This will spawn a new process and run the given command using
  * various environment file solutions.
@@ -16,6 +14,4 @@ export declare function CLI(args: string[]): Promise<{
  * @param {EnvCmdOptions} { command, commandArgs, envFile, rc, options }
  * @returns {Promise<{ [key: string]: any }>} Returns an object containing [environment variable name]: value
  */
-export declare function EnvCmd({ command, commandArgs, envFile, rc, options }: EnvCmdOptions): Promise<{
-    [key: string]: any;
-}>;
+export declare function EnvCmd({ command, commandArgs, envFile, rc, options }: EnvCmdOptions): Promise<Record<string, any>>;

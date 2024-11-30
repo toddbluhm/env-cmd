@@ -9,7 +9,7 @@ describe('parseArgs', (): void => {
   const environments = ['development', 'production']
   const rcFilePath = './.env-cmdrc'
   const envFilePath = './.env'
-  let logInfoStub: sinon.SinonStub<any, any>
+  let logInfoStub: sinon.SinonStub<any>
 
   before((): void => {
     logInfoStub = sinon.stub(console, 'info')
@@ -53,7 +53,7 @@ describe('parseArgs', (): void => {
       assert.sameOrderedMembers(res.commandArgs, commandFlags)
       assert.notOk(res.options!.useShell)
       assert.notOk(res.envFile)
-    }
+    },
   )
 
   it('should parse override option', (): void => {
