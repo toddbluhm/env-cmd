@@ -5,9 +5,9 @@ import * as rcFile from '../src/parse-rc-file'
 import * as envFile from '../src/parse-env-file'
 
 describe('getEnvVars', (): void => {
-  let getRCFileVarsStub: sinon.SinonStub<any, any>
-  let getEnvFileVarsStub: sinon.SinonStub<any, any>
-  let logInfoStub: sinon.SinonStub<any, any>
+  let getRCFileVarsStub: sinon.SinonStub<any>
+  let getEnvFileVarsStub: sinon.SinonStub<any>
+  let logInfoStub: sinon.SinonStub<any> | undefined
 
   before((): void => {
     getRCFileVarsStub = sinon.stub(rcFile, 'getRCFileVars')
@@ -21,9 +21,7 @@ describe('getEnvVars', (): void => {
   afterEach((): void => {
     sinon.resetHistory()
     sinon.resetBehavior()
-    if (logInfoStub !== undefined) {
-      logInfoStub.restore()
-    }
+    logInfoStub?.restore()
   })
 
   it('should parse the json .rc file from the default path with the given environment',
@@ -37,7 +35,7 @@ describe('getEnvVars', (): void => {
       assert.lengthOf(getRCFileVarsStub.args[0][0].environments, 1)
       assert.equal(getRCFileVarsStub.args[0][0].environments[0], 'production')
       assert.equal(getRCFileVarsStub.args[0][0].filePath, './.env-cmdrc')
-    }
+    },
   )
 
   it('should print path of custom .rc file and environments to info for verbose',
@@ -46,7 +44,7 @@ describe('getEnvVars', (): void => {
       getRCFileVarsStub.returns({ THANKS: 'FOR ALL THE FISH' })
       await getEnvVars({ rc: { environments: ['production'] }, verbose: true })
       assert.equal(logInfoStub.callCount, 1)
-    }
+    },
   )
 
   it('should search all default .rc file paths', async (): Promise<void> => {
@@ -71,7 +69,9 @@ describe('getEnvVars', (): void => {
     try {
       await getEnvVars({ rc: { environments: ['production'] } })
       assert.fail('should not get here.')
-    } catch (e) {
+    }
+    catch (e) {
+      assert.instanceOf(e, Error)
       assert.match(e.message, /failed to find/gi)
       assert.match(e.message, /\.rc file/gi)
       assert.match(e.message, /default paths/gi)
@@ -86,7 +86,8 @@ describe('getEnvVars', (): void => {
     try {
       await getEnvVars({ rc: { environments: ['production'] }, verbose: true })
       assert.fail('should not get here.')
-    } catch (e) {
+    }
+    catch {
       assert.equal(logInfoStub.callCount, 1)
     }
   })
@@ -98,7 +99,9 @@ describe('getEnvVars', (): void => {
     try {
       await getEnvVars({ rc: { environments: ['bad'] } })
       assert.fail('should not get here.')
-    } catch (e) {
+    }
+    catch (e) {
+      assert.instanceOf(e, Error)
       assert.match(e.message, /failed to find environments/gi)
       assert.match(e.message, /\.rc file at path/gi)
     }
@@ -112,7 +115,8 @@ describe('getEnvVars', (): void => {
     try {
       await getEnvVars({ rc: { environments: ['bad'] }, verbose: true })
       assert.fail('should not get here.')
-    } catch (e) {
+    }
+    catch {
       assert.equal(logInfoStub.callCount, 1)
     }
   })
@@ -120,7 +124,7 @@ describe('getEnvVars', (): void => {
   it('should find .rc file at custom path path', async (): Promise<void> => {
     getRCFileVarsStub.returns({ THANKS: 'FOR ALL THE FISH' })
     const envs = await getEnvVars({
-      rc: { environments: ['production'], filePath: '../.custom-rc' }
+      rc: { environments: ['production'], filePath: '../.custom-rc' },
     })
     assert.isOk(envs)
     assert.lengthOf(Object.keys(envs), 1)
@@ -136,7 +140,7 @@ describe('getEnvVars', (): void => {
     getRCFileVarsStub.returns({ THANKS: 'FOR ALL THE FISH' })
     await getEnvVars({
       rc: { environments: ['production'], filePath: '../.custom-rc' },
-      verbose: true
+      verbose: true,
     })
     assert.equal(logInfoStub.callCount, 1)
   })
@@ -147,10 +151,12 @@ describe('getEnvVars', (): void => {
     getRCFileVarsStub.rejects(pathError)
     try {
       await getEnvVars({
-        rc: { environments: ['production'], filePath: '../.custom-rc' }
+        rc: { environments: ['production'], filePath: '../.custom-rc' },
       })
       assert.fail('should not get here.')
-    } catch (e) {
+    }
+    catch (e) {
+      assert.instanceOf(e, Error)
       assert.match(e.message, /failed to find/gi)
       assert.match(e.message, /\.rc file at path/gi)
     }
@@ -164,10 +170,11 @@ describe('getEnvVars', (): void => {
     try {
       await getEnvVars({
         rc: { environments: ['production'], filePath: '../.custom-rc' },
-        verbose: true
+        verbose: true,
       })
       assert.fail('should not get here.')
-    } catch (e) {
+    }
+    catch {
       assert.equal(logInfoStub.callCount, 1)
     }
   })
@@ -178,10 +185,12 @@ describe('getEnvVars', (): void => {
     getRCFileVarsStub.rejects(environmentError)
     try {
       await getEnvVars({
-        rc: { environments: ['bad'], filePath: '../.custom-rc' }
+        rc: { environments: ['bad'], filePath: '../.custom-rc' },
       })
       assert.fail('should not get here.')
-    } catch (e) {
+    }
+    catch (e) {
+      assert.instanceOf(e, Error)
       assert.match(e.message, /failed to find environments/gi)
       assert.match(e.message, /\.rc file at path/gi)
     }
@@ -196,13 +205,14 @@ describe('getEnvVars', (): void => {
       try {
         await getEnvVars({
           rc: { environments: ['bad'], filePath: '../.custom-rc' },
-          verbose: true
+          verbose: true,
         })
         assert.fail('should not get here.')
-      } catch (e) {
+      }
+      catch {
         assert.equal(logInfoStub.callCount, 1)
       }
-    }
+    },
   )
 
   it('should parse the env file from a custom path', async (): Promise<void> => {
@@ -227,7 +237,9 @@ describe('getEnvVars', (): void => {
     try {
       await getEnvVars({ envFile: { filePath: '../.env-file' } })
       assert.fail('should not get here.')
-    } catch (e) {
+    }
+    catch (e) {
+      assert.instanceOf(e, Error)
       assert.match(e.message, /failed to find/gi)
       assert.match(e.message, /\.env file at path/gi)
     }
@@ -239,14 +251,15 @@ describe('getEnvVars', (): void => {
     try {
       await getEnvVars({ envFile: { filePath: '../.env-file' }, verbose: true })
       assert.fail('should not get here.')
-    } catch (e) {
+    }
+    catch {
       assert.equal(logInfoStub.callCount, 1)
     }
   })
 
   it(
-    'should parse the env file from the default path if custom ' +
-    'path not found and fallback option provided',
+    'should parse the env file from the default path if custom '
+    + 'path not found and fallback option provided',
     async (): Promise<void> => {
       getEnvFileVarsStub.onFirstCall().rejects('File not found.')
       getEnvFileVarsStub.returns({ THANKS: 'FOR ALL THE FISH' })
@@ -256,19 +269,19 @@ describe('getEnvVars', (): void => {
       assert.equal(envs.THANKS, 'FOR ALL THE FISH')
       assert.equal(getEnvFileVarsStub.callCount, 2)
       assert.equal(getEnvFileVarsStub.args[1][0], './.env')
-    }
+    },
   )
 
   it(
-    'should print multiple times for failure to find .env file and ' +
-    'failure to find fallback file to infor for verbose',
+    'should print multiple times for failure to find .env file and '
+    + 'failure to find fallback file to infor for verbose',
     async (): Promise<void> => {
       logInfoStub = sinon.stub(console, 'info')
       getEnvFileVarsStub.onFirstCall().rejects('File not found.')
       getEnvFileVarsStub.returns({ THANKS: 'FOR ALL THE FISH' })
       await getEnvVars({ envFile: { filePath: '../.env-file', fallback: true }, verbose: true })
       assert.equal(logInfoStub.callCount, 2)
-    }
+    },
   )
 
   it('should parse the env file from the default path', async (): Promise<void> => {
@@ -304,7 +317,9 @@ describe('getEnvVars', (): void => {
     try {
       await getEnvVars()
       assert.fail('should not get here.')
-    } catch (e) {
+    }
+    catch (e) {
+      assert.instanceOf(e, Error)
       assert.match(e.message, /failed to find/gi)
       assert.match(e.message, /\.env file/gi)
       assert.match(e.message, /default paths/gi)
@@ -319,9 +334,10 @@ describe('getEnvVars', (): void => {
       try {
         await getEnvVars({ verbose: true })
         assert.fail('should not get here.')
-      } catch (e) {
+      }
+      catch {
         assert.equal(logInfoStub.callCount, 1)
       }
-    }
+    },
   )
 })

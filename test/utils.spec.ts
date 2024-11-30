@@ -48,5 +48,13 @@ describe('utils', (): void => {
       const res = isPromise({})
       assert.isFalse(res)
     })
+    it('should return false for string', (): void => {
+      const res = isPromise('test')
+      assert.isFalse(res)
+    })
+    it('should return false for undefined', (): void => {
+      const res = isPromise(undefined)
+      assert.isFalse(res)
+    })
   })
 })

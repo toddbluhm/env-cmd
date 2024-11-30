@@ -10,6 +10,7 @@
   "production": {
     "THANKS": "FOR WHAT?!",
     "ANSWER": 42,
-    "ONLY": "IN PRODUCTION"
+    "ONLY": "IN PRODUCTION",
+    "BRINGATOWEL": true
   }
 }

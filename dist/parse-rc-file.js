@@ -24,7 +24,7 @@ async function getRCFileVars({ environments, filePath }) {
     let parsedData;
     try {
         if (ext === '.json' || ext === '.js' || ext === '.cjs') {
-            const possiblePromise = require(absolutePath); /* eslint-disable-line */
+            const possiblePromise = require(absolutePath);  
             parsedData = utils_1.isPromise(possiblePromise) ? await possiblePromise : possiblePromise;
         }
         else {

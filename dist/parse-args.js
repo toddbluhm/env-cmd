@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const commander = require("commander");
 const utils_1 = require("./utils");
 // Use commonjs require to prevent a weird folder hierarchy in dist
-const packageJson = require('../package.json'); /* eslint-disable-line */
+const packageJson = require('../package.json');  
 /**
 * Parses the arguments passed into the cli
 */
