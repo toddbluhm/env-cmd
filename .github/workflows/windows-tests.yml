@@ -7,6 +7,9 @@ jobs:
 
     runs-on: windows-latest
 
+    env:
+      HUSKY: 0
+
     strategy:
       matrix:
         node-version: [18.x, 20.x, 22.x]
