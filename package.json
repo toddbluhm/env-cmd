@@ -53,7 +53,7 @@
   },
   "devDependencies": {
     "@commitlint/cli": "^8.0.0",
-    "@commitlint/config-conventional": "^8.0.0",
+    "@commitlint/config-conventional": "^19.6.0",
     "@eslint/js": "^9.15.0",
     "@stylistic/eslint-plugin": "^2.11.0",
     "@types/chai": "^4.0.0",
