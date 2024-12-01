@@ -11,6 +11,7 @@
     "env-cmd": "bin/env-cmd.js"
   },
   "scripts": {
+    "prepare": "husky",
     "test": "mocha -r ts-node/register ./test/**/*.ts",
     "test-cover": "nyc npm test",
     "coveralls": "coveralls < coverage/lcov.info",
@@ -100,11 +101,6 @@
       "devDependencyUpdate": "chore: update devDependecy ${dependency}",
       "dependencyPin": "fix: pin dependency ${dependency}",
       "devDependencyPin": "fix: pin devDependecy ${dependency}"
-    }
-  },
-  "husky": {
-    "hooks": {
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
     }
   },
   "commitlint": {
