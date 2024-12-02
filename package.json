@@ -56,7 +56,7 @@
     "@commitlint/config-conventional": "^19.6.0",
     "@eslint/js": "^9.15.0",
     "@stylistic/eslint-plugin": "^2.11.0",
-    "@types/chai": "^4.0.0",
+    "@types/chai": "^5.0.1",
     "@types/cross-spawn": "^6.0.0",
     "@types/mocha": "^7.0.0",
     "@types/node": "^12.0.0",
