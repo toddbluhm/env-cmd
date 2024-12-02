@@ -1,4 +1,4 @@
-module.exports = new Promise((resolve) => {
+export default new Promise((resolve) => {
   setTimeout(() => {
     resolve({
       development: {

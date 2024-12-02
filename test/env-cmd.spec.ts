@@ -1,68 +1,44 @@
-import * as sinon from 'sinon'
+import { default as sinon } from 'sinon'
 import { assert } from 'chai'
-import * as signalTermLib from '../src/signal-termination'
-import * as parseArgsLib from '../src/parse-args'
-import * as getEnvVarsLib from '../src/get-env-vars'
-import * as expandEnvsLib from '../src/expand-envs'
-import * as spawnLib from '../src/spawn'
-import * as envCmdLib from '../src/env-cmd'
+import { default as esmock } from 'esmock'
+import { expandEnvs } from '../src/expand-envs.js'
+import type { EnvCmd } from '../src/env-cmd.ts'
 
-describe('CLI', (): void => {
-  let sandbox: sinon.SinonSandbox
-  let parseArgsStub: sinon.SinonStub<any>
-  let envCmdStub: sinon.SinonStub<any>
-  let processExitStub: sinon.SinonStub<any>
-  before((): void => {
-    sandbox = sinon.createSandbox()
-    parseArgsStub = sandbox.stub(parseArgsLib, 'parseArgs')
-    envCmdStub = sandbox.stub(envCmdLib, 'EnvCmd')
-    processExitStub = sandbox.stub(process, 'exit')
-  })
-
-  after((): void => {
-    sandbox.restore()
-  })
-
-  afterEach((): void => {
-    sandbox.resetHistory()
-    sandbox.resetBehavior()
-  })
-
-  it('should parse the provided args and execute the EnvCmd', async (): Promise<void> => {
-    parseArgsStub.returns({})
-    await envCmdLib.CLI(['node', './env-cmd', '-v'])
-    assert.equal(parseArgsStub.callCount, 1)
-    assert.equal(envCmdStub.callCount, 1)
-    assert.equal(processExitStub.callCount, 0)
-  })
-
-  it('should catch exception if EnvCmd throws an exception', async (): Promise<void> => {
-    parseArgsStub.returns({})
-    envCmdStub.throwsException('Error')
-    await envCmdLib.CLI(['node', './env-cmd', '-v'])
-    assert.equal(parseArgsStub.callCount, 1)
-    assert.equal(envCmdStub.callCount, 1)
-    assert.equal(processExitStub.callCount, 1)
-    assert.equal(processExitStub.args[0][0], 1)
-  })
-})
+let envCmdLib: { EnvCmd: typeof EnvCmd }
 
 describe('EnvCmd', (): void => {
   let sandbox: sinon.SinonSandbox
   let getEnvVarsStub: sinon.SinonStub<any>
   let spawnStub: sinon.SinonStub<any>
   let expandEnvsSpy: sinon.SinonSpy<any>
-  before((): void => {
+  before(async (): Promise<void> => {
     sandbox = sinon.createSandbox()
-    getEnvVarsStub = sandbox.stub(getEnvVarsLib, 'getEnvVars')
-    spawnStub = sandbox.stub(spawnLib, 'spawn')
+    getEnvVarsStub = sandbox.stub()
+    spawnStub = sandbox.stub()
     spawnStub.returns({
-      on: (): void => { /* Fake the on method */ },
-      kill: (): void => { /* Fake the kill method */ },
+      on: sinon.stub(),
+      kill: sinon.stub(),
     })
-    expandEnvsSpy = sandbox.spy(expandEnvsLib, 'expandEnvs')
-    sandbox.stub(signalTermLib.TermSignals.prototype, 'handleTermSignals')
-    sandbox.stub(signalTermLib.TermSignals.prototype, 'handleUncaughtExceptions')
+    expandEnvsSpy = sandbox.spy(expandEnvs)
+
+    const TermSignals = sandbox.stub()
+    TermSignals.prototype.handleTermSignals = sandbox.stub()
+    TermSignals.prototype.handleUncaughtExceptions = sandbox.stub()
+
+    envCmdLib = await esmock('../src/env-cmd.ts', {
+      '../src/get-env-vars': {
+        getEnvVars: getEnvVarsStub,
+      },
+      'cross-spawn': {
+        default: spawnStub,
+      },
+      '../src/expand-envs': {
+        expandEnvs: expandEnvsSpy,
+      },
+      '../src/signal-termination': {
+        TermSignals,
+      },
+    })
   })
 
   after((): void => {

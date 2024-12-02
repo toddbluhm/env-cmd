@@ -1,2 +1,3 @@
 #! /usr/bin/env node
-require('../dist').CLI(process.argv.slice(2))
+import { CLI } from '../dist'
+CLI(process.argv.slice(2))
