@@ -1,9 +1,7 @@
 import * as fs from 'fs'
 import * as path from 'path'
-import { resolveEnvFilePath, isPromise } from './utils'
-import { Environment } from './types'
-
-const REQUIRE_HOOK_EXTENSIONS = ['.json', '.js', '.cjs']
+import { resolveEnvFilePath, IMPORT_HOOK_EXTENSIONS, isPromise } from './utils.js'
+import type { Environment } from './types.ts'
 
 /**
  * Gets the environment vars from an env file
@@ -19,9 +17,17 @@ export async function getEnvFileVars(envFilePath: string): Promise<Environment> 
   // Get the file extension
   const ext = path.extname(absolutePath).toLowerCase()
   let env: Environment = {}
-  if (REQUIRE_HOOK_EXTENSIONS.includes(ext)) {
-    const possiblePromise: Environment | Promise<Environment> = require(absolutePath) /* eslint-disable-line */
-    env = isPromise(possiblePromise) ? await possiblePromise : possiblePromise
+  if (IMPORT_HOOK_EXTENSIONS.includes(ext)) {
+    const res = await import(absolutePath) as Environment | { default: Environment }
+    if ('default' in res) {
+      env = res.default as Environment
+    } else {
+      env = res
+    }
+    // Check to see if the imported value is a promise
+    if (isPromise(env)) {
+      env = await env
+    }
   }
   else {
     const file = fs.readFileSync(absolutePath, { encoding: 'utf8' })

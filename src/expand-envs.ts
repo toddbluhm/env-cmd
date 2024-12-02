@@ -1,4 +1,4 @@
-import { Environment } from './types'
+import type { Environment } from './types.ts'
 
 /**
  * expandEnvs Replaces $var in args and command with environment variables

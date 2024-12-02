@@ -1,29 +1,9 @@
-import { spawn } from './spawn'
-import { EnvCmdOptions, Environment } from './types'
-import { TermSignals } from './signal-termination'
-import { parseArgs } from './parse-args'
-import { getEnvVars } from './get-env-vars'
-import { expandEnvs } from './expand-envs'
-
-/**
- * Executes env - cmd using command line arguments
- * @export
- * @param {string[]} args Command line argument to pass in ['-f', './.env']
- * @returns {Promise<Environment>}
- */
-export async function CLI(args: string[]): Promise<Environment> {
-  // Parse the args from the command line
-  const parsedArgs = parseArgs(args)
-
-  // Run EnvCmd
-  try {
-    return await (exports as { EnvCmd: typeof EnvCmd }).EnvCmd(parsedArgs)
-  }
-  catch (e) {
-    console.error(e)
-    return process.exit(1)
-  }
-}
+import { default as spawn } from 'cross-spawn'
+import type { EnvCmdOptions, Environment } from './types.ts'
+import { TermSignals } from './signal-termination.js'
+import { getEnvVars } from './get-env-vars.js'
+import { expandEnvs } from './expand-envs.js'
+import * as processLib from 'node:process'
 
 /**
  * The main env-cmd program. This will spawn a new process and run the given command using
@@ -53,11 +33,11 @@ export async function EnvCmd(
   }
   // Override the merge order if --no-override flag set
   if (options.noOverride === true) {
-    env = Object.assign({}, env, process.env)
+    env = Object.assign({}, env, processLib.env)
   }
   else {
     // Add in the system environment variables to our environment list
-    env = Object.assign({}, process.env, env)
+    env = Object.assign({}, processLib.env, env)
   }
 
   if (options.expandEnvs === true) {

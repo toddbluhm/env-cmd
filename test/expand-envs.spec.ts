@@ -1,6 +1,6 @@
 /* eslint @typescript-eslint/no-non-null-assertion: 0 */
 import { assert } from 'chai'
-import { expandEnvs } from '../src/expand-envs'
+import { expandEnvs } from '../src/expand-envs.js'
 
 describe('expandEnvs', (): void => {
   const envs = {

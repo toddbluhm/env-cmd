@@ -5,12 +5,14 @@
     "lib": ["es2023"],
     "module": "Node16",
     "moduleDetection": "force",
-    "outDir": "./dist",
+    "noEmit": true,
     "resolveJsonModule": true,
     "strict": true,
     "target": "ES2022",
   },
   "include": [
-    "./src/**/*"
+    "./**/*",
+    "./test-files/.rc-test-async.cjs",
+    "./test-files/.rc-test-async.mjs",
   ]
 }

@@ -1,16 +1,20 @@
-import * as path from 'path'
-import * as os from 'os'
+import { resolve } from 'node:path'
+import { homedir } from 'node:os'
+import { cwd } from 'node:process'
+
+// Special file extensions that node can natively import
+export const IMPORT_HOOK_EXTENSIONS = ['.json', '.js', '.cjs', '.mjs']
 
 /**
  * A simple function for resolving the path the user entered
  */
 export function resolveEnvFilePath(userPath: string): string {
   // Make sure a home directory exist
-  const home = os.homedir() as string | undefined
+  const home = homedir() as string | undefined
   if (home != null) {
     userPath = userPath.replace(/^~($|\/|\\)/, `${home}$1`)
   }
-  return path.resolve(process.cwd(), userPath)
+  return resolve(cwd(), userPath)
 }
 /**
  * A simple function that parses a comma separated string into an array of strings

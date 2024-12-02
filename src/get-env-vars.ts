@@ -1,6 +1,6 @@
-import { GetEnvVarOptions, Environment } from './types'
-import { getRCFileVars } from './parse-rc-file'
-import { getEnvFileVars } from './parse-env-file'
+import type { GetEnvVarOptions, Environment } from './types.ts'
+import { getRCFileVars } from './parse-rc-file.js'
+import { getEnvFileVars } from './parse-env-file.js'
 
 const RC_FILE_DEFAULT_LOCATIONS = ['./.env-cmdrc', './.env-cmdrc.js', './.env-cmdrc.json']
 const ENV_FILE_DEFAULT_LOCATIONS = ['./.env', './.env.js', './.env.json']

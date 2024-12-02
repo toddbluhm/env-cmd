@@ -2,7 +2,7 @@ import { assert } from 'chai'
 import {
   stripEmptyLines, stripComments, parseEnvVars,
   parseEnvString, getEnvFileVars,
-} from '../src/parse-env-file'
+} from '../src/parse-env-file.js'
 
 describe('stripEmptyLines', (): void => {
   it('should strip out all empty lines', (): void => {
@@ -125,8 +125,8 @@ describe('getEnvFileVars', (): void => {
     })
   })
 
-  it('should parse a js file', async (): Promise<void> => {
-    const env = await getEnvFileVars('./test/test-files/test.js')
+  it('should parse a js/cjs file', async (): Promise<void> => {
+    const env = await getEnvFileVars('./test/test-files/test.cjs')
     assert.deepEqual(env, {
       THANKS: 'FOR ALL THE FISH',
       ANSWER: 0,
@@ -134,8 +134,25 @@ describe('getEnvFileVars', (): void => {
     })
   })
 
-  it('should parse an async js file', async (): Promise<void> => {
-    const env = await getEnvFileVars('./test/test-files/test-async.js')
+  it('should parse an async js/cjs file', async (): Promise<void> => {
+    const env = await getEnvFileVars('./test/test-files/test-async.cjs')
+    assert.deepEqual(env, {
+      THANKS: 'FOR ALL THE FISH',
+      ANSWER: 0,
+    })
+  })
+
+  it('should parse a mjs file', async (): Promise<void> => {
+    const env = await getEnvFileVars('./test/test-files/test.mjs')
+    assert.deepEqual(env, {
+      THANKS: 'FOR ALL THE FISH',
+      ANSWER: 0,
+      GALAXY: 'hitch\nhiking',
+    })
+  })
+
+  it('should parse an async mjs file', async (): Promise<void> => {
+    const env = await getEnvFileVars('./test/test-files/test-async.mjs')
     assert.deepEqual(env, {
       THANKS: 'FOR ALL THE FISH',
       ANSWER: 0,

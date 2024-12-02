@@ -1,7 +1,7 @@
 /* eslint @typescript-eslint/no-non-null-assertion: 0 */
-import * as sinon from 'sinon'
+import { default as sinon } from 'sinon'
 import { assert } from 'chai'
-import { parseArgs } from '../src/parse-args'
+import { parseArgs } from '../src/parse-args.js'
 
 describe('parseArgs', (): void => {
   const command = 'command'
