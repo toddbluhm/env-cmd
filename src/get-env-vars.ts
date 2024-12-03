@@ -1,30 +1,30 @@
-import { GetEnvVarOptions } from './types'
-import { getRCFileVars } from './parse-rc-file'
-import { getEnvFileVars } from './parse-env-file'
+import type { GetEnvVarOptions, Environment } from './types.ts'
+import { getRCFileVars } from './parse-rc-file.js'
+import { getEnvFileVars } from './parse-env-file.js'
 
 const RC_FILE_DEFAULT_LOCATIONS = ['./.env-cmdrc', './.env-cmdrc.js', './.env-cmdrc.json']
 const ENV_FILE_DEFAULT_LOCATIONS = ['./.env', './.env.js', './.env.json']
 
-export async function getEnvVars (options: GetEnvVarOptions = {}): Promise<{ [key: string]: any }> {
-  options.envFile = options.envFile !== undefined ? options.envFile : {}
+export async function getEnvVars(options: GetEnvVarOptions = {}): Promise<Environment> {
+  options.envFile = options.envFile ?? {}
   // Check for rc file usage
   if (options.rc !== undefined) {
     return await getRCFile({
       environments: options.rc.environments,
       filePath: options.rc.filePath,
-      verbose: options.verbose
+      verbose: options.verbose,
     })
   }
   return await getEnvFile({
     filePath: options.envFile.filePath,
     fallback: options.envFile.fallback,
-    verbose: options.verbose
+    verbose: options.verbose,
   })
 }
 
-export async function getEnvFile (
-  { filePath, fallback, verbose }: { filePath?: string, fallback?: boolean, verbose?: boolean }
-): Promise<{ [key: string]: any }> {
+export async function getEnvFile(
+  { filePath, fallback, verbose }: { filePath?: string, fallback?: boolean, verbose?: boolean },
+): Promise<Environment> {
   // Use env file
   if (filePath !== undefined) {
     try {
@@ -33,10 +33,12 @@ export async function getEnvFile (
         console.info(`Found .env file at path: ${filePath}`)
       }
       return env
-    } catch (e) {
+    }
+    catch {
       if (verbose === true) {
         console.info(`Failed to find .env file at path: ${filePath}`)
       }
+      // Ignore error as we are just trying this location
     }
     if (fallback !== true) {
       throw new Error(`Failed to find .env file at path: ${filePath}`)
@@ -51,7 +53,10 @@ export async function getEnvFile (
         console.info(`Found .env file at default path: ${path}`)
       }
       return env
-    } catch (e) { }
+    }
+    catch {
+      // Ignore error because we are just trying this location
+    }
   }
 
   const error = `Failed to find .env file at default paths: [${ENV_FILE_DEFAULT_LOCATIONS.join(',')}]`
@@ -61,9 +66,9 @@ export async function getEnvFile (
   throw new Error(error)
 }
 
-export async function getRCFile (
-  { environments, filePath, verbose }: { environments: string[], filePath?: string, verbose?: boolean }
-): Promise<{ [key: string]: any }> {
+export async function getRCFile(
+  { environments, filePath, verbose }: { environments: string[], filePath?: string, verbose?: boolean },
+): Promise<Environment> {
   // User provided an .rc file path
   if (filePath !== undefined) {
     try {
@@ -72,15 +77,18 @@ export async function getRCFile (
         console.info(`Found environments: [${environments.join(',')}] for .rc file at path: ${filePath}`)
       }
       return env
-    } catch (e) {
-      if (e.name === 'PathError') {
-        if (verbose === true) {
-          console.info(`Failed to find .rc file at path: ${filePath}`)
+    }
+    catch (e) {
+      if (e instanceof Error) {
+        if (e.name === 'PathError') {
+          if (verbose === true) {
+            console.info(`Failed to find .rc file at path: ${filePath}`)
+          }
         }
-      }
-      if (e.name === 'EnvironmentError') {
-        if (verbose === true) {
-          console.info(`Failed to find environments: [${environments.join(',')}] for .rc file at path: ${filePath}`)
+        if (e.name === 'EnvironmentError') {
+          if (verbose === true) {
+            console.info(`Failed to find environments: [${environments.join(',')}] for .rc file at path: ${filePath}`)
+          }
         }
       }
       throw e
@@ -95,13 +103,22 @@ export async function getRCFile (
         console.info(`Found environments: [${environments.join(',')}] for default .rc file at path: ${path}`)
       }
       return env
-    } catch (e) {
-      if (e.name === 'EnvironmentError') {
-        const errorText = `Failed to find environments: [${environments.join(',')}] for .rc file at path: ${path}`
-        if (verbose === true) {
-          console.info(errorText)
+    }
+    catch (e) {
+      if (e instanceof Error) {
+        if (e.name === 'EnvironmentError') {
+          const errorText = `Failed to find environments: [${environments.join(',')}] for .rc file at path: ${path}`
+          if (verbose === true) {
+            console.info(errorText)
+          }
+          throw new Error(errorText)
         }
-        throw new Error(errorText)
+        if (e.name === 'ParseError') {
+          if (verbose === true) {
+            console.info(e.message)
+          }
+          throw new Error(e.message)
+        }
       }
     }
   }

@@ -1,28 +1,42 @@
-import * as fs from 'fs'
-import * as path from 'path'
-import { resolveEnvFilePath, isPromise } from './utils'
-
-const REQUIRE_HOOK_EXTENSIONS = ['.json', '.js', '.cjs']
+import { existsSync, readFileSync } from 'node:fs'
+import { extname } from 'node:path'
+import { pathToFileURL } from 'node:url'
+import { resolveEnvFilePath, IMPORT_HOOK_EXTENSIONS, isPromise } from './utils.js'
+import type { Environment } from './types.ts'
 
 /**
  * Gets the environment vars from an env file
  */
-export async function getEnvFileVars (envFilePath: string): Promise<{ [key: string]: any }> {
+export async function getEnvFileVars(envFilePath: string): Promise<Environment> {
   const absolutePath = resolveEnvFilePath(envFilePath)
-  if (!fs.existsSync(absolutePath)) {
+  if (!existsSync(absolutePath)) {
     const pathError = new Error(`Invalid env file path (${envFilePath}).`)
     pathError.name = 'PathError'
     throw pathError
   }
 
   // Get the file extension
-  const ext = path.extname(absolutePath).toLowerCase()
-  let env = {}
-  if (REQUIRE_HOOK_EXTENSIONS.includes(ext)) {
-    const possiblePromise = require(absolutePath) /* eslint-disable-line */
-    env = isPromise(possiblePromise) ? await possiblePromise : possiblePromise
-  } else {
-    const file = fs.readFileSync(absolutePath, { encoding: 'utf8' })
+  const ext = extname(absolutePath).toLowerCase()
+  let env: Environment = {}
+  if (IMPORT_HOOK_EXTENSIONS.includes(ext)) {
+    // For some reason in ES Modules, only JSON file types need to be specifically delinated when importing them
+    let attributeTypes = {}
+    if (ext === '.json') {
+      attributeTypes = { with: { type: 'json' } }
+    }
+    const res = await import(pathToFileURL(absolutePath).href, attributeTypes) as Environment | { default: Environment }
+    if ('default' in res) {
+      env = res.default as Environment
+    } else {
+      env = res
+    }
+    // Check to see if the imported value is a promise
+    if (isPromise(env)) {
+      env = await env
+    }
+  }
+  else {
+    const file = readFileSync(absolutePath, { encoding: 'utf8' })
     env = parseEnvString(file)
   }
   return env
@@ -31,7 +45,7 @@ export async function getEnvFileVars (envFilePath: string): Promise<{ [key: stri
 /**
  * Parse out all env vars from a given env file string and return an object
  */
-export function parseEnvString (envFileString: string): { [key: string]: string } {
+export function parseEnvString(envFileString: string): Environment {
   // First thing we do is stripe out all comments
   envFileString = stripComments(envFileString.toString())
 
@@ -45,27 +59,41 @@ export function parseEnvString (envFileString: string): { [key: string]: string 
 /**
  * Parse out all env vars from an env file string
  */
-export function parseEnvVars (envString: string): { [key: string]: string } {
+export function parseEnvVars(envString: string): Environment {
   const envParseRegex = /^((.+?)[=](.*))$/gim
-  const matches: { [key: string]: string } = {}
+  const matches: Environment = {}
   let match
   while ((match = envParseRegex.exec(envString)) !== null) {
     // Note: match[1] is the full env=var line
     const key = match[2].trim()
-    const value = match[3].trim()
+    let value: string | number | boolean = match[3].trim()
 
     // remove any surrounding quotes
-    matches[key] = value
+    value = value
       .replace(/(^['"]|['"]$)/g, '')
       .replace(/\\n/g, '\n')
+
+    // Convert string to JS type if appropriate
+    if (value !== '' && !isNaN(+value)) {
+      matches[key] = +value
+    }
+    else if (value === 'true') {
+      matches[key] = true
+    }
+    else if (value === 'false') {
+      matches[key] = false
+    }
+    else {
+      matches[key] = value
+    }
   }
-  return matches
+  return JSON.parse(JSON.stringify(matches)) as Environment
 }
 
 /**
  * Strips out comments from env file string
  */
-export function stripComments (envString: string): string {
+export function stripComments(envString: string): string {
   const commentsRegex = /(^#.*$)/gim
   let match = commentsRegex.exec(envString)
   let newString = envString
@@ -79,7 +107,7 @@ export function stripComments (envString: string): string {
 /**
  * Strips out newlines from env file string
  */
-export function stripEmptyLines (envString: string): string {
+export function stripEmptyLines(envString: string): string {
   const emptyLinesRegex = /(^\n)/gim
   return envString.replace(emptyLinesRegex, '')
 }

@@ -3,22 +3,25 @@ name: windows tests
 on: [push, pull_request]
 
 jobs:
-  build:
+  test:
 
     runs-on: windows-latest
 
+    env:
+      HUSKY: 0
+
     strategy:
       matrix:
-        node-version: [8.x, 10.x, 12.x]
+        node-version: [18.x, 20.x, 22.x]
 
     steps:
-    - name: Checkout project
-      uses: actions/checkout@v2
+    - name: Checkout Project
+      uses: actions/checkout@v4
       with:
         fetch-depth: 0
 
     - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
+      uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
 
@@ -28,20 +31,24 @@ jobs:
     - name: Lint Files
       run: npm run lint
 
-    - name: Run Tests and Converage
+    - name: Run Tests and Coverage
       env:
         CI: true
       run: npm run test-cover
 
-    - name: Coveralls Parallel
-      uses: coverallsapp/github-action@master
+    - name: Send Coverage to Coveralls
+      uses: coverallsapp/github-action@v2
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         parallel: true
         path-to-lcov: ./coverage/lcov.info
 
-    - name: Coveralls Finished
-      uses: coverallsapp/github-action@master
-      with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        parallel-finished: true
+  finish:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Close Coveralls Parallel Build
+        uses: coverallsapp/github-action@v2
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          parallel-finished: true

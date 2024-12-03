@@ -4,8 +4,7 @@
 [![npm](https://badgen.net/npm/v/env-cmd)](https://www.npmjs.com/package/env-cmd)
 [![npm](https://badgen.net/npm/dm/env-cmd)](https://www.npmjs.com/package/env-cmd)
 [![License](https://badgen.net/github/license/toddbluhm/env-cmd)](https://github.com/toddbluhm/env-cmd/blob/master/LICENSE)
-[![TS-Standard - Typescript Standard Style Guide](https://badgen.net/badge/code%20style/ts-standard/blue?icon=typescript)](https://github.com/toddbluhm/ts-standard)
-[![Dependabot badge](https://badgen.net/dependabot/toddbluhm/env-cmd?icon=dependabot)](https://dependabot.com/)
+[![Typescript-ESLint](https://badgen.net/badge/code%20style/typescript-eslint/blue?icon=typescript)](https://github.com/typescript-eslint/typescript-eslint)
 
 # env-cmd
 

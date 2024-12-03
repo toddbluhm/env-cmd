@@ -1,73 +1,73 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
 const SIGNALS_TO_HANDLE = [
-    'SIGINT', 'SIGTERM', 'SIGHUP'
+    'SIGINT', 'SIGTERM', 'SIGHUP',
 ];
-class TermSignals {
+export class TermSignals {
+    terminateSpawnedProcessFuncHandlers = {};
+    terminateSpawnedProcessFuncExitHandler;
+    verbose = false;
+    _exitCalled = false;
     constructor(options = {}) {
-        this.terminateSpawnedProcessFuncHandlers = {};
-        this.verbose = false;
-        this._exitCalled = false;
         this.verbose = options.verbose === true;
     }
     handleTermSignals(proc) {
         // Terminate child process if parent process receives termination events
-        SIGNALS_TO_HANDLE.forEach((signal) => {
-            this.terminateSpawnedProcessFuncHandlers[signal] =
-                (signal, code) => {
-                    this._removeProcessListeners();
-                    if (!this._exitCalled) {
-                        if (this.verbose) {
-                            console.info('Parent process exited with signal: ' +
-                                signal.toString() +
-                                '. Terminating child process...');
-                        }
-                        // Mark shared state so we do not run into a signal/exit loop
-                        this._exitCalled = true;
-                        // Use the signal code if it is an error code
-                        let correctSignal;
-                        if (typeof signal === 'number') {
-                            if (signal > (code !== null && code !== void 0 ? code : 0)) {
-                                code = signal;
-                                correctSignal = 'SIGINT';
-                            }
-                        }
-                        else {
-                            correctSignal = signal;
-                        }
-                        // Kill the child process
-                        proc.kill(correctSignal !== null && correctSignal !== void 0 ? correctSignal : code);
-                        // Terminate the parent process
-                        this._terminateProcess(code, correctSignal);
+        const terminationFunc = (signal) => {
+            this._removeProcessListeners();
+            if (!this._exitCalled) {
+                if (this.verbose) {
+                    console.info('Parent process exited with signal: '
+                        + signal.toString()
+                        + '. Terminating child process...');
+                }
+                // Mark shared state so we do not run into a signal/exit loop
+                this._exitCalled = true;
+                // Use the signal code if it is an error code
+                // let correctSignal: NodeJS.Signals | undefined
+                if (typeof signal === 'number') {
+                    if (signal > 0) {
+                        // code = signal
+                        signal = 'SIGINT';
                     }
-                };
+                }
+                // else {
+                //   correctSignal = signal
+                // }
+                // Kill the child process
+                proc.kill(signal);
+                // Terminate the parent process
+                this._terminateProcess(signal);
+            }
+        };
+        for (const signal of SIGNALS_TO_HANDLE) {
+            this.terminateSpawnedProcessFuncHandlers[signal] = terminationFunc;
             process.once(signal, this.terminateSpawnedProcessFuncHandlers[signal]);
-        });
-        process.once('exit', this.terminateSpawnedProcessFuncHandlers.SIGTERM);
+        }
+        this.terminateSpawnedProcessFuncExitHandler = terminationFunc;
+        process.once('exit', this.terminateSpawnedProcessFuncExitHandler);
         // Terminate parent process if child process receives termination events
         proc.on('exit', (code, signal) => {
             this._removeProcessListeners();
             if (!this._exitCalled) {
                 if (this.verbose) {
-                    console.info(`Child process exited with code: ${(code !== null && code !== void 0 ? code : '').toString()} and signal:` +
-                        (signal !== null && signal !== void 0 ? signal : '').toString() +
-                        '. Terminating parent process...');
+                    console.info(`Child process exited with code: ${(code ?? '').toString()} and signal:`
+                        + (signal ?? '').toString()
+                        + '. Terminating parent process...');
                 }
                 // Mark shared state so we do not run into a signal/exit loop
                 this._exitCalled = true;
                 // Use the signal code if it is an error code
                 let correctSignal;
                 if (typeof signal === 'number') {
-                    if (signal > (code !== null && code !== void 0 ? code : 0)) {
+                    if (signal > (code ?? 0)) {
                         code = signal;
                         correctSignal = 'SIGINT';
                     }
                 }
                 else {
-                    correctSignal = signal !== null && signal !== void 0 ? signal : undefined;
+                    correctSignal = signal ?? undefined;
                 }
                 // Terminate the parent process
-                this._terminateProcess(code, correctSignal);
+                this._terminateProcess(correctSignal ?? code);
             }
         });
     }
@@ -75,17 +75,23 @@ class TermSignals {
      * Enables catching of unhandled exceptions
      */
     handleUncaughtExceptions() {
-        process.on('uncaughtException', (e) => this._uncaughtExceptionHandler(e));
+        process.on('uncaughtException', (e) => {
+            this._uncaughtExceptionHandler(e);
+        });
     }
     /**
      * Terminate parent process helper
      */
-    _terminateProcess(code, signal) {
-        if (signal !== undefined) {
-            return process.kill(process.pid, signal);
-        }
-        if (code !== undefined) {
-            return process.exit(code);
+    _terminateProcess(signal) {
+        if (signal != null) {
+            if (typeof signal === 'string') {
+                process.kill(process.pid, signal);
+                return;
+            }
+            if (typeof signal === 'number') {
+                process.exit(signal);
+                return;
+            }
         }
         throw new Error('Unable to terminate parent process successfully');
     }
@@ -96,7 +102,9 @@ class TermSignals {
         SIGNALS_TO_HANDLE.forEach((signal) => {
             process.removeListener(signal, this.terminateSpawnedProcessFuncHandlers[signal]);
         });
-        process.removeListener('exit', this.terminateSpawnedProcessFuncHandlers.SIGTERM);
+        if (this.terminateSpawnedProcessFuncExitHandler != null) {
+            process.removeListener('exit', this.terminateSpawnedProcessFuncExitHandler);
+        }
     }
     /**
     * General exception handler
@@ -106,4 +114,3 @@ class TermSignals {
         process.exit(1);
     }
 }
-exports.TermSignals = TermSignals;

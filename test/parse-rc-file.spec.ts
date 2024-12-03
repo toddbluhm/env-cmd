@@ -1,5 +1,5 @@
 import { assert } from 'chai'
-import { getRCFileVars } from '../src/parse-rc-file'
+import { getRCFileVars } from '../src/parse-rc-file.js'
 
 const rcFilePath = './test/test-files/.rc-test'
 const rcJSONFilePath = './test/test-files/.rc-test.json'
@@ -11,7 +11,8 @@ describe('getRCFileVars', (): void => {
     assert.deepEqual(res, {
       THANKS: 'FOR WHAT?!',
       ANSWER: 42,
-      ONLY: 'IN PRODUCTION'
+      ONLY: 'IN PRODUCTION',
+      BRINGATOWEL: true,
     })
   })
 
@@ -20,7 +21,7 @@ describe('getRCFileVars', (): void => {
     assert.exists(res)
     assert.deepEqual(res, {
       THANKS: 'FOR MORE FISHIES',
-      ANSWER: 21
+      ANSWER: 21,
     })
   })
 
@@ -28,7 +29,9 @@ describe('getRCFileVars', (): void => {
     try {
       await getRCFileVars({ environments: ['bad'], filePath: 'bad-path' })
       assert.fail('Should not get here!')
-    } catch (e) {
+    }
+    catch (e) {
+      assert.instanceOf(e, Error)
       assert.match(e.message, /\.rc file at path/gi)
     }
   })
@@ -37,7 +40,9 @@ describe('getRCFileVars', (): void => {
     try {
       await getRCFileVars({ environments: ['bad'], filePath: rcFilePath })
       assert.fail('Should not get here!')
-    } catch (e) {
+    }
+    catch (e) {
+      assert.instanceOf(e, Error)
       assert.match(e.message, /environments/gi)
     }
   })
@@ -46,20 +51,36 @@ describe('getRCFileVars', (): void => {
     try {
       await getRCFileVars({ environments: ['bad'], filePath: './test/test-files/.rc-test-bad-format' })
       assert.fail('Should not get here!')
-    } catch (e) {
+    }
+    catch (e) {
+      assert.instanceOf(e, Error)
       assert.match(e.message, /parse/gi)
     }
   })
 
-  it('should parse an async js .rc file', async (): Promise<void> => {
+  it('should parse an async js/cjs .rc file', async (): Promise<void> => {
     const env = await getRCFileVars({
       environments: ['production'],
-      filePath: './test/test-files/.rc-test-async.js'
+      filePath: './test/test-files/.rc-test-async.cjs',
     })
     assert.deepEqual(env, {
       THANKS: 'FOR WHAT?!',
       ANSWER: 42,
-      ONLY: 'IN PRODUCTION'
+      ONLY: 'IN PRODUCTION',
+      BRINGATOWEL: true,
+    })
+  })
+
+  it('should parse an async mjs .rc file', async (): Promise<void> => {
+    const env = await getRCFileVars({
+      environments: ['production'],
+      filePath: './test/test-files/.rc-test-async.mjs',
+    })
+    assert.deepEqual(env, {
+      THANKS: 'FOR WHAT?!',
+      ANSWER: 42,
+      ONLY: 'IN PRODUCTION',
+      BRINGATOWEL: true,
     })
   })
 })

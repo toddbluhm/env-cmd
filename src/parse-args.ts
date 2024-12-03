@@ -1,14 +1,12 @@
 import * as commander from 'commander'
-import { EnvCmdOptions } from './types'
-import { parseArgList } from './utils'
-
-// Use commonjs require to prevent a weird folder hierarchy in dist
-const packageJson = require('../package.json') /* eslint-disable-line */
+import type { EnvCmdOptions, CommanderOptions, EnvFileOptions, RCFileOptions } from './types.ts'
+import { parseArgList } from './utils.js'
+import { default as packageJson } from '../package.json' with { type: 'json' }; 
 
 /**
 * Parses the arguments passed into the cli
 */
-export function parseArgs (args: string[]): EnvCmdOptions {
+export function parseArgs(args: string[]): EnvCmdOptions {
   // Run the initial arguments through commander in order to determine
   // which value in the args array is the `command` to execute
   let program = parseArgsUsingCommander(args)
@@ -42,23 +40,27 @@ export function parseArgs (args: string[]): EnvCmdOptions {
     silent = true
   }
 
-  let rc: any
-  if (program.environments !== undefined && program.environments.length !== 0) {
+  let rc: RCFileOptions | undefined
+  if (
+    program.environments !== undefined
+    && Array.isArray(program.environments)
+    && program.environments.length !== 0
+  ) {
     rc = {
       environments: program.environments,
-      filePath: program.rcFile
+      filePath: program.rcFile,
     }
   }
 
-  let envFile: any
+  let envFile: EnvFileOptions | undefined
   if (program.file !== undefined) {
     envFile = {
       filePath: program.file,
-      fallback: program.fallback
+      fallback: program.fallback,
     }
   }
 
-  const options = {
+  const options: EnvCmdOptions = {
     command,
     commandArgs,
     envFile,
@@ -68,8 +70,8 @@ export function parseArgs (args: string[]): EnvCmdOptions {
       noOverride,
       silent,
       useShell,
-      verbose
-    }
+      verbose,
+    },
   }
   if (verbose) {
     console.info(`Options: ${JSON.stringify(options, null, 0)}`)
@@ -77,8 +79,8 @@ export function parseArgs (args: string[]): EnvCmdOptions {
   return options
 }
 
-export function parseArgsUsingCommander (args: string[]): commander.Command {
-  const program = new commander.Command()
+export function parseArgsUsingCommander(args: string[]): CommanderOptions {
+  const program = new commander.Command() as CommanderOptions
   return program
     .version(packageJson.version, '-v, --version')
     .usage('[options] <command> [...args]')

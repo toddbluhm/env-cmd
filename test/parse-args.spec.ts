@@ -1,7 +1,7 @@
 /* eslint @typescript-eslint/no-non-null-assertion: 0 */
-import * as sinon from 'sinon'
+import { default as sinon } from 'sinon'
 import { assert } from 'chai'
-import { parseArgs } from '../src/parse-args'
+import { parseArgs } from '../src/parse-args.js'
 
 describe('parseArgs', (): void => {
   const command = 'command'
@@ -9,7 +9,7 @@ describe('parseArgs', (): void => {
   const environments = ['development', 'production']
   const rcFilePath = './.env-cmdrc'
   const envFilePath = './.env'
-  let logInfoStub: sinon.SinonStub<any, any>
+  let logInfoStub: sinon.SinonStub<any>
 
   before((): void => {
     logInfoStub = sinon.stub(console, 'info')
@@ -27,13 +27,13 @@ describe('parseArgs', (): void => {
   it('should parse environment value', (): void => {
     const res = parseArgs(['-e', environments[0], command])
     assert.exists(res.rc)
-    assert.sameOrderedMembers(res.rc!.environments, [environments[0]])
+    assert.sameOrderedMembers(res.rc.environments, [environments[0]])
   })
 
   it('should parse multiple environment values', (): void => {
     const res = parseArgs(['-e', environments.join(','), command])
     assert.exists(res.rc)
-    assert.sameOrderedMembers(res.rc!.environments, environments)
+    assert.sameOrderedMembers(res.rc.environments, environments)
   })
 
   it('should parse command value', (): void => {
@@ -53,37 +53,37 @@ describe('parseArgs', (): void => {
       assert.sameOrderedMembers(res.commandArgs, commandFlags)
       assert.notOk(res.options!.useShell)
       assert.notOk(res.envFile)
-    }
+    },
   )
 
   it('should parse override option', (): void => {
     const res = parseArgs(['-e', environments[0], '--no-override', command, ...commandArgs])
     assert.exists(res.options)
-    assert.isTrue(res.options!.noOverride)
+    assert.isTrue(res.options.noOverride)
   })
 
   it('should parse use shell option', (): void => {
     const res = parseArgs(['-e', environments[0], '--use-shell', command, ...commandArgs])
     assert.exists(res.options)
-    assert.isTrue(res.options!.useShell)
+    assert.isTrue(res.options.useShell)
   })
 
   it('should parse rc file path', (): void => {
     const res = parseArgs(['-e', environments[0], '-r', rcFilePath, command, ...commandArgs])
     assert.exists(res.rc)
-    assert.equal(res.rc!.filePath, rcFilePath)
+    assert.equal(res.rc.filePath, rcFilePath)
   })
 
   it('should parse env file path', (): void => {
     const res = parseArgs(['-f', envFilePath, command, ...commandArgs])
     assert.exists(res.envFile)
-    assert.equal(res.envFile!.filePath, envFilePath)
+    assert.equal(res.envFile.filePath, envFilePath)
   })
 
   it('should parse fallback option', (): void => {
     const res = parseArgs(['-f', envFilePath, '--fallback', command, ...commandArgs])
     assert.exists(res.envFile)
-    assert.isTrue(res.envFile!.fallback)
+    assert.isTrue(res.envFile.fallback)
   })
 
   it('should print to console.info if --verbose flag is passed', (): void => {

@@ -1,3 +1,4 @@
+export declare const IMPORT_HOOK_EXTENSIONS: string[];
 /**
  * A simple function for resolving the path the user entered
  */
@@ -7,6 +8,6 @@ export declare function resolveEnvFilePath(userPath: string): string;
  */
 export declare function parseArgList(list: string): string[];
 /**
- * A simple function to test if the value is a promise
+ * A simple function to test if the value is a promise/thenable
  */
-export declare function isPromise(value: any | PromiseLike<Object>): value is Promise<any>;
+export declare function isPromise<T>(value?: T | PromiseLike<T>): value is PromiseLike<T>;
