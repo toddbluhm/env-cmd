@@ -1,21 +1,21 @@
-import { Command } from 'commander'
+import type { Command } from '@commander-js/extra-typings'
 
 // Define an export type
 export type Environment = Partial<Record<string, string | number | boolean>>
 
 export type RCEnvironment = Partial<Record<string, Environment>>
 
-export interface CommanderOptions extends Command {
-  override?: boolean // Default: false
-  useShell?: boolean // Default: false
+export type CommanderOptions = Command<[], {
+  environments?: true | string[]
   expandEnvs?: boolean // Default: false
-  verbose?: boolean // Default: false
-  silent?: boolean // Default: false
   fallback?: boolean // Default false
-  environments?: string[]
-  rcFile?: string
-  file?: string
-}
+  file?: true | string
+  override?: boolean // Default: false
+  rcFile?: true | string
+  silent?: boolean // Default: false
+  useShell?: boolean // Default: false
+  verbose?: boolean // Default: false
+}>
 
 export interface RCFileOptions {
   environments: string[]

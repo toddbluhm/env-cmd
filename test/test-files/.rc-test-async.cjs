@@ -1,6 +1,5 @@
 module.exports = new Promise((resolve) => {
   setTimeout(() => {
-    console.log('resolved')
     resolve({
       development: {
         THANKS: 'FOR ALL THE FISH',
