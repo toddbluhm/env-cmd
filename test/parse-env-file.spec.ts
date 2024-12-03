@@ -16,6 +16,11 @@ describe('stripComments', (): void => {
     const envString = stripComments('#BOB=COOL\nNODE_ENV=dev\nANSWER=42 AND COUNTING\n#AnotherComment\n')
     assert(envString === '\nNODE_ENV=dev\nANSWER=42 AND COUNTING\n\n')
   })
+
+  it('should not strip out #s from values', (): void => {
+    const envString = stripComments('#\nBOB=COMMENT#ELL\n#\nNODE_ENV=dev\nANSWER=42 AND COUNTING\n#AnotherComment\n')
+    assert(envString === '\nBOB=COMMENT#ELL\n\nNODE_ENV=dev\nANSWER=42 AND COUNTING\n\n', envString)
+  })
 })
 
 describe('parseEnvVars', (): void => {
