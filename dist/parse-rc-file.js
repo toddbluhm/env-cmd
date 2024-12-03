@@ -1,6 +1,7 @@
-import { stat, readFile } from 'fs';
-import { promisify } from 'util';
-import { extname } from 'path';
+import { stat, readFile } from 'node:fs';
+import { promisify } from 'node:util';
+import { extname } from 'node:path';
+import { pathToFileURL } from 'node:url';
 import { resolveEnvFilePath, IMPORT_HOOK_EXTENSIONS, isPromise } from './utils.js';
 const statAsync = promisify(stat);
 const readFileAsync = promisify(readFile);
@@ -27,7 +28,7 @@ export async function getRCFileVars({ environments, filePath }) {
             if (ext === '.json') {
                 attributeTypes = { with: { type: 'json' } };
             }
-            const res = await import(absolutePath, attributeTypes);
+            const res = await import(pathToFileURL(absolutePath).href, attributeTypes);
             if ('default' in res) {
                 parsedData = res.default;
             }

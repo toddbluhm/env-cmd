@@ -1,18 +1,19 @@
-import * as fs from 'fs';
-import * as path from 'path';
+import { existsSync, readFileSync } from 'node:fs';
+import { extname } from 'node:path';
+import { pathToFileURL } from 'node:url';
 import { resolveEnvFilePath, IMPORT_HOOK_EXTENSIONS, isPromise } from './utils.js';
 /**
  * Gets the environment vars from an env file
  */
 export async function getEnvFileVars(envFilePath) {
     const absolutePath = resolveEnvFilePath(envFilePath);
-    if (!fs.existsSync(absolutePath)) {
+    if (!existsSync(absolutePath)) {
         const pathError = new Error(`Invalid env file path (${envFilePath}).`);
         pathError.name = 'PathError';
         throw pathError;
     }
     // Get the file extension
-    const ext = path.extname(absolutePath).toLowerCase();
+    const ext = extname(absolutePath).toLowerCase();
     let env = {};
     if (IMPORT_HOOK_EXTENSIONS.includes(ext)) {
         // For some reason in ES Modules, only JSON file types need to be specifically delinated when importing them
@@ -20,7 +21,7 @@ export async function getEnvFileVars(envFilePath) {
         if (ext === '.json') {
             attributeTypes = { with: { type: 'json' } };
         }
-        const res = await import(absolutePath, attributeTypes);
+        const res = await import(pathToFileURL(absolutePath).href, attributeTypes);
         if ('default' in res) {
             env = res.default;
         }
@@ -33,7 +34,7 @@ export async function getEnvFileVars(envFilePath) {
         }
     }
     else {
-        const file = fs.readFileSync(absolutePath, { encoding: 'utf8' });
+        const file = readFileSync(absolutePath, { encoding: 'utf8' });
         env = parseEnvString(file);
     }
     return env;
