@@ -3,14 +3,15 @@
     "declaration": true,
     "esModuleInterop": false,
     "lib": ["es2023"],
-    "module": "Node16",
+    "module": "NodeNext",
     "moduleDetection": "force",
     "outDir": "./dist",
     "resolveJsonModule": true,
     "strict": true,
     "target": "ES2022",
+    "rootDir": "src"
   },
   "include": [
-    "./src/**/*"
+    "src/**/*"
   ]
 }

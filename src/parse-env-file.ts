@@ -18,7 +18,12 @@ export async function getEnvFileVars(envFilePath: string): Promise<Environment> 
   const ext = path.extname(absolutePath).toLowerCase()
   let env: Environment = {}
   if (IMPORT_HOOK_EXTENSIONS.includes(ext)) {
-    const res = await import(absolutePath) as Environment | { default: Environment }
+    // For some reason in ES Modules, only JSON file types need to be specifically delinated when importing them
+    let attributeTypes = {}
+    if (ext === '.json') {
+      attributeTypes = { with: { type: 'json' } }
+    }
+    const res = await import(absolutePath, attributeTypes) as Environment | { default: Environment }
     if ('default' in res) {
       env = res.default as Environment
     } else {

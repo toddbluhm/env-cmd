@@ -29,7 +29,12 @@ export async function getRCFileVars(
   let parsedData: Partial<RCEnvironment> = {}
   try {
     if (IMPORT_HOOK_EXTENSIONS.includes(ext)) {
-      const res = await import(absolutePath) as RCEnvironment | { default: RCEnvironment }
+      // For some reason in ES Modules, only JSON file types need to be specifically delinated when importing them
+      let attributeTypes = {}
+      if (ext === '.json') {
+        attributeTypes = { with: { type: 'json' } }
+      }
+      const res = await import(absolutePath, attributeTypes) as RCEnvironment | { default: RCEnvironment }
       if ('default' in res) {
         parsedData = res.default as RCEnvironment
       } else {

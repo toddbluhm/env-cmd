@@ -1,9 +1,7 @@
 import * as commander from 'commander'
 import type { EnvCmdOptions, CommanderOptions, EnvFileOptions, RCFileOptions } from './types.ts'
 import { parseArgList } from './utils.js'
-
-// Use commonjs require to prevent a weird folder hierarchy in dist
-const packageJson = (await import('../package.json')).default
+import { default as packageJson } from '../package.json' with { type: 'json' }; 
 
 /**
 * Parses the arguments passed into the cli

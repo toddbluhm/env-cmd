@@ -1,30 +1,31 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const path = require("path");
-const os = require("os");
+import { resolve } from 'node:path';
+import { homedir } from 'node:os';
+import { cwd } from 'node:process';
+// Special file extensions that node can natively import
+export const IMPORT_HOOK_EXTENSIONS = ['.json', '.js', '.cjs', '.mjs'];
 /**
  * A simple function for resolving the path the user entered
  */
-function resolveEnvFilePath(userPath) {
+export function resolveEnvFilePath(userPath) {
     // Make sure a home directory exist
-    const home = os.homedir();
-    if (home !== undefined) {
+    const home = homedir();
+    if (home != null) {
         userPath = userPath.replace(/^~($|\/|\\)/, `${home}$1`);
     }
-    return path.resolve(process.cwd(), userPath);
+    return resolve(cwd(), userPath);
 }
-exports.resolveEnvFilePath = resolveEnvFilePath;
 /**
  * A simple function that parses a comma separated string into an array of strings
  */
-function parseArgList(list) {
+export function parseArgList(list) {
     return list.split(',');
 }
-exports.parseArgList = parseArgList;
 /**
- * A simple function to test if the value is a promise
+ * A simple function to test if the value is a promise/thenable
  */
-function isPromise(value) {
-    return value != null && typeof value.then === 'function';
+export function isPromise(value) {
+    return value != null
+        && typeof value === 'object'
+        && 'then' in value
+        && typeof value.then === 'function';
 }
-exports.isPromise = isPromise;
