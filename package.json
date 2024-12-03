@@ -50,7 +50,7 @@
   "homepage": "https://github.com/toddbluhm/env-cmd#readme",
   "dependencies": {
     "commander": "^5.0.0",
-    "cross-spawn": "^7.0.0"
+    "cross-spawn": "^7.0.6"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.6.0",
