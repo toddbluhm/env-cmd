@@ -30,7 +30,7 @@ ENV3=THE FISH
 ```json
 {
   "scripts": {
-    "test": "env-cmd mocha -R spec"
+    "test": "env-cmd -- mocha -R spec"
   }
 }
 ```
@@ -38,7 +38,7 @@ ENV3=THE FISH
 **Terminal**
 
 ```sh
-./node_modules/.bin/env-cmd node index.js
+./node_modules/.bin/env-cmd -- node index.js
 ```
 
 ### Using custom env file path
@@ -48,13 +48,13 @@ To use a custom env filename or path, pass the `-f` flag. This is a major breaki
 **Terminal**
 
 ```sh
-./node_modules/.bin/env-cmd -f ./custom/path/.env node index.js
+./node_modules/.bin/env-cmd -f ./custom/path/.env -- node index.js
 ```
 
 ## 📜 Help
 
 ```text
-Usage: _ [options] <command> [...args]
+Usage: env-cmd [options] -- <command> [...args]
 
 Options:
   -v, --version                       output the version number
@@ -101,10 +101,10 @@ are found.
 **Terminal**
 
 ```sh
-./node_modules/.bin/env-cmd -e production node index.js
+./node_modules/.bin/env-cmd -e production -- node index.js
 # Or for multiple environments (where `production` vars override `test` vars,
 # but both are included)
-./node_modules/.bin/env-cmd -e test,production node index.js
+./node_modules/.bin/env-cmd -e test,production -- node index.js
 ```
 
 ### `--no-override` option
@@ -125,7 +125,7 @@ commands together that share the same environment variables.
 **Terminal**
 
 ```sh
-./node_modules/.bin/env-cmd -f ./test/.env --use-shell "npm run lint && npm test"
+./node_modules/.bin/env-cmd -f ./test/.env --use-shell -- "npm run lint && npm test"
 ```
 
 ### Asynchronous env file support
@@ -138,7 +138,7 @@ commands together that share the same environment variables.
    **Terminal**
    
    ```sh
-   ./node_modules/.bin/env-cmd -f ./async-file.js node index.js
+   ./node_modules/.bin/env-cmd -f ./async-file.js -- node index.js
    ```
 
 ### `-x` expands vars in arguments
@@ -152,14 +152,14 @@ to provide arguments to a command that are based on environment variable values 
 
 ```sh
 # $VAR will be expanded into the env value it contains at runtime
-./node_modules/.bin/env-cmd -x node index.js --arg=\$VAR
+./node_modules/.bin/env-cmd -x -- node index.js --arg=\$VAR
 ```
 
 or in `package.json` (use `\\` to insert a literal backslash)
 ```json
 {
   "script": {
-    "start": "env-cmd -x node index.js --arg=\\$VAR"
+    "start": "env-cmd -x -- node index.js --arg=\\$VAR"
   }
 }
 ```
@@ -251,11 +251,6 @@ usually just easier to have a file with all the vars in them, especially for dev
 ## 🧬 Related Projects
 
 [`cross-env`](https://github.com/kentcdodds/cross-env) - Cross platform setting of environment scripts
-
-## 🎊 Special Thanks
-
-Special thanks to [`cross-env`](https://github.com/kentcdodds/cross-env) for inspiration (uses the
-same `cross-spawn` lib underneath too).
 
 ## 📋 Contributing Guide
 
