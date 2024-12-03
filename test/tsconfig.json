@@ -3,15 +3,16 @@
     "declaration": true,
     "esModuleInterop": false,
     "lib": ["es2023"],
-    "module": "NodeNext",
+    "module": "Node16",
     "moduleDetection": "force",
-    "outDir": "./dist",
+    "noEmit": true,
     "resolveJsonModule": true,
     "strict": true,
     "target": "ES2022",
-    "rootDir": "src"
   },
   "include": [
-    "src/**/*"
+    "./**/*",
+    "./test-files/.rc-test-async.cjs",
+    "./test-files/.rc-test-async.mjs",
   ]
 }

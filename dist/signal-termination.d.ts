@@ -1,7 +1,7 @@
-/// <reference types="node" />
 import { ChildProcess } from 'child_process';
 export declare class TermSignals {
     private readonly terminateSpawnedProcessFuncHandlers;
+    private terminateSpawnedProcessFuncExitHandler?;
     private readonly verbose;
     _exitCalled: boolean;
     constructor(options?: {
@@ -15,7 +15,7 @@ export declare class TermSignals {
     /**
      * Terminate parent process helper
      */
-    _terminateProcess(code?: number, signal?: NodeJS.Signals): void;
+    _terminateProcess(signal?: NodeJS.Signals | number): void;
     /**
      * Exit event listener clean up helper
      */

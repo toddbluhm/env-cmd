@@ -1,13 +1,10 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const commander = require("commander");
-const utils_1 = require("./utils");
-// Use commonjs require to prevent a weird folder hierarchy in dist
-const packageJson = require('../package.json');  
+import * as commander from 'commander';
+import { parseArgList } from './utils.js';
+import { default as packageJson } from '../package.json' with { type: 'json' };
 /**
 * Parses the arguments passed into the cli
 */
-function parseArgs(args) {
+export function parseArgs(args) {
     // Run the initial arguments through commander in order to determine
     // which value in the args array is the `command` to execute
     let program = parseArgsUsingCommander(args);
@@ -39,17 +36,19 @@ function parseArgs(args) {
         silent = true;
     }
     let rc;
-    if (program.environments !== undefined && program.environments.length !== 0) {
+    if (program.environments !== undefined
+        && Array.isArray(program.environments)
+        && program.environments.length !== 0) {
         rc = {
             environments: program.environments,
-            filePath: program.rcFile
+            filePath: program.rcFile,
         };
     }
     let envFile;
     if (program.file !== undefined) {
         envFile = {
             filePath: program.file,
-            fallback: program.fallback
+            fallback: program.fallback,
         };
     }
     const options = {
@@ -62,21 +61,20 @@ function parseArgs(args) {
             noOverride,
             silent,
             useShell,
-            verbose
-        }
+            verbose,
+        },
     };
     if (verbose) {
         console.info(`Options: ${JSON.stringify(options, null, 0)}`);
     }
     return options;
 }
-exports.parseArgs = parseArgs;
-function parseArgsUsingCommander(args) {
+export function parseArgsUsingCommander(args) {
     const program = new commander.Command();
     return program
         .version(packageJson.version, '-v, --version')
         .usage('[options] <command> [...args]')
-        .option('-e, --environments [env1,env2,...]', 'The rc file environment(s) to use', utils_1.parseArgList)
+        .option('-e, --environments [env1,env2,...]', 'The rc file environment(s) to use', parseArgList)
         .option('-f, --file [path]', 'Custom env file path (default path: ./.env)')
         .option('--fallback', 'Fallback to default env file path, if custom env file path not found')
         .option('--no-override', 'Do not override existing environment variables')
@@ -88,4 +86,3 @@ function parseArgsUsingCommander(args) {
         .allowUnknownOption(true)
         .parse(['_', '_', ...args]);
 }
-exports.parseArgsUsingCommander = parseArgsUsingCommander;

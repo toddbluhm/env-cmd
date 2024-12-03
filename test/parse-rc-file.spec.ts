@@ -1,5 +1,5 @@
 import { assert } from 'chai'
-import { getRCFileVars } from '../src/parse-rc-file'
+import { getRCFileVars } from '../src/parse-rc-file.js'
 
 const rcFilePath = './test/test-files/.rc-test'
 const rcJSONFilePath = './test/test-files/.rc-test.json'
@@ -58,10 +58,23 @@ describe('getRCFileVars', (): void => {
     }
   })
 
-  it('should parse an async js .rc file', async (): Promise<void> => {
+  it('should parse an async js/cjs .rc file', async (): Promise<void> => {
     const env = await getRCFileVars({
       environments: ['production'],
-      filePath: './test/test-files/.rc-test-async.js',
+      filePath: './test/test-files/.rc-test-async.cjs',
+    })
+    assert.deepEqual(env, {
+      THANKS: 'FOR WHAT?!',
+      ANSWER: 42,
+      ONLY: 'IN PRODUCTION',
+      BRINGATOWEL: true,
+    })
+  })
+
+  it('should parse an async mjs .rc file', async (): Promise<void> => {
+    const env = await getRCFileVars({
+      environments: ['production'],
+      filePath: './test/test-files/.rc-test-async.mjs',
     })
     assert.deepEqual(env, {
       THANKS: 'FOR WHAT?!',

@@ -1,9 +1,7 @@
 import * as commander from 'commander'
-import { EnvCmdOptions, CommanderOptions, EnvFileOptions, RCFileOptions } from './types'
-import { parseArgList } from './utils'
-
-// Use commonjs require to prevent a weird folder hierarchy in dist
-const packageJson: { version: string } = require('../package.json') /* eslint-disable-line */
+import type { EnvCmdOptions, CommanderOptions, EnvFileOptions, RCFileOptions } from './types.ts'
+import { parseArgList } from './utils.js'
+import { default as packageJson } from '../package.json' with { type: 'json' }; 
 
 /**
 * Parses the arguments passed into the cli

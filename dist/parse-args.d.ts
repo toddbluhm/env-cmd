@@ -1,7 +1,6 @@
-import * as commander from 'commander';
-import { EnvCmdOptions } from './types';
+import type { EnvCmdOptions, CommanderOptions } from './types.ts';
 /**
 * Parses the arguments passed into the cli
 */
 export declare function parseArgs(args: string[]): EnvCmdOptions;
-export declare function parseArgsUsingCommander(args: string[]): commander.Command;
+export declare function parseArgsUsingCommander(args: string[]): CommanderOptions;

@@ -1,6 +1,6 @@
 import { assert } from 'chai'
-import * as sinon from 'sinon'
-import { TermSignals } from '../src/signal-termination'
+import { default as sinon } from 'sinon'
+import { TermSignals } from '../src/signal-termination.js'
 import { ChildProcess } from 'child_process'
 
 type ChildExitListener = (code: number | null, signal: NodeJS.Signals | null | number) => void
