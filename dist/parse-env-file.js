@@ -85,14 +85,8 @@ export function parseEnvVars(envString) {
  * Strips out comments from env file string
  */
 export function stripComments(envString) {
-    const commentsRegex = /(^#.*$)/gim;
-    let match = commentsRegex.exec(envString);
-    let newString = envString;
-    while (match != null) {
-        newString = newString.replace(match[1], '');
-        match = commentsRegex.exec(envString);
-    }
-    return newString;
+    const commentsRegex = /(^\s*#.*$)/gim;
+    return envString.replace(commentsRegex, '');
 }
 /**
  * Strips out newlines from env file string
