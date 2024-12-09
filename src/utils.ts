@@ -32,3 +32,13 @@ export function isPromise<T>(value?: T | PromiseLike<T>): value is PromiseLike<T
     && 'then' in value
     && typeof value.then === 'function'
 }
+
+
+// "Import Attributes" are only supported since node v18.20 and v20.10.
+// For older node versions, we have to use "Import Assertions".
+// TODO: remove this check when we drop support for node v20
+const [major, minor] = process.version.slice(1).split('.').map(Number)
+const legacyImportAssertions =
+  (major === 18 && minor < 20) || (major === 20 && minor < 10)
+
+export const importAttributesKeyword = legacyImportAssertions ? 'assert' : 'with'

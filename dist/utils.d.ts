@@ -11,3 +11,4 @@ export declare function parseArgList(list: string): string[];
  * A simple function to test if the value is a promise/thenable
  */
 export declare function isPromise<T>(value?: T | PromiseLike<T>): value is PromiseLike<T>;
+export declare const importAttributesKeyword: string;
