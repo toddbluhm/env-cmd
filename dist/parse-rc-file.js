@@ -2,7 +2,7 @@ import { stat, readFile } from 'node:fs';
 import { promisify } from 'node:util';
 import { extname } from 'node:path';
 import { pathToFileURL } from 'node:url';
-import { resolveEnvFilePath, IMPORT_HOOK_EXTENSIONS, isPromise } from './utils.js';
+import { resolveEnvFilePath, IMPORT_HOOK_EXTENSIONS, isPromise, importAttributesKeyword } from './utils.js';
 const statAsync = promisify(stat);
 const readFileAsync = promisify(readFile);
 /**
@@ -26,7 +26,7 @@ export async function getRCFileVars({ environments, filePath }) {
             // For some reason in ES Modules, only JSON file types need to be specifically delinated when importing them
             let attributeTypes = {};
             if (ext === '.json') {
-                attributeTypes = { with: { type: 'json' } };
+                attributeTypes = { [importAttributesKeyword]: { type: 'json' } };
             }
             const res = await import(pathToFileURL(absolutePath).href, attributeTypes);
             if ('default' in res) {
