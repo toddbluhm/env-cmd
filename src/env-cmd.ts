@@ -45,6 +45,13 @@ export async function EnvCmd(
     commandArgs = commandArgs.map(arg => expandEnvs(arg, env))
   }
 
+  if (!command) {
+    throw new Error(
+      'env-cmd cannot be used as a standalone command. ' +
+        'Refer to the documentation for usage examples: https://npm.im/env-cmd',
+    );
+  }
+
   // Execute the command with the given environment variables
   const proc = spawn(command, commandArgs, {
     stdio: 'inherit',

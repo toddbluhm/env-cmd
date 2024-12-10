@@ -209,4 +209,22 @@ describe('EnvCmd', (): void => {
       assert.fail('Should not get here.')
     },
   )
+
+  it('provides a helpful error if the CLI is incorrectly invoked', async () => {
+    getEnvVarsStub.returns({ BOB: 'test' });
+    try {
+      await envCmdLib.EnvCmd({
+        command: '',
+        commandArgs: [],
+        envFile: {
+          filePath: './.env',
+        },
+      });
+    } catch (e) {
+      assert.instanceOf(e, Error);
+      assert.include(e.message, 'cannot be used as a standalone');
+      return;
+    }
+    assert.fail('Should not get here.');
+  });
 })
