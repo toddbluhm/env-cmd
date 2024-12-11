@@ -66,12 +66,19 @@ export function parseEnvVars(envString: string): Environment {
   while ((match = envParseRegex.exec(envString)) !== null) {
     // Note: match[1] is the full env=var line
     const key = match[2].trim()
-    let value: string | number | boolean = match[3].trim()
+    let value = match[3].trim()
 
-    // remove any surrounding quotes
-    value = value
-      .replace(/(^['"]|['"]$)/g, '')
-      .replace(/\\n/g, '\n')
+    // if the string is quoted, remove everything after the final
+    // quote. This implicitly removes inline comments.
+    if (value.startsWith("'") || value.startsWith('"')) {
+      value = value.slice(1, value.lastIndexOf(value[0]));
+    } else {
+      // if the string is not quoted, we need to explicitly remove
+      // inline comments.
+      value = value.split('#')[0].trim();
+    }
+  
+    value = value.replace(/\\n/g, '\n');
 
     // Convert string to JS type if appropriate
     if (value !== '' && !isNaN(+value)) {
