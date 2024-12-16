@@ -96,6 +96,36 @@ describe('parseEnvVars', (): void => {
     assert(envVars.NODE_ENV === 'dev')
     assert(envVars.ANSWER === ' 42 AND COUNTING')
   })
+
+  describe('value', () => {
+    const testCases = [
+      [`a`, `a`],
+      [`'a'`, `a`],
+      [`"a"`, `a`],
+      [`"a"`, `a`],
+      [`"single 'quotes' inside double"`, `single 'quotes' inside double`],
+      [`'double "quotes" inside single'`, `double "quotes" inside single`],
+      [`a # comment without quotes`, `a`],
+      [`'a' # comment with single quotes`, `a`],
+      [`"a" # comment with double quotes`, `a`],
+      [`"a"garbage after final quote`, `a`],
+      [
+        `"double quotes " within double quotes"`,
+        `double quotes " within double quotes`,
+      ],
+      [
+        `'single quotes ' within single quotes'`,
+        `single quotes ' within single quotes`,
+      ],
+      [`line\\nbreaks`, `line\nbreaks`],
+      [`"line\\n\\nbreaks in quotes"`, `line\n\nbreaks in quotes`],
+    ];
+    for (const [input, output] of testCases) {
+      it(`should parse ${input}`, () => {
+        assert.equal(parseEnvVars(`KEY=${input}`).KEY, output)
+      })
+    }
+  })
 })
 
 describe('parseEnvString', (): void => {
@@ -172,6 +202,14 @@ describe('getEnvFileVars', (): void => {
       ONLY: 'IN=PRODUCTION',
       GALAXY: 'hitch\nhiking',
       BRINGATOWEL: true,
+      a: 1,
+      b: 2,
+      c: 3,
+      d: "=",
+      e: "equals symbol = = ",
+      json_no_quotes: "{\"foo\": \"bar\"}",
+      json_with_quotes: "{\"foo\": \"bar\"}",
+      quotes: "hello \n\n \" 'escaped \\tsingle quote' \" #cool #fun ",
     })
   })
 

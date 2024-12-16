@@ -3,3 +3,14 @@ ANSWER=42
 ONLY= "IN=PRODUCTION"
 GALAXY="hitch\nhiking"
 BRINGATOWEL=true
+# full-line comment
+#
+quotes = 'hello \n\n " 'escaped \tsingle quote' " #cool #fun ' # inline comment
+a=1#inline comment
+b='2'#inline comment
+c="3"#inline comment
+d==
+e='equals symbol = = '
+json_no_quotes={"foo": "bar"}
+json_with_quotes='{"foo": "bar"}'
+json_with_quotes='{"foo": "bar"}'
