@@ -34,12 +34,18 @@ export async function getEnvFileVars(envFilePath: string): Promise<Environment> 
     if (isPromise(env)) {
       env = await env
     }
+
+    return env;
   }
-  else {
-    const file = readFileSync(absolutePath, { encoding: 'utf8' })
-    env = parseEnvString(file)
+
+  const file = readFileSync(absolutePath, { encoding: 'utf8' })
+
+  switch (ext) {
+    // other loaders can be added here
+
+    default:
+      return parseEnvString(file)
   }
-  return env
 }
 
 /**
