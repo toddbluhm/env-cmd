@@ -192,6 +192,32 @@ describe('getEnvFileVars', (): void => {
       THANKS: 'FOR ALL THE FISH',
       ANSWER: '0',
     })
+  });
+
+  (process.features.typescript ? describe : describe.skip)('TS', () => {
+    it('should parse a .ts file', async () => {
+      const env = await getEnvFileVars('./test/test-files/ts-test.ts');
+      assert.deepEqual(env, {
+        THANKS: 'FOR ALL THE FISH',
+        ANSWER: '1',
+      });
+    });
+
+    it('should parse a .cts file', async () => {
+      const env = await getEnvFileVars('./test/test-files/cts-test.cts');
+      assert.deepEqual(env, {
+        THANKS: 'FOR ALL THE FISH',
+        ANSWER: '0',
+      });
+    });
+
+    it('should parse a .tsx file', async () => {
+      const env = await getEnvFileVars('./test/test-files/tsx-test.tsx');
+      assert.deepEqual(env, {
+        THANKS: 'FOR ALL THE FISH',
+        ANSWER: '2',
+      });
+    });
   })
 
   it('should parse an env file', async (): Promise<void> => {

@@ -1,5 +1,6 @@
 import { getRCFileVars } from './parse-rc-file.js';
 import { getEnvFileVars } from './parse-env-file.js';
+import { isLoaderError } from './utils.js';
 const RC_FILE_DEFAULT_LOCATIONS = ['./.env-cmdrc', './.env-cmdrc.js', './.env-cmdrc.json'];
 const ENV_FILE_DEFAULT_LOCATIONS = ['./.env', './.env.js', './.env.json'];
 export async function getEnvVars(options = {}) {
@@ -28,7 +29,10 @@ export async function getEnvFile({ filePath, fallback, verbose }) {
             }
             return env;
         }
-        catch {
+        catch (error) {
+            if (isLoaderError(error)) {
+                throw error;
+            }
             if (verbose === true) {
                 console.info(`Failed to find .env file at path: ${filePath}`);
             }
