@@ -1,9 +1,9 @@
 {
   "compilerOptions": {
     "declaration": true,
-    "esModuleInterop": false,
+    "esModuleInterop": true,
     "lib": ["es2023"],
-    "module": "NodeNext",
+    "module": "nodenext",
     "moduleDetection": "force",
     "outDir": "./dist",
     "resolveJsonModule": true,

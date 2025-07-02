@@ -1,13 +1,7 @@
-import { createRequire } from 'node:module'
 import { Command } from '@commander-js/extra-typings'
 import type { EnvCmdOptions, CommanderOptions, EnvFileOptions, RCFileOptions } from './types.ts'
 import { parseArgList } from './utils.js'
-
-// TODO: once we drop support for node <v20.10, this can be converted to
-// a normal import statement
-const packageJson = createRequire(import.meta.url)('../package.json') as {
-  version: string;
-}
+import packageJson from '../package.json' with { type: 'json' }
 
 /**
 * Parses the arguments passed into the cli
