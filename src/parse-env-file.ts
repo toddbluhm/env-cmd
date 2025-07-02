@@ -17,16 +17,16 @@ export async function getEnvFileVars(envFilePath: string): Promise<Environment> 
 
   // Get the file extension
   const ext = extname(absolutePath).toLowerCase()
-  let env: Environment = {}
+  let env: unknown;
   if (IMPORT_HOOK_EXTENSIONS.includes(ext)) {
     // For some reason in ES Modules, only JSON file types need to be specifically delinated when importing them
     let attributeTypes = {}
     if (ext === '.json') {
       attributeTypes = { [importAttributesKeyword]: { type: 'json' } }
     }
-    const res = await import(pathToFileURL(absolutePath).href, attributeTypes) as Environment | { default: Environment }
-    if ('default' in res) {
-      env = res.default as Environment
+    const res: unknown = await import(pathToFileURL(absolutePath).href, attributeTypes)
+    if (typeof res === 'object' && res && 'default' in res) {
+      env = res.default
     } else {
       env = res
     }
@@ -35,7 +35,7 @@ export async function getEnvFileVars(envFilePath: string): Promise<Environment> 
       env = await env
     }
 
-    return env;
+    return normalizeEnvObject(env, absolutePath)
   }
 
   const file = readFileSync(absolutePath, { encoding: 'utf8' })
@@ -83,22 +83,10 @@ export function parseEnvVars(envString: string): Environment {
       // inline comments.
       value = value.split('#')[0].trim();
     }
-  
+
     value = value.replace(/\\n/g, '\n');
 
-    // Convert string to JS type if appropriate
-    if (value !== '' && !isNaN(+value)) {
-      matches[key] = +value
-    }
-    else if (value === 'true') {
-      matches[key] = true
-    }
-    else if (value === 'false') {
-      matches[key] = false
-    }
-    else {
-      matches[key] = value
-    }
+    matches[key] = value
   }
   return JSON.parse(JSON.stringify(matches)) as Environment
 }
@@ -117,4 +105,28 @@ export function stripComments(envString: string): string {
 export function stripEmptyLines(envString: string): string {
   const emptyLinesRegex = /(^\n)/gim
   return envString.replace(emptyLinesRegex, '')
+}
+
+/**
+ * If we load data from a file like .js, the user
+ * might export something which is not an object.
+ *
+ * This function ensures that the input is valid,
+ * and converts the object's values to strings, for
+ * consistincy. See issue #125 for details.
+ */
+export function normalizeEnvObject(input: unknown, absolutePath: string): Environment {
+  if (typeof input !== 'object' || !input) {
+    throw new Error(`env-cmd cannot load “${absolutePath}” because it does not export an object.`)
+  }
+
+  const env: Environment = {};
+  for (const [key, value] of Object.entries(input)) {
+    // we're intentionally stringifying the value here, to
+    // match what `child_process.spawn` does when loading 
+    // env variables.
+    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+    env[key] = `${value}`
+  }
+  return env
 }

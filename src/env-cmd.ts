@@ -56,7 +56,7 @@ export async function EnvCmd(
   const proc = spawn(command, commandArgs, {
     stdio: 'inherit',
     shell: options.useShell,
-    env: env as Record<string, string>,
+    env,
   })
 
   // Handle any termination signals for parent and child proceses
