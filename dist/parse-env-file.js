@@ -14,7 +14,7 @@ export async function getEnvFileVars(envFilePath) {
     }
     // Get the file extension
     const ext = extname(absolutePath).toLowerCase();
-    let env = {};
+    let env;
     if (IMPORT_HOOK_EXTENSIONS.includes(ext)) {
         // For some reason in ES Modules, only JSON file types need to be specifically delinated when importing them
         let attributeTypes = {};
@@ -22,7 +22,7 @@ export async function getEnvFileVars(envFilePath) {
             attributeTypes = { [importAttributesKeyword]: { type: 'json' } };
         }
         const res = await import(pathToFileURL(absolutePath).href, attributeTypes);
-        if ('default' in res) {
+        if (typeof res === 'object' && res && 'default' in res) {
             env = res.default;
         }
         else {
@@ -32,12 +32,14 @@ export async function getEnvFileVars(envFilePath) {
         if (isPromise(env)) {
             env = await env;
         }
+        return normalizeEnvObject(env, absolutePath);
     }
-    else {
-        const file = readFileSync(absolutePath, { encoding: 'utf8' });
-        env = parseEnvString(file);
+    const file = readFileSync(absolutePath, { encoding: 'utf8' });
+    switch (ext) {
+        // other loaders can be added here
+        default:
+            return parseEnvString(file);
     }
-    return env;
 }
 /**
  * Parse out all env vars from a given env file string and return an object
@@ -61,23 +63,18 @@ export function parseEnvVars(envString) {
         // Note: match[1] is the full env=var line
         const key = match[2].trim();
         let value = match[3].trim();
-        // remove any surrounding quotes
-        value = value
-            .replace(/(^['"]|['"]$)/g, '')
-            .replace(/\\n/g, '\n');
-        // Convert string to JS type if appropriate
-        if (value !== '' && !isNaN(+value)) {
-            matches[key] = +value;
-        }
-        else if (value === 'true') {
-            matches[key] = true;
-        }
-        else if (value === 'false') {
-            matches[key] = false;
+        // if the string is quoted, remove everything after the final
+        // quote. This implicitly removes inline comments.
+        if (value.startsWith("'") || value.startsWith('"')) {
+            value = value.slice(1, value.lastIndexOf(value[0]));
         }
         else {
-            matches[key] = value;
+            // if the string is not quoted, we need to explicitly remove
+            // inline comments.
+            value = value.split('#')[0].trim();
         }
+        value = value.replace(/\\n/g, '\n');
+        matches[key] = value;
     }
     return JSON.parse(JSON.stringify(matches));
 }
@@ -94,4 +91,26 @@ export function stripComments(envString) {
 export function stripEmptyLines(envString) {
     const emptyLinesRegex = /(^\n)/gim;
     return envString.replace(emptyLinesRegex, '');
+}
+/**
+ * If we load data from a file like .js, the user
+ * might export something which is not an object.
+ *
+ * This function ensures that the input is valid,
+ * and converts the object's values to strings, for
+ * consistincy. See issue #125 for details.
+ */
+export function normalizeEnvObject(input, absolutePath) {
+    if (typeof input !== 'object' || !input) {
+        throw new Error(`env-cmd cannot load “${absolutePath}” because it does not export an object.`);
+    }
+    const env = {};
+    for (const [key, value] of Object.entries(input)) {
+        // we're intentionally stringifying the value here, to
+        // match what `child_process.spawn` does when loading 
+        // env variables.
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+        env[key] = `${value}`;
+    }
+    return env;
 }

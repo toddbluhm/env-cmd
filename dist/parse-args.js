@@ -94,5 +94,6 @@ export function parseArgsUsingCommander(args) {
         .option('--use-shell', 'Execute the command in a new shell with the given environment')
         .option('--verbose', 'Print helpful debugging information')
         .allowUnknownOption(true)
+        .allowExcessArguments(true)
         .parse(['_', '_', ...args], { from: 'node' });
 }

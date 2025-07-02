@@ -1,5 +1,5 @@
 import type { Command } from '@commander-js/extra-typings';
-export type Environment = Partial<Record<string, string | number | boolean>>;
+export type Environment = Partial<Record<string, string>>;
 export type RCEnvironment = Partial<Record<string, Environment>>;
 export type CommanderOptions = Command<[], {
     environments?: true | string[];
