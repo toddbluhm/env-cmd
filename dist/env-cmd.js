@@ -33,11 +33,15 @@ export async function EnvCmd({ command, commandArgs, envFile, rc, options = {}, 
         command = expandEnvs(command, env);
         commandArgs = commandArgs.map(arg => expandEnvs(arg, env));
     }
+    if (!command) {
+        throw new Error('env-cmd cannot be used as a standalone command. ' +
+            'Refer to the documentation for usage examples: https://npm.im/env-cmd');
+    }
     // Execute the command with the given environment variables
     const proc = spawn(command, commandArgs, {
         stdio: 'inherit',
         shell: options.useShell,
-        env: env,
+        env,
     });
     // Handle any termination signals for parent and child proceses
     const signals = new TermSignals({ verbose: options.verbose });
