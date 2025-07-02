@@ -1,6 +1,6 @@
 {
   "name": "env-cmd",
-  "version": "10.1.0",
+  "version": "0.0.0-semantically-released",
   "description": "Executes a command using the environment variables in an env file",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -84,5 +84,12 @@
       "text",
       "lcov"
     ]
+  },
+  "release": {
+    "branches": ["master"],
+    "tagFormat": "${version}"
+  },
+  "publishConfig": {
+    "provenance": true
   }
 }
