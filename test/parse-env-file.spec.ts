@@ -29,8 +29,8 @@ describe('parseEnvVars', (): void => {
     assert(envVars.BOB === 'COOL')
     assert(envVars.NODE_ENV === 'dev')
     assert(envVars.ANSWER === '42 AND COUNTING')
-    assert(envVars.NUMBER === 42)
-    assert(envVars.BOOLEAN === true)
+    assert(envVars.NUMBER === '42')
+    assert(envVars.BOOLEAN === 'true')
   })
 
   it('should parse out all env vars in string with format \'key=value\'', (): void => {
@@ -133,7 +133,7 @@ describe('parseEnvString', (): void => {
     const env = parseEnvString('BOB=COOL\nNODE_ENV=dev\nANSWER=42\n')
     assert(env.BOB === 'COOL')
     assert(env.NODE_ENV === 'dev')
-    assert(env.ANSWER === 42)
+    assert(env.ANSWER === '42')
   })
 })
 
@@ -142,10 +142,10 @@ describe('getEnvFileVars', (): void => {
     const env = await getEnvFileVars('./test/test-files/test.json')
     assert.deepEqual(env, {
       THANKS: 'FOR WHAT?!',
-      ANSWER: 42,
+      ANSWER: '42',
       ONLY: 'IN PRODUCTION',
       GALAXY: 'hitch\nhiking',
-      BRINGATOWEL: true,
+      BRINGATOWEL: 'true',
     })
   })
 
@@ -153,10 +153,10 @@ describe('getEnvFileVars', (): void => {
     const env = await getEnvFileVars('./test/test-files/test-newlines.json')
     assert.deepEqual(env, {
       THANKS: 'FOR WHAT?!',
-      ANSWER: 42,
+      ANSWER: '42',
       ONLY: 'IN\n PRODUCTION',
       GALAXY: 'hitch\nhiking\n\n',
-      BRINGATOWEL: true,
+      BRINGATOWEL: 'true',
     })
   })
 
@@ -164,7 +164,7 @@ describe('getEnvFileVars', (): void => {
     const env = await getEnvFileVars('./test/test-files/test.cjs')
     assert.deepEqual(env, {
       THANKS: 'FOR ALL THE FISH',
-      ANSWER: 0,
+      ANSWER: '0',
       GALAXY: 'hitch\nhiking',
     })
   })
@@ -173,7 +173,7 @@ describe('getEnvFileVars', (): void => {
     const env = await getEnvFileVars('./test/test-files/test-async.cjs')
     assert.deepEqual(env, {
       THANKS: 'FOR ALL THE FISH',
-      ANSWER: 0,
+      ANSWER: '0',
     })
   })
 
@@ -181,7 +181,7 @@ describe('getEnvFileVars', (): void => {
     const env = await getEnvFileVars('./test/test-files/test.mjs')
     assert.deepEqual(env, {
       THANKS: 'FOR ALL THE FISH',
-      ANSWER: 0,
+      ANSWER: '0',
       GALAXY: 'hitch\nhiking',
     })
   })
@@ -190,7 +190,7 @@ describe('getEnvFileVars', (): void => {
     const env = await getEnvFileVars('./test/test-files/test-async.mjs')
     assert.deepEqual(env, {
       THANKS: 'FOR ALL THE FISH',
-      ANSWER: 0,
+      ANSWER: '0',
     })
   })
 
@@ -198,13 +198,13 @@ describe('getEnvFileVars', (): void => {
     const env = await getEnvFileVars('./test/test-files/test')
     assert.deepEqual(env, {
       THANKS: 'FOR WHAT?!',
-      ANSWER: 42,
+      ANSWER: '42',
       ONLY: 'IN=PRODUCTION',
       GALAXY: 'hitch\nhiking',
-      BRINGATOWEL: true,
-      a: 1,
-      b: 2,
-      c: 3,
+      BRINGATOWEL: 'true',
+      a: '1',
+      b: '2',
+      c: '3',
       d: "=",
       e: "equals symbol = = ",
       json_no_quotes: "{\"foo\": \"bar\"}",
@@ -223,4 +223,16 @@ describe('getEnvFileVars', (): void => {
       assert.match(e.message, /file path/gi)
     }
   })
+
+  for (const fileExt of ['cjs', 'mjs', 'json']) {
+    it(`should throw an error when importing a ${fileExt} file with an invalid export`, async () => {
+      try {
+        await getEnvFileVars(`./test/test-files/invalid.${fileExt}`)
+        assert.fail('Should not get here!')
+      } catch (e) {
+        assert.instanceOf(e, Error)
+        assert.match(e.message, /does not export an object/gi)
+      }
+    })
+  }
 })
