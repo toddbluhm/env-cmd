@@ -1,0 +1,21 @@
+name: release
+
+# Run action on every commit to main, release only when requested through commit annotation.
+on:
+  push:
+    branches: [master]
+
+jobs:
+  build-test-release:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write # Required to mint token for npm package provenance
+      contents: write # Needed to create and write release notes in GitHub release
+    steps:
+      - uses: actions/checkout@v3
+      - run: npm install
+      - run: npm run build
+      - run: npm test
+      - uses: tobua/release-npm-action@v3
+        with:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
