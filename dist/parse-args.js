@@ -32,7 +32,7 @@ export function parseArgs(args) {
         expandEnvs = true;
     }
     let recursive = false;
-    if (program.recursive === true) {
+    if (parsedCmdOptions.recursive === true) {
         recursive = true;
     }
     let verbose = false;
@@ -93,16 +93,12 @@ export function parseArgsUsingCommander(args) {
         .option('-f, --file [path]', 'Custom env file path (default path: ./.env)')
         .option('-r, --rc-file [path]', 'Custom rc file path (default path: ./.env-cmdrc.(js|cjs|mjs|json)')
         .option('-x, --expand-envs', 'Replace $var in args and command with environment variables')
+        .option('--recursive', 'Replace $var and $\\{var\\} in env file with the referenced environment variable')
         .option('--fallback', 'Fallback to default env file path, if custom env file path not found')
         .option('--no-override', 'Do not override existing environment variables')
         .option('--silent', 'Ignore any env-cmd errors and only fail on executed program failure.')
         .option('--use-shell', 'Execute the command in a new shell with the given environment')
         .option('--verbose', 'Print helpful debugging information')
-<<<<<<< HEAD
-=======
-        .option('-x, --expand-envs', 'Replace $var and $\\{var\\} in args and command with environment variables')
-        .option('--recursive', 'Replace $var and $\\{var\\} in env file with the referenced environment variable')
->>>>>>> 65d2198 (feat: recursive embedding of env vars in env vars)
         .allowUnknownOption(true)
         .allowExcessArguments(true)
         .parse(['_', '_', ...args], { from: 'node' });
