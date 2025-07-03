@@ -1,10 +1,10 @@
 # Changelog
 
-## Landed in master
+## 11.0.0
 
 - **Upgrade**: Upgraded dependency `commander` to `13.x`
 - **Upgrade**: Upgraded dependency `cross-spawn` to `7.x`
-- **Upgrade**: Upgraded all devDependencies `ts-standard`, `sinon`
+- **Upgrade**: Upgraded all devDependencies
 - **Feature**: support both `$var` and `${var}` when expanding vars
 - **Feature**: Added support for nested env variables with the `--recursive` flag
 
