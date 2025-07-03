@@ -171,7 +171,7 @@ describe('EnvCmd', (): void => {
 
   it('should spawn process with args expanded if recursive option is true',
     async (): Promise<void> => {
-      getEnvVarsStub.returns({ PING: 'PONG', recursive: 'PING ${PING}' }) /* eslint-disable-line */
+      getEnvVarsStub.returns({ PING: 'PONG', recursive: 'PING ${PING}' })
       await envCmdLib.EnvCmd({
         command: 'node',
         commandArgs: [],

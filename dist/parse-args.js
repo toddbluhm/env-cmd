@@ -29,7 +29,7 @@ export function parseArgs(args) {
         expandEnvs = true;
     }
     let recursive = false;
-    if (program.recursive === true) {
+    if (parsedCmdOptions.recursive === true) {
         recursive = true;
     }
     let verbose = false;

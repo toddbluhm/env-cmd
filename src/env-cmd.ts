@@ -42,7 +42,9 @@ export async function EnvCmd(
 
   if (options.recursive === true) {
     for (const key of Object.keys(env)) {
-      env[key] = expandEnvs(env[key], env)
+      if (env[key] !== undefined) {
+        env[key] = expandEnvs(env[key], env)
+      }
     }
   }
 
