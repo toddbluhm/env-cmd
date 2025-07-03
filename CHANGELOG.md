@@ -1,9 +1,10 @@
 # Changelog
 
-## 10.1.1 - In Development
+## 11.0.0
 
-- **Upgrade**: Upgraded dependency `commander` to `5.x`
-- **Upgrade**: Upgraded devDependencies `ts-standard`, `sinon`
+- **Upgrade**: Upgraded dependency `commander` to `13.x`
+- **Upgrade**: Upgraded dependency `cross-spawn` to `7.x`
+- **Upgrade**: Upgraded all devDependencies
 
 ## 10.1.0
 
