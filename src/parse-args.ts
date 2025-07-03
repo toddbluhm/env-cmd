@@ -34,7 +34,7 @@ export function parseArgs(args: string[]): EnvCmdOptions {
     expandEnvs = true
   }
   let recursive = false
-  if (program.recursive === true) {
+  if (parsedCmdOptions.recursive === true) {
     recursive = true
   }
   let verbose = false

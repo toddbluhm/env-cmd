@@ -8,6 +8,7 @@ export type RCEnvironment = Partial<Record<string, Environment>>
 export type CommanderOptions = Command<[], {
   environments?: true | string[]
   expandEnvs?: boolean // Default: false
+  recursive?: boolean // Default: false
   fallback?: boolean // Default false
   file?: true | string
   override?: boolean // Default: false
