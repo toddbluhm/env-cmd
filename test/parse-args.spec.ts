@@ -69,7 +69,7 @@ describe('parseArgs', (): void => {
   })
 
   it('should parse rc file path', (): void => {
-    const res = parseArgs(['-e', environments[0], '-r', rcFilePath, '--', command, ...commandArgs])
+    const res = parseArgs(['-e', environments[0], '-f', rcFilePath, '--', command, ...commandArgs])
     assert.exists(res.rc)
     assert.equal(res.rc.filePath, rcFilePath)
   })

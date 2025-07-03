@@ -51,9 +51,9 @@ export function parseArgs(args: string[]): EnvCmdOptions {
     rc = {
       environments: parsedCmdOptions.environments,
       // if we get a boolean value assume not defined
-      filePath: parsedCmdOptions.rcFile === true ? 
+      filePath: parsedCmdOptions.file === true ?
         undefined : 
-        parsedCmdOptions.rcFile,
+        parsedCmdOptions.file,
     }
   }
 
@@ -93,8 +93,7 @@ export function parseArgsUsingCommander(args: string[]): CommanderOptions {
     .version(packageJson.version, '-v, --version')
     .usage('[options] -- <command> [...args]')
     .option('-e, --environments [envs...]', 'The rc file environment(s) to use', parseArgList)
-    .option('-f, --file [path]', 'Custom env file path (default path: ./.env)')
-    .option('-r, --rc-file [path]', 'Custom rc file path (default path: ./.env-cmdrc.(js|cjs|mjs|json)')
+    .option('-f, --file [path]', 'Custom env file path or .rc file path if \'-e\' used (default path: ./.env or ./.env-cmdrc.(js|cjs|mjs|json))')
     .option('-x, --expand-envs', 'Replace $var in args and command with environment variables')
     .option('--fallback', 'Fallback to default env file path, if custom env file path not found')
     .option('--no-override', 'Do not override existing environment variables')
