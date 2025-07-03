@@ -6,7 +6,7 @@ on:
     branches: [master]
 
 jobs:
-  build-test-release:
+  publish-npm:
     runs-on: ubuntu-latest
     permissions:
       id-token: write # Required to mint token for npm package provenance
@@ -16,6 +16,7 @@ jobs:
       - run: npm install
       - run: npm run build
       - run: npm test
-      - uses: tobua/release-npm-action@v3
+      - uses: JS-DevTools/npm-publish@v3
         with:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          token: ${{ secrets.NPM_TOKEN }}
+          provenance: true
