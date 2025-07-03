@@ -31,6 +31,10 @@ export function parseArgs(args) {
     if (parsedCmdOptions.expandEnvs === true) {
         expandEnvs = true;
     }
+    let recursive = false;
+    if (parsedCmdOptions.recursive === true) {
+        recursive = true;
+    }
     let verbose = false;
     if (parsedCmdOptions.verbose === true) {
         verbose = true;
@@ -68,6 +72,7 @@ export function parseArgs(args) {
         rc,
         options: {
             expandEnvs,
+            recursive,
             noOverride,
             silent,
             useShell,
@@ -88,6 +93,7 @@ export function parseArgsUsingCommander(args) {
         .option('-f, --file [path]', 'Custom env file path (default path: ./.env)')
         .option('-r, --rc-file [path]', 'Custom rc file path (default path: ./.env-cmdrc.(js|cjs|mjs|json)')
         .option('-x, --expand-envs', 'Replace $var in args and command with environment variables')
+        .option('--recursive', 'Replace $var and $\\{var\\} in env file with the referenced environment variable')
         .option('--fallback', 'Fallback to default env file path, if custom env file path not found')
         .option('--no-override', 'Do not override existing environment variables')
         .option('--silent', 'Ignore any env-cmd errors and only fail on executed program failure.')
