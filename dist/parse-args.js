@@ -1,4 +1,4 @@
-import { Command } from '@commander-js/extra-typings';
+import { Command, Option, CommanderError } from '@commander-js/extra-typings';
 import { parseArgList } from './utils.js';
 import packageJson from '../package.json' with { type: 'json' };
 /**
@@ -89,6 +89,10 @@ export function parseArgsUsingCommander(args) {
         .option('--silent', 'Ignore any env-cmd errors and only fail on executed program failure.')
         .option('--use-shell', 'Execute the command in a new shell with the given environment')
         .option('--verbose', 'Print helpful debugging information')
+        // TODO: Remove -r deprecation error on version >= v12
+        .addOption(new Option('-r, --rc-file [path]', 'Deprecated Option')
+        .hideHelp()
+        .argParser(() => { throw new CommanderError(1, 'deprecated-option', 'The -r flag has been deprecated, use the -f flag instead.'); }))
         .allowUnknownOption(true)
         .allowExcessArguments(true)
         .parse(['_', '_', ...args], { from: 'node' });
