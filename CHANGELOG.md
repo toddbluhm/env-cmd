@@ -1,15 +1,28 @@
 # Changelog
 
-## 10.1.1 - In Development
+## 11.0.0
 
-- **Upgrade**: Upgraded dependency `commander` to `5.x`
-- **Upgrade**: Upgraded devDependencies `ts-standard`, `sinon`
+- **BREAKING**: Drop support for nodejs `v8` to `v20.9`. The minimum supported nodejs version is now `v20.10`.
+- **BREAKING**: remove `-r` flag and use only `-f` flag.
+- **BREAKING**: Support inline comments in `.env` files. A `#` character now signifies the start of an inline comment, unless the value is surrounded by quotation marks (`"`).
+- **BREAKING**: Migrated the repository to ESM modules instead of CommonJS.
+- **BREAKING**: Support variable expansion using curly-brace syntax (`{{MY_VAR}}`), when the `-x` option is enabled.
+- **Feature**: Support loading env variables from `.cjs` and `.mjs` files.
+- **Feature**: Support loading env variables from `.ts`, `.cts`, and `.mts` files.
+- **Feature**: When loading an invalid JSON file, show the original parse error.
+- **Feature**: Add a more helpful error message when trying to invoke env-cmd as a standalone command.
+- **Docs**: clarify how variable expansion works.
+- **Internal**: Replaced Travis CI with GitHub Actions, run unit tests on windows.
+- **Internal**: Configure automatic releases to npm from GitHub Actions
+- **Internal**: Refactor the loader logic, to make it easier to add other loaders.
+- **Upgrade**: Update all dependencies.
+- **Upgrade**: Upgraded all devDependencies
 
 ## 10.1.0
 
 - **Feature**: Added support for expanding vars using the `-x` flag.
 Note: only supports `$var` syntax
-- **Feature**: Added support for `--silent` flag that ignores env-cmd errors and missing files and 
+- **Feature**: Added support for `--silent` flag that ignores env-cmd errors and missing files and
 only terminates on caught signals
 - **Feature**: Added a new `--verbose` flag that prints additional debugging info to `console.info`
 - **Upgrade**: Upgraded dependency `commander` to `4.x`
