@@ -7,7 +7,6 @@ export type CommanderOptions = Command<[], {
     fallback?: boolean;
     file?: true | string;
     override?: boolean;
-    rcFile?: true | string;
     silent?: boolean;
     useShell?: boolean;
     verbose?: boolean;

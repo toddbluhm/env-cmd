@@ -57,17 +57,17 @@ To use a custom env filename or path, pass the `-f` flag. This is a major breaki
 Usage: env-cmd [options] -- <command> [...args]
 
 Options:
-  -v, --version                       output the version number
-  -e, --environments [env1,env2,...]  The rc file environment(s) to use
-  -f, --file [path]                   Custom env file path (default path: ./.env)
-  --fallback                          Fallback to default env file path, if custom env file path not found
-  --no-override                       Do not override existing environment variables
-  -r, --rc-file [path]                Custom rc file path (default path: ./.env-cmdrc(|.js|.json)
-  --silent                            Ignore any env-cmd errors and only fail on executed program failure.
-  --use-shell                         Execute the command in a new shell with the given environment
-  --verbose                           Print helpful debugging information
-  -x, --expand-envs                   Replace $var in args and command with environment variables
-  -h, --help                          output usage information
+  -v, --version                 output the version number
+  -e, --environments [envs...]  The rc file environment(s) to use
+  -f, --file [path]             Custom env file path or .rc file path if '-e' used (default path: ./.env or
+                                ./.env-cmdrc.(js|cjs|mjs|json))
+  -x, --expand-envs             Replace $var in args and command with environment variables
+  --fallback                    Fallback to default env file path, if custom env file path not found
+  --no-override                 Do not override existing environment variables
+  --silent                      Ignore any env-cmd errors and only fail on executed program failure.
+  --use-shell                   Execute the command in a new shell with the given environment
+  --verbose                     Print helpful debugging information
+  -h, --help                    display help for command
 ```
 
 ## 🔬 Advanced Usage
