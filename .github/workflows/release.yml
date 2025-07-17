@@ -1,0 +1,49 @@
+name: release
+
+# Run action on every commit to main, release only when requested through commit annotation.
+on:
+  push:
+    branches: [master]
+
+jobs:
+  publish-npm:
+    runs-on: ubuntu-latest
+
+    env:
+      HUSKY: 0
+      NODE_VERSION: 24.x
+
+    permissions:
+      id-token: write # Required to mint token for npm package provenance
+      contents: write # Needed to create and write release notes in GitHub release
+    
+    steps:
+    - name: Checkout Project
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Use Node.js ${{ env.NODE_VERSION }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+
+    - name: Install Dependencies
+      run: npm install
+
+    - name: Lint Files
+      run: npm run lint
+
+    - name: Build Project
+      run: npm run build
+
+    - name: Run Tests
+      env:
+        CI: true
+      run: npm run test
+    
+    - name: Publish to NPM
+      uses: JS-DevTools/npm-publish@v3
+      with:
+        token: ${{ secrets.NPM_TOKEN }}
+        provenance: true
