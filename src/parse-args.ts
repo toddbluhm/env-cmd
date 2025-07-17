@@ -1,4 +1,4 @@
-import { Command } from '@commander-js/extra-typings'
+import { Command, Option, CommanderError } from '@commander-js/extra-typings'
 import type { EnvCmdOptions, CommanderOptions, EnvFileOptions, RCFileOptions } from './types.ts'
 import { parseArgList } from './utils.js'
 import packageJson from '../package.json' with { type: 'json' }
@@ -51,9 +51,9 @@ export function parseArgs(args: string[]): EnvCmdOptions {
     rc = {
       environments: parsedCmdOptions.environments,
       // if we get a boolean value assume not defined
-      filePath: parsedCmdOptions.rcFile === true ? 
+      filePath: parsedCmdOptions.file === true ?
         undefined : 
-        parsedCmdOptions.rcFile,
+        parsedCmdOptions.file,
     }
   }
 
@@ -88,19 +88,23 @@ export function parseArgs(args: string[]): EnvCmdOptions {
 }
 
 export function parseArgsUsingCommander(args: string[]): CommanderOptions {
+  
   return new Command('env-cmd')
     .description('CLI for executing commands using an environment from an env file.')
     .version(packageJson.version, '-v, --version')
     .usage('[options] -- <command> [...args]')
     .option('-e, --environments [envs...]', 'The rc file environment(s) to use', parseArgList)
-    .option('-f, --file [path]', 'Custom env file path (default path: ./.env)')
-    .option('-r, --rc-file [path]', 'Custom rc file path (default path: ./.env-cmdrc.(js|cjs|mjs|json)')
+    .option('-f, --file [path]', 'Custom env file path or .rc file path if \'-e\' used (default path: ./.env or ./.env-cmdrc.(js|cjs|mjs|json))')
     .option('-x, --expand-envs', 'Replace $var in args and command with environment variables')
     .option('--fallback', 'Fallback to default env file path, if custom env file path not found')
     .option('--no-override', 'Do not override existing environment variables')
     .option('--silent', 'Ignore any env-cmd errors and only fail on executed program failure.')
     .option('--use-shell', 'Execute the command in a new shell with the given environment')
     .option('--verbose', 'Print helpful debugging information')
+    // TODO: Remove -r deprecation error on version >= v12
+    .addOption(new Option('-r, --rc-file [path]', 'Deprecated Option')
+      .hideHelp()
+      .argParser(() => { throw new CommanderError(1, 'deprecated-option', 'The -r flag has been deprecated, use the -f flag instead.') }))
     .allowUnknownOption(true)
     .allowExcessArguments(true)
     .parse(['_', '_', ...args], { from: 'node' })

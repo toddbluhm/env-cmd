@@ -11,7 +11,6 @@ export type CommanderOptions = Command<[], {
   fallback?: boolean // Default false
   file?: true | string
   override?: boolean // Default: false
-  rcFile?: true | string
   silent?: boolean // Default: false
   useShell?: boolean // Default: false
   verbose?: boolean // Default: false
