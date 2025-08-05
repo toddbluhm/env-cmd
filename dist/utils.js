@@ -2,7 +2,16 @@ import { resolve } from 'node:path';
 import { homedir } from 'node:os';
 import { cwd } from 'node:process';
 // Special file extensions that node can natively import
-export const IMPORT_HOOK_EXTENSIONS = ['.json', '.js', '.cjs', '.mjs'];
+export const IMPORT_HOOK_EXTENSIONS = [
+    '.json',
+    '.js',
+    '.cjs',
+    '.mjs',
+    '.ts',
+    '.mts',
+    '.cts',
+    '.tsx',
+];
 /**
  * A simple function for resolving the path the user entered
  */
@@ -28,4 +37,10 @@ export function isPromise(value) {
         && typeof value === 'object'
         && 'then' in value
         && typeof value.then === 'function';
+}
+/** @returns true if the error is `ERR_UNKNOWN_FILE_EXTENSION` */
+export function isLoaderError(error) {
+    return (error instanceof Error &&
+        'code' in error &&
+        error.code === 'ERR_UNKNOWN_FILE_EXTENSION');
 }

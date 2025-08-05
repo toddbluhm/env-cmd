@@ -11,3 +11,5 @@ export declare function parseArgList(list: string): string[];
  * A simple function to test if the value is a promise/thenable
  */
 export declare function isPromise<T>(value?: T | PromiseLike<T>): value is PromiseLike<T>;
+/** @returns true if the error is `ERR_UNKNOWN_FILE_EXTENSION` */
+export declare function isLoaderError(error: unknown): error is Error;

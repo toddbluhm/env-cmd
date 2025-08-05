@@ -3,6 +3,7 @@ import { promisify } from 'node:util';
 import { extname } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { resolveEnvFilePath, IMPORT_HOOK_EXTENSIONS, isPromise } from './utils.js';
+import { checkIfTypescriptSupported } from './loaders/typescript.js';
 const statAsync = promisify(stat);
 const readFileAsync = promisify(readFile);
 /**
@@ -23,6 +24,8 @@ export async function getRCFileVars({ environments, filePath }) {
     let parsedData = {};
     try {
         if (IMPORT_HOOK_EXTENSIONS.includes(ext)) {
+            if (/tsx?$/.test(ext))
+                checkIfTypescriptSupported();
             // For some reason in ES Modules, only JSON file types need to be specifically delinated when importing them
             let attributeTypes = {};
             if (ext === '.json') {

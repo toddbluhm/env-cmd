@@ -2,6 +2,7 @@ import { existsSync, readFileSync } from 'node:fs';
 import { extname } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { resolveEnvFilePath, IMPORT_HOOK_EXTENSIONS, isPromise } from './utils.js';
+import { checkIfTypescriptSupported } from './loaders/typescript.js';
 /**
  * Gets the environment vars from an env file
  */
@@ -16,6 +17,8 @@ export async function getEnvFileVars(envFilePath) {
     const ext = extname(absolutePath).toLowerCase();
     let env;
     if (IMPORT_HOOK_EXTENSIONS.includes(ext)) {
+        if (/tsx?$/.test(ext))
+            checkIfTypescriptSupported();
         // For some reason in ES Modules, only JSON file types need to be specifically delinated when importing them
         let attributeTypes = {};
         if (ext === '.json') {
