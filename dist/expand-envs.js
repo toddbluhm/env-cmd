@@ -6,6 +6,6 @@ export function expandEnvs(str, envs) {
     return str.replace(/(?<!\\)\$[a-zA-Z0-9_]+/g, (varName) => {
         const varValue = envs[varName.slice(1)];
         // const test = 42;
-        return varValue === undefined ? varName : varValue.toString();
+        return varValue ?? varName;
     });
 }

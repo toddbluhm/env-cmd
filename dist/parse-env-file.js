@@ -49,7 +49,7 @@ export async function getEnvFileVars(envFilePath) {
  */
 export function parseEnvString(envFileString) {
     // First thing we do is stripe out all comments
-    envFileString = stripComments(envFileString.toString());
+    envFileString = stripComments(envFileString);
     // Next we stripe out all the empty lines
     envFileString = stripEmptyLines(envFileString);
     // Merge the file env vars with the current process env vars (the file vars overwrite process vars)
@@ -110,7 +110,7 @@ export function normalizeEnvObject(input, absolutePath) {
     const env = {};
     for (const [key, value] of Object.entries(input)) {
         // we're intentionally stringifying the value here, to
-        // match what `child_process.spawn` does when loading 
+        // match what `child_process.spawn` does when loading
         // env variables.
         // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         env[key] = `${value}`;

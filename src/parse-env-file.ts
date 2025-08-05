@@ -56,7 +56,7 @@ export async function getEnvFileVars(envFilePath: string): Promise<Environment> 
  */
 export function parseEnvString(envFileString: string): Environment {
   // First thing we do is stripe out all comments
-  envFileString = stripComments(envFileString.toString())
+  envFileString = stripComments(envFileString)
 
   // Next we stripe out all the empty lines
   envFileString = stripEmptyLines(envFileString)
@@ -126,7 +126,7 @@ export function normalizeEnvObject(input: unknown, absolutePath: string): Enviro
   const env: Environment = {};
   for (const [key, value] of Object.entries(input)) {
     // we're intentionally stringifying the value here, to
-    // match what `child_process.spawn` does when loading 
+    // match what `child_process.spawn` does when loading
     // env variables.
     // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
     env[key] = `${value}`
