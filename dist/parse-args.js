@@ -88,18 +88,17 @@ export function parseArgsUsingCommander(args) {
         .usage('[options] -- <command> [...args]')
         .option('-e, --environments [envs...]', 'The rc file environment(s) to use', parseArgList)
         .option('-f, --file [path]', 'Custom env file path or .rc file path if \'-e\' used (default path: ./.env or ./.env-cmdrc.(js|cjs|mjs|json))')
-        .option('-x, --expand-envs', 'Replace $var and $\\{var\\} in args and command with environment variables')
+        .option('-x, --expand-envs', 'Replace $var and ${var} in args and command with environment variables')
+        .option('--recursive', 'Replace $var and ${var} in env file with the referenced environment variable')
         .option('--fallback', 'Fallback to default env file path, if custom env file path not found')
         .option('--no-override', 'Do not override existing environment variables')
         .option('--silent', 'Ignore any env-cmd errors and only fail on executed program failure.')
         .option('--use-shell', 'Execute the command in a new shell with the given environment')
         .option('--verbose', 'Print helpful debugging information')
-        .option('--recursive', 'Replace $var and $\\{var\\} in env file with the referenced environment variable')
         // TODO: Remove -r deprecation error on version >= v12
         .addOption(new Option('-r, --rc-file [path]', 'Deprecated Option')
         .hideHelp()
         .argParser(() => { throw new CommanderError(1, 'deprecated-option', 'The -r flag has been deprecated, use the -f flag instead.'); }))
-        // ENDTODO
         .allowUnknownOption(true)
         .allowExcessArguments(true)
         .parse(['_', '_', ...args], { from: 'node' });
