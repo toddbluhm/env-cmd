@@ -1,15 +1,18 @@
 # Changelog
 
-## 10.1.1 - In Development
+## Landed in master
 
-- **Upgrade**: Upgraded dependency `commander` to `5.x`
-- **Upgrade**: Upgraded devDependencies `ts-standard`, `sinon`
+- **Upgrade**: Upgraded dependency `commander` to `13.x`
+- **Upgrade**: Upgraded dependency `cross-spawn` to `7.x`
+- **Upgrade**: Upgraded all devDependencies `ts-standard`, `sinon`
+- **Feature**: support both `$var` and `${var}` when expanding vars
+- **Feature**: Added support for nested env variables with the `--recursive` flag
 
 ## 10.1.0
 
 - **Feature**: Added support for expanding vars using the `-x` flag.
 Note: only supports `$var` syntax
-- **Feature**: Added support for `--silent` flag that ignores env-cmd errors and missing files and 
+- **Feature**: Added support for `--silent` flag that ignores env-cmd errors and missing files and
 only terminates on caught signals
 - **Feature**: Added a new `--verbose` flag that prints additional debugging info to `console.info`
 - **Upgrade**: Upgraded dependency `commander` to `4.x`

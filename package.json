@@ -38,11 +38,12 @@
   ],
   "author": "Todd Bluhm",
   "contributors": [
+    "Anton Versal <ant.ver@gmail.com>",
     "Eric Lanehart <eric@pushred.co>",
     "Jon Scheiding <jonscheiding@gmail.com>",
-    "serapath (Alexander Praetorius) <dev@serapath.de>",
     "Kyle Hensel <me@kyle.kiwi>",
-    "Anton Versal <ant.ver@gmail.com>"
+    "Nicholas Krul <nicholas.krul@gmail.com>",
+    "serapath (Alexander Praetorius) <dev@serapath.de>"
   ],
   "license": "MIT",
   "bugs": {
