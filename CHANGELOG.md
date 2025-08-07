@@ -3,22 +3,21 @@
 ## 11.0.0
 
 - **BREAKING**: Drop support for nodejs `v8` to `v20.9`. The minimum supported nodejs version is now `v20.10`.
-- **BREAKING**: remove `-r` flag and use only `-f` flag.
+- **BREAKING**: Removed `-r` flag and use only `-f` flag.
 - **BREAKING**: Support inline comments in `.env` files. A `#` character now signifies the start of an inline comment, unless the value is surrounded by quotation marks (`"`).
 - **BREAKING**: Migrated the repository to ESM modules instead of CommonJS.
-- **BREAKING**: Support variable expansion using curly-brace syntax (`{{MY_VAR}}`), when the `-x` option is enabled.
+- **BREAKING**: Support variable expansion using curly-brace syntax (`${MY_VAR}`), when the `-x` option is enabled.
 - **Feature**: Support loading env variables from `.cjs` and `.mjs` files.
 - **Feature**: Support loading env variables from `.ts`, `.cts`, and `.mts` files.
 - **Feature**: When loading an invalid JSON file, show the original parse error.
 - **Feature**: Add a more helpful error message when trying to invoke env-cmd as a standalone command.
+- **Feature**: Added support for nested env variables within env files with the `--recursive` flag
 - **Docs**: clarify how variable expansion works.
 - **Internal**: Replaced Travis CI with GitHub Actions, run unit tests on windows.
 - **Internal**: Configure automatic releases to npm from GitHub Actions
 - **Internal**: Refactor the loader logic, to make it easier to add other loaders.
 - **Upgrade**: Update all dependencies.
 - **Upgrade**: Upgraded all devDependencies
-- **Feature**: support both `$var` and `${var}` when expanding vars
-- **Feature**: Added support for nested env variables with the `--recursive` flag
 
 ## 10.1.0
 
