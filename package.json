@@ -52,7 +52,7 @@
   "homepage": "https://github.com/toddbluhm/env-cmd#readme",
   "dependencies": {
     "@commander-js/extra-typings": "^13.1.0",
-    "commander": "^13.1.0",
+    "commander": "^14.0.0",
     "cross-spawn": "^7.0.6"
   },
   "devDependencies": {
