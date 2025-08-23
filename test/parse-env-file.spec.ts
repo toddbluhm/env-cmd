@@ -194,7 +194,7 @@ describe('getEnvFileVars', (): void => {
     })
   });
 
-  (process.features.typescript ? describe : describe.skip)('TS', () => {
+  (process.features.typescript === 'transform' ? describe : describe.skip)('TS', () => {
     it('should parse a .ts file', async () => {
       const env = await getEnvFileVars('./test/test-files/ts-test.ts');
       assert.deepEqual(env, {
