@@ -3,6 +3,7 @@
 ## 11.0.0
 
 - **BREAKING**: Drop support for nodejs `v8` to `v20.9`. The minimum supported nodejs version is now `v20.10`.
+- **BREAKING**: Must use `--` to separate the `env-cmd` flags from the command to execute (`env-cmd -f .env -- node index.js`).
 - **BREAKING**: Removed `-r` flag and use only `-f` flag.
 - **BREAKING**: Support inline comments in `.env` files. A `#` character now signifies the start of an inline comment, unless the value is surrounded by quotation marks (`"`).
 - **BREAKING**: Migrated the repository to ESM modules instead of CommonJS.
